@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Filters | CrafterTool</title>
+
+    <link rel="stylesheet" href="filter.css">
+</head>
+<body>
+
+<header class="header">
+    <a href="../index.html" class="logo">CrafterTool</a>
+
+    <nav>
+        <a href="../index.html">Home</a>
+        <a href="#">All Tools</a>
+    </nav>
+</header>
+
+<div class="container">
+
+    <h1>Image Filters</h1>
+
+    <p>Apply beautiful filters to your images.</p>
+
+    <input type="file" id="fileInput" accept="image/*">
+
+    <div class="preview">
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <div class="controls">
+
+        <label>Brightness</label>
+        <input type="range" id="brightness" min="0" max="200" value="100">
+
+        <label>Contrast</label>
+        <input type="range" id="contrast" min="0" max="200" value="100">
+
+        <label>Grayscale</label>
+        <input type="range" id="grayscale" min="0" max="100" value="0">
+
+        <label>Sepia</label>
+        <input type="range" id="sepia" min="0" max="100" value="0">
+
+        <label>Invert</label>
+        <input type="range" id="invert" min="0" max="100" value="0">
+
+    </div>
+
+    <button id="applyBtn">
+        Apply Filters
+    </button>
+
+    <a id="downloadBtn" download="filtered-image.png">
+        Download Image
+    </a>
+    <div style="max-width: 800px;
+  margin: 40px auto; 
+  padding: 0 20px; 
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: left;"
+    
+    <!-- Main Heading -->
+    <h2 style="font-size: 24px; color: #2b3a8f; margin-bottom: 20px; font-weight: 600; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">
+        How to use image compressor
+    </h2>
+    
+    <!-- Instructions List -->
+    <ul style="list-style-type: none; padding-left: 0; line-height: 1.8; color: #333333; font-size: 15px;">
+        <li style="margin-bottom: 15px;">
+            <strong style="color: #2b3a8f;">Click the Choose file:</strong> Select any image from your computer or phone.
+        </li>
+        <li style="margin-bottom: 15px;">
+            <strong style="color: #2b3a8f;">Adjust slider:</strong> Move the brightness,contrast,grayscale,sepia,Invert Quality slider down to a lower percentage to achieve a smaller file size.
+        </li>
+        <li style="margin-bottom: 15px;">
+            <strong style="color: #2b3a8f;">Compress image:</strong> Click Apply filter to preview the file size conversion on your screen.
+        </li>
+        <li style="margin-bottom: 15px;">
+            <strong style="color: #2b3a8f;">Download Image:</strong> Click Download Image to save it back to your device.
+        </li>
+    </ul>
+
+</div>
+
+</div>
+
+<script src="filter.js "></script>
+
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Rotate PDF | CrafterTool</title>
+
+<link rel="stylesheet" href="rotatepdf.css">
+
+<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+
+</head>
+
+<body>
+
+<header class="header">
+
+<a href="index.html" class="logo">CrafterTool</a>
+
+<nav>
+<a href="index.html">Home</a>
+<a href="#">Tools</a>
+</nav>
+
+</header>
+
+<div class="container">
+
+<h1>Rotate PDF</h1>
+
+<p>Rotate all pages of a PDF.</p>
+
+<input
+type="file"
+id="pdfInput"
+accept=".pdf">
+
+<select id="rotation">
+
+<option value="90">90°</option>
+<option value="180">180°</option>
+<option value="270">270°</option>
+
+</select>
+
+<button id="rotateBtn">
+<strong>Rotate PDF</strong>
+</button>
+
+<div style="max-width: 800px;
+  margin: 40px auto; 
+  padding: 0 20px; 
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: left;"
+    
+    <!-- Main Heading -->
+    <h2 style="font-size: 24px; color: #2b3a8f; margin-bottom: 20px; font-weight: 600; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">
+        How to use Rotate pdf
+    </h2>
+    
+    <!-- Instructions List -->
+    <ul style="list-style-type: none; padding-left: 0; line-height: 1.8; color: #333333; font-size: 15px;">
+        <li style="margin-bottom: 15px;">
+            <strong style="color: #2b3a8f;">Click the Choose file:</strong> Select any image from your computer or phone.
+        </li>
+        <li style="margin-bottom: 15px;">
+            <strong style="color: #2b3a8f;">Adjust angle:</strong> clivk on the bottom arrow to show the angle what you want.
+        </li>
+        
+        <li style="margin-bottom: 15px;">
+            <strong style="color: #2b3a8f;">Rotate PDF:</strong> Click Rotate pdf to save it back to your device.
+        </li>
+    </ul>
+
+</div>
+</div>
+
+<script src="rotatepdf.js"></script>
+
+</body>
+</html>

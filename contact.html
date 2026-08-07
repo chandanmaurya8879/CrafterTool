@@ -1,0 +1,229 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Contact Us | CrafterTool</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f5f7fb;
+}
+
+header{
+    background:#4f46e5;
+    color:#fff;
+    padding:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    font-size:28px;
+    font-weight:bold;
+}
+
+nav a{
+    color:#fff;
+    text-decoration:none;
+    margin-left:20px;
+}
+
+.container{
+    max-width:1000px;
+    margin:50px auto;
+    padding:20px;
+}
+
+.contact-box{
+    background:#fff;
+    padding:40px;
+    border-radius:15px;
+    box-shadow:0 10px 25px rgba(0,0,0,.1);
+}
+
+h1{
+    color:#4f46e5;
+    text-align:center;
+}
+
+.subtitle{
+    text-align:center;
+    color:#666;
+    margin-bottom:40px;
+}
+
+.contact-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:40px;
+}
+
+.info h2{
+    color:#4f46e5;
+}
+
+.info p{
+    color:#555;
+    line-height:1.8;
+}
+
+form input,
+form textarea{
+    width:100%;
+    padding:15px;
+    margin-bottom:20px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:16px;
+}
+
+textarea{
+    resize:vertical;
+}
+
+button{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:8px;
+    background:#4f46e5;
+    color:#fff;
+    font-size:17px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#3730a3;
+}
+
+footer{
+    background:#111827;
+    color:#fff;
+    text-align:center;
+    padding:20px;
+    margin-top:50px;
+}
+
+@media(max-width:768px){
+
+.contact-grid{
+    grid-template-columns:1fr;
+}
+
+header{
+    flex-direction:column;
+    gap:15px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+CrafterTool
+</div>
+
+<nav>
+
+<a href="index.html">Home</a>
+<a href="about.html">About</a>
+<a href="privacy-policy.html">privacy</a>
+  <a href="term.html">Term & Cond</a>
+
+</nav>
+
+</header>
+
+<div class="container">
+
+<div class="contact-box">
+
+<h1>Contact Us</h1>
+
+<p class="subtitle">
+Have a question, suggestion, or found a bug? We'd love to hear from you.
+</p>
+
+<div class="contact-grid">
+
+<div class="info">
+
+<h2>Get in Touch</h2>
+
+<p>
+📧 Email: craftercc369@gmail.com
+</p>
+
+<p>
+🌐 Website: www.CrafterTool.com
+</p>
+
+<p>
+⏰ Response Time: Within 24–48 hours
+</p>
+
+<p>
+Thank you for using CrafterTool. Your feedback helps us improve our tools and provide a better experience.
+</p>
+
+</div>
+
+<form>
+
+<input
+type="text"
+placeholder="Your Name"
+required>
+
+<input
+type="email"
+placeholder="Your Email"
+required>
+
+<input
+type="text"
+placeholder="Subject"
+required>
+
+<textarea
+rows="6"
+placeholder="Write your message..."
+required></textarea>
+
+<button type="submit">
+Send Message
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+<footer>
+
+<p>
+© 2026 CrafterTool • Built by Chandan Maurya
+</p>
+
+</footer>
+
+</body>
+</html>

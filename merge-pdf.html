@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merge PDF | CrafterTool</title>
+
+    <link rel="stylesheet" href="merge-pdf.css">
+
+    <!-- pdf-lib -->
+    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+</head>
+<body>
+
+<header class="header">
+    <a href="index.html" class="logo">CrafterTool</a>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="#">Tools</a>
+    </nav>
+</header>
+
+<div class="container">
+
+    <h1>Merge PDF</h1>
+
+    <p>Select two or more PDF files to merge them into one.</p>
+
+    <input
+        type="file"
+        id="pdfFiles"
+        accept=".pdf"
+        multiple>
+
+    <ul id="fileList"></ul>
+
+    <button id="mergeBtn">
+        <strong>Merge PDF</strong>
+    </button>
+
+  <div style="max-width: 800px;
+  margin: 40px auto; 
+  padding: 0 20px; 
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: left;"
+    
+    <!-- Main Heading -->
+    <h2 style="font-size: 24px; color: #2b3a8f; margin-bottom: 20px; font-weight: 600; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">
+        How to use <strong> merge pdf </strong>
+    </h2>
+    
+    <!-- Instructions List -->
+    <ul style="list-style-type: none; padding-left: 0; line-height: 1.8; color: #333333; font-size: 15px;">
+        <li style="margin-bottom: 15px;">
+            <strong style="color: #2b3a8f;">Click the Choose file:</strong> Select at least two pdf from your computer or phone.
+        </li>
+        
+        <li style="margin-bottom: 15px;">
+            <strong style="color: #2b3a8f;">Download Image:</strong> Click Download Image to save it back to your device.
+        </li>
+    </ul>
+
+</div>
+  
+</div>
+
+<script src="merge-pdf.js"></script>
+
+</body>
+</html>

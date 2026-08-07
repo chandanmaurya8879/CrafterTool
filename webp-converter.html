@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>WebP Converter | CrafterTool</title>
+
+<link rel="stylesheet" href="webp-converter.css">
+
+</head>
+
+
+<body>
+
+<header class="header">
+
+    <a href="index.html" class="logo">
+        CrafterTool
+    </a>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="#">All Tools</a>
+    </nav>
+
+</header>
+
+
+<div class="container">
+
+    <h1>WebP Image Converter</h1>
+
+    <p>
+        Convert JPG and PNG images into WebP format.
+    </p>
+
+
+    <input 
+    type="file"
+    id="fileInput"
+    accept="image/*">
+
+
+    <div class="preview">
+
+        <img id="preview">
+
+    </div>
+
+
+
+    <label>
+        WebP Quality
+    </label>
+
+    <input 
+    type="range"
+    id="quality"
+    min="10"
+    max="100"
+    value="80">
+
+
+    <span id="qualityValue">
+        80%
+    </span>
+
+
+
+    <br>
+
+
+    <button id="convertBtn">
+      <strong>Convert to WebP</strong> 
+    </button>
+
+
+
+    <br><br>
+
+
+
+    <a 
+    id="downloadBtn"
+    download="converted-image.webp">
+
+      <strong>Download WebP</strong> 
+
+    </a>
+<div style="max-width: 800px;
+  margin: 40px auto; 
+  padding: 0 20px; 
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: left;"
+    
+    <!-- Main Heading -->
+    <h2 style="font-size: 24px; color: #2b3a8f; margin-bottom: 20px; font-weight: 600; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">
+        How to use webp Image converter
+    </h2>
+    
+    <!-- Instructions List -->
+    <ul style="list-style-type: none; padding-left: 0; line-height: 1.8; color: #333333; font-size: 15px;">
+        <li style="margin-bottom: 15px;">
+            <strong style="color: #2b3a8f;">Click the Choose file:</strong> Select any image from your computer or phone.
+        </li>
+        <li style="margin-bottom: 15px;">
+            <strong style="color: #2b3a8f;">Adjust slider:</strong> Move the  Quality slider down to a lower percentage to achieve a smaller file size.
+        </li>
+        <li style="margin-bottom: 15px;">
+            <strong style="color: #2b3a8f;">convert webp:</strong> Click convert webp to preview the file size conversion on your screen.
+        </li>
+        <li style="margin-bottom: 15px;">
+            <strong style="color: #2b3a8f;">Download wevp:</strong> Click Download webp to save it back to your device.
+        </li>
+    </ul>
+
+</div>
+
+</div>
+
+<script src="webp-converter.js"></script>
+
+
+</body>
+
+</html>
