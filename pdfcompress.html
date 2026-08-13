@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Compress | Craftertool </title>
+<link rel="stylesheet" href="pdfcompress.css">
+</head>
+<body>
+  <header class="header">
+    <a href="index.html" class="logo">Craftertool </a>
+        <nav>
+          
+          <a href="index.html">Home</a>
+        <a href="index.html">All Tools</a>
+        </nav>
+   </header>
+<div  class="container" >
+  <h1>
+    PDF Compressor 
+      </h1>
+  <p>Compress the pdf instently</p>
+    <br>
+  <input 
+    type="file" 
+    id="fileinput" 
+    accept="application/pdf">
+  <br>
+    <br>
+   <p>Compressor percentage</p>
+ <div class="preview"></div>
+  
+  <input
+    type="range"
+    id="Compress" 
+    min="0" 
+    max="100" 
+    value="50">
+    
+  <span id="qualityValue">
+    50%
+  </span>
+    <br>
+  
+  <button id="CompressBtn">
+<strong>Compress PDF</strong>
+</button>
+  
+  <div class="details">
+
+        <div class="card">
+
+            <h3>Original Size</h3>
+
+            <p id="originalSize">
+                0 KB
+            </p>
+
+        </div>
+
+        <div class="card">
+
+            <h3>Compressed Size</h3>
+
+            <p id="compressedSize">
+                0 KB
+            </p>
+
+        </div>
+    </div>
+  
+  <div style="margin-top: 20px;"><button id="DownloadBtn">
+<strong>Download PDF</strong>
+</button></div>
+  
+  <div style="max-width: 800px;
+  margin: 40px auto; 
+  padding: 0 20px; 
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: left;">
+    
+    <!-- Main Heading -->
+    <h2 style="font-size: 24px; color: #2b3a8f; margin-bottom: 20px; font-weight: 600; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">
+        How to use image compressor
+    </h2>
+    
+    <!-- Instructions List -->
+    <ul style="list-style-type: none; padding-left: 0; line-height: 1.8; color: #333333; font-size: 15px;">
+        <li style="margin-bottom: 15px;">
+            <strong style="color: #2b3a8f;">Click the Choose file:</strong> Select any image from your computer or phone.
+        </li>
+        <li style="margin-bottom: 15px;">
+            <strong style="color: #2b3a8f;">Adjust slider:</strong> Move the Compression Quality slider down to a lower percentage to achieve a smaller file size (e.g., 50% or 60% balances great size reductions with minimal visual changes).
+        </li>
+        <li style="margin-bottom: 15px;">
+            <strong style="color: #2b3a8f;">Compress image:</strong> Click Compress Image to preview the file size conversion on your screen.
+        </li>
+        <li style="margin-bottom: 15px;">
+            <strong style="color: #2b3a8f;">Download Image:</strong> Click Download Image to save it back to your device.
+        </li>
+    </ul>
+
+</div>
+  </div>
+    <script src="Pdfcompress.js"></script>
+</body>
+</html>
