@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Camera to PDF | CrafterTool</title>
+
+<link rel="stylesheet" href="cameratopdf.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+</head>
+
+<body>
+
+<header class="header">
+
+<a href="index.html" class="logo">
+CrafterTool
+</a>
+
+<nav>
+
+<a href="index.html">Home</a>
+
+<a href="#">All Tools</a>
+
+</nav>
+
+</header>
+
+<div class="container">
+
+<h1>Camera to PDF</h1>
+
+<p>
+Capture photos using your camera and convert them into a PDF.
+</p>
+
+<video
+id="video"
+autoplay
+playsinline>
+</video>
+
+<canvas
+id="canvas"
+style="display:none;">
+</canvas>
+
+<div class="buttons">
+
+<button id="startCamera">
+Open Camera
+</button>
+
+<button id="capturePhoto">
+Capture Photo
+</button>
+
+<button id="createPDF">
+Create PDF
+</button>
+
+</div>
+
+<h2>Captured Images</h2>
+
+<div id="preview"></div>
+
+</div>
+
+<script src="cameratopdf.js"></script>
+
+</body>
+
+</html>

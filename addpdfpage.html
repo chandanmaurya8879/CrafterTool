@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Add Page Number | CrafterTool</title>
+
+<link rel="stylesheet" href="addpdfpage.css">
+
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
+
+</head>
+
+<body>
+
+<header class="header">
+
+<a href="index.html" class="logo">
+CrafterTool
+</a>
+
+<nav>
+<a href="index.html">Home</a>
+<a href="#">All Tools</a>
+</nav>
+
+</header>
+
+<div class="container">
+
+<h1>Add Page Numbers in pdf</h1>
+
+<p>Add page numbers to your PDF instantly.</p>
+
+<input
+type="file"
+id="pdfFile"
+accept=".pdf">
+
+<select id="position">
+
+<option value="bottom-center">Bottom Center</option>
+
+<option value="bottom-right">Bottom Right</option>
+
+<option value="top-center">Top Center</option>
+
+<option value="top-right">Top Right</option>
+
+</select>
+
+<button id="addBtn">
+Add Page Numbers
+</button>
+
+<br><br>
+
+<a
+id="downloadBtn"
+download="page-numbered.pdf"
+style="display:none;">
+Download PDF
+</a>
+
+<div id="result"></div>
+
+</div>
+
+<script src="addpdfpage.js"></script>
+
+</body>
+
+</html>

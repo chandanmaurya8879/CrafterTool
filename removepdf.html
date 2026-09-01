@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Remove PDF Pages | CrafterTool</title>
+
+<link rel="stylesheet" href="removepdf.css">
+
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
+
+</head>
+
+<body>
+
+<header class="header">
+
+<a href="index.html" class="logo">
+CrafterTool
+</a>
+
+<nav>
+<a href="index.html">Home</a>
+<a href="#">All Tools</a>
+</nav>
+
+</header>
+
+<div class="container">
+
+<h1>Remove PDF Pages</h1>
+
+<p>
+Upload a PDF and remove unwanted pages instantly.
+</p>
+
+<input
+type="file"
+id="pdfFile"
+accept=".pdf">
+
+<div id="info"></div>
+
+<label for="pages">
+Enter page numbers to remove
+<br>
+<small>Example: 2,4,6</small>
+</label>
+
+<input
+type="text"
+id="pages"
+placeholder="2,4,6">
+
+<br><br>
+
+<button id="removeBtn">
+Remove Pages
+</button>
+
+<br><br>
+
+<a
+id="downloadBtn"
+style="display:none;"
+download="updated.pdf">
+Download PDF
+</a>
+
+</div>
+
+<div style="max-width:800px;
+margin:40px auto;
+padding:0 20px;
+font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+text-align:left;">
+
+<h2 style="font-size:24px;color:#2b3a8f;margin-bottom:20px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;">
+How to use Remove PDF Pages
+</h2>
+
+<ul style="list-style:none;line-height:1.8;">
+
+<li><b>Choose PDF:</b> Select your PDF file.</li>
+
+<li><b>Enter Pages:</b> Type page numbers separated by commas.</li>
+
+<li><b>Remove Pages:</b> Click the Remove Pages button.</li>
+
+<li><b>Download:</b> Save the new PDF.</li>
+
+</ul>
+
+</div>
+
+<script src="removepdf.js"></script>
+
+</body>
+
+</html>

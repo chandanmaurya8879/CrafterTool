@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>HTML to PDF | CrafterTool</title>
+
+<link rel="stylesheet" href="html-to-pdf.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+</head>
+
+
+<body>
+
+
+<header class="header">
+
+<a href="index.html" class="logo">
+CrafterTool
+</a>
+
+<nav>
+<a href="index.html">Home</a>
+<a href="#">All Tools</a>
+</nav>
+
+</header>
+
+
+
+<div class="container">
+
+
+<h1>HTML to PDF Converter</h1>
+
+<p>
+Convert your HTML content into PDF instantly.
+</p>
+
+
+<textarea id="htmlCode"
+placeholder="Write your HTML here...">
+<h1>Hello PDF</h1>
+<p>This is my HTML document.</p>
+</textarea>
+
+
+<button id="previewBtn">
+Preview
+</button>
+
+
+<button id="pdfBtn">
+Download PDF
+</button>
+
+
+
+<h2>Preview</h2>
+
+<div id="previewBox"></div>
+
+
+
+</div>
+
+
+
+<script src="html-to-pdf.js"></script>
+
+
+</body>
+
+</html>

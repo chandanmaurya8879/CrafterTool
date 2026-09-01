@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Compare PDF | CrafterTool</title>
+
+<link rel="stylesheet" href="comparepdf.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+</head>
+
+<body>
+
+<header class="header">
+
+<a href="index.html" class="logo">
+CrafterTool
+</a>
+
+<nav>
+<a href="index.html">Home</a>
+<a href="#">All Tools</a>
+</nav>
+
+</header>
+
+
+<div class="container">
+
+<h1>Compare PDF</h1>
+
+<p>
+Compare two PDF files and find text differences.
+</p>
+
+
+<label>Select First PDF</label>
+
+<input 
+type="file"
+id="pdf1"
+accept=".pdf">
+
+
+<label>Select Second PDF</label>
+
+<input
+type="file"
+id="pdf2"
+accept=".pdf">
+
+
+<button id="compareBtn">
+Compare PDF
+</button>
+
+
+<div id="result"></div>
+
+
+</div>
+
+
+<div style="max-width:800px;
+margin:40px auto;
+padding:0 20px;
+font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+text-align:left;">
+
+<h2 style="font-size:24px;color:#2b3a8f;">
+How to use Compare PDF
+</h2>
+
+<ul style="line-height:1.8;">
+
+<li><b>Choose First PDF:</b> Upload your first PDF file.</li>
+
+<li><b>Choose Second PDF:</b> Upload another PDF file.</li>
+
+<li><b>Compare:</b> Click the compare button to check differences.</li>
+
+<li><b>Result:</b> The tool will show whether PDFs are same or different.</li>
+
+</ul>
+
+</div>
+
+
+<script src="comparepdf.js"></script>
+
+</body>
+
+</html>

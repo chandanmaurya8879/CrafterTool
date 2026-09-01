@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>WiFi Password to QR | CrafterTool</title>
+
+<link rel="stylesheet" href="wifitoqr.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+</head>
+
+<body>
+
+
+<header class="header">
+
+<a href="index.html" class="logo">
+CrafterTool
+</a>
+
+<nav>
+<a href="index.html">Home</a>
+<a href="#">All Tools</a>
+</nav>
+
+</header>
+
+
+
+<div class="container">
+
+<h1>WiFi Password to QR Code</h1>
+
+<p>
+Create a QR code for your WiFi network.
+</p>
+
+
+<input 
+type="text"
+id="ssid"
+placeholder="WiFi Name (SSID)">
+
+
+<input 
+type="password"
+id="password"
+placeholder="WiFi Password">
+
+
+
+<select id="security">
+
+<option value="WPA">
+WPA/WPA2
+</option>
+
+<option value="WEP">
+WEP
+</option>
+
+<option value="nopass">
+No Password
+</option>
+
+</select>
+
+
+
+<button id="generateBtn">
+Generate QR Code
+</button>
+
+
+<div id="qrcode"></div>
+
+
+
+<button 
+id="downloadBtn"
+style="display:none;">
+Download QR
+</button>
+
+
+</div>
+
+
+
+<script src="wifitoqr.js"></script>
+
+</body>
+
+</html>

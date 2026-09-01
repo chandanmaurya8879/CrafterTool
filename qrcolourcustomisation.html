@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>QR Color Customizer | CrafterTool</title>
+
+<link rel="stylesheet" href="qrcolourcustomisation.css">
+
+</head>
+
+
+<body>
+
+
+<header class="header">
+
+<a href="index.html" class="logo">
+CrafterTool
+</a>
+
+<nav>
+<a href="index.html">Home</a>
+<a href="#">All Tools</a>
+</nav>
+
+</header>
+
+
+
+<div class="container">
+
+
+<h1>QR Color Customizer</h1>
+
+<p>
+Upload your QR code and customize its colors.
+</p>
+
+
+
+<input 
+type="file"
+id="qrUpload"
+accept="image/png,image/jpeg">
+
+
+
+<div class="controls">
+
+
+<label>
+QR Color
+</label>
+
+<input 
+type="color"
+id="qrColor"
+value="#000000">
+
+
+
+<label>
+Background Color
+</label>
+
+<input 
+type="color"
+id="bgColor"
+value="#ffffff">
+
+
+</div>
+
+
+
+<div class="preview">
+
+<canvas id="canvas"></canvas>
+
+</div>
+
+
+
+<button id="applyBtn">
+Customize QR
+</button>
+
+
+
+<button id="downloadBtn" style="display:none;">
+Download QR
+</button>
+
+
+
+</div>
+
+
+
+<script src="qrcolourcustomisation.js"></script>
+
+
+</body>
+
+</html>

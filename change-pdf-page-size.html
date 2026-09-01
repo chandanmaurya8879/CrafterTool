@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Change PDF Page Size | CrafterTool</title>
+
+<link rel="stylesheet" href="change-pdf-page-size.css">
+
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
+
+</head>
+
+<body>
+
+<header class="header">
+
+<a href="index.html" class="logo">
+CrafterTool
+</a>
+
+<nav>
+<a href="index.html">Home</a>
+<a href="#">All Tools</a>
+</nav>
+
+</header>
+
+
+<div class="container">
+
+<h1>Change PDF Page Size</h1>
+
+<p>
+Resize your PDF pages easily in your browser.
+</p>
+
+
+<input 
+type="file"
+id="pdfFile"
+accept=".pdf">
+
+
+<select id="pageSize">
+
+<option value="A4">A4</option>
+
+<option value="A3">A3</option>
+
+<option value="Letter">Letter</option>
+
+<option value="Legal">Legal</option>
+
+</select>
+
+
+<button id="changeBtn">
+Change Page Size
+</button>
+
+
+<br>
+
+
+<a id="downloadBtn"
+download="resized-pdf.pdf"
+style="display:none;">
+
+Download PDF
+
+</a>
+
+
+<div id="result"></div>
+
+
+</div>
+
+
+<script src="change-pdf-page-size.js"></script>
+
+</body>
+
+</html>

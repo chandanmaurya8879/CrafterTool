@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Change PDF Information | CrafterTool</title>
+
+<link rel="stylesheet" href="changepdfinformation.css">
+
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
+
+</head>
+
+<body>
+
+<header class="header">
+
+<a href="index.html" class="logo">
+CrafterTool
+</a>
+
+<nav>
+<a href="index.html">Home</a>
+<a href="#">All Tools</a>
+</nav>
+
+</header>
+
+
+<div class="container">
+
+<h1>Change PDF Information</h1>
+
+<p>
+Edit PDF title, author and other information.
+</p>
+
+
+<input 
+type="file"
+id="pdfFile"
+accept=".pdf">
+
+
+<input 
+type="text"
+id="title"
+placeholder="PDF Title">
+
+
+<input 
+type="text"
+id="author"
+placeholder="Author">
+
+
+<input 
+type="text"
+id="subject"
+placeholder="Subject">
+
+
+<input 
+type="text"
+id="keywords"
+placeholder="Keywords (comma separated)">
+
+
+<input 
+type="text"
+id="creator"
+placeholder="Creator">
+
+
+<button id="changeBtn">
+Update PDF Information
+</button>
+
+
+<br>
+
+
+<a id="downloadBtn"
+download="updated-info.pdf"
+style="display:none;">
+Download PDF
+</a>
+
+
+<div id="result"></div>
+
+
+</div>
+
+
+<script src="changepdfinformation.js"></script>
+
+</body>
+
+</html>

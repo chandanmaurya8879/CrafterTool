@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>URL to QR Code | CrafterTool</title>
+
+<link rel="stylesheet" href="urltoqr.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+</head>
+
+<body>
+
+<header class="header">
+
+<a href="index.html" class="logo">
+CrafterTool
+</a>
+
+<nav>
+<a href="index.html">Home</a>
+<a href="#">All Tools</a>
+</nav>
+
+</header>
+
+<div class="container">
+
+<h1>URL to QR Code</h1>
+
+<p>Convert any website URL into a QR code instantly.</p>
+
+<input
+type="url"
+id="urlInput"
+placeholder="https://example.com">
+
+<button id="generateBtn">
+Generate QR Code
+</button>
+
+<div id="qrcode"></div>
+
+<button
+id="downloadBtn"
+style="display:none;">
+Download QR
+</button>
+
+</div>
+
+<script src="urltoqr.js"></script>
+
+</body>
+
+</html>

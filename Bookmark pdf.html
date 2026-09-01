@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Bookmark PDF | CrafterTool</title>
+
+<link rel="stylesheet" href="Bookmark pdf.css">
+
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
+
+</head>
+
+
+<body>
+
+
+<header class="header">
+
+<a href="index.html" class="logo">
+CrafterTool
+</a>
+
+<nav>
+<a href="index.html">Home</a>
+<a href="#">All Tools</a>
+</nav>
+
+</header>
+
+
+
+<div class="container">
+
+
+<h1>Create Bookmark PDF</h1>
+
+<p>
+Add a bookmark page to your PDF.
+</p>
+
+
+<input 
+type="file"
+id="pdfFile"
+accept=".pdf">
+
+
+
+<div class="bookmark-box">
+
+
+<input 
+type="text"
+id="bookmarkTitle"
+placeholder="Bookmark title">
+
+
+<input 
+type="number"
+id="pageNumber"
+placeholder="Page number">
+
+
+<button id="addBookmark">
+Add Bookmark
+</button>
+
+
+</div>
+
+
+
+<ul id="bookmarkList"></ul>
+
+
+
+<button id="createPDF">
+Create PDF
+</button>
+
+
+
+<a 
+id="downloadBtn"
+style="display:none;"
+download="bookmark-pdf.pdf">
+
+Download PDF
+
+</a>
+
+
+
+<div id="result"></div>
+
+
+</div>
+
+
+
+<script src="Bookmark pdf.js"></script>
+
+
+</body>
+
+</html>

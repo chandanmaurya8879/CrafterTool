@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Remove PDF Metadata | CrafterTool</title>
+
+<link rel="stylesheet" href="removepdfmetadata.css">
+
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
+
+</head>
+
+<body>
+
+<header class="header">
+
+<a href="index.html" class="logo">
+CrafterTool
+</a>
+
+<nav>
+<a href="index.html">Home</a>
+<a href="#">All Tools</a>
+</nav>
+
+</header>
+
+
+<div class="container">
+
+<h1>Remove PDF Metadata</h1>
+
+<p>
+Remove hidden information from your PDF files.
+</p>
+
+
+<input 
+type="file"
+id="pdfFile"
+accept=".pdf">
+
+
+<br>
+
+
+<button id="removeBtn">
+Remove Metadata
+</button>
+
+
+<br>
+
+
+<a id="downloadBtn"
+download="clean-pdf.pdf"
+style="display:none;">
+Download PDF
+</a>
+
+
+<div id="result"></div>
+
+
+</div>
+
+
+<script src="removepdfmetadata.js"></script>
+
+</body>
+
+</html>
