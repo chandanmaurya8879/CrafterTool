@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- SEO -->
+  <title>Data Breach Checker | Check if your email was exposed</title>
+  <meta name="description" content="Free, browser-based data breach checker. Instantly see if your email has appeared in known public breaches. No data stored. Powered by XposedOrNot.">
+  <link rel="canonical" href="https://craftertools.com/data-breach-checker">
+  <!-- Open Graph -->
+  <meta property="og:title" content="Data Breach Checker | CrafterTools">
+  <meta property="og:description" content="Check if your email has been exposed in public data breaches. Fast, private, no backend.">
+  <meta property="og:url" content="https://craftertools.com/data-breach-checker">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="CrafterTools">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Data Breach Checker">
+  <meta name="twitter:description" content="Free email breach checker. See if your email appears in public breach databases.">
+  <!-- Lazy preload for CSS -->
+  <link rel="stylesheet" href="Data branch checker.css">
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Data Breach Checker",
+    "url": "https://craftertools.com/data-breach-checker",
+    "applicationCategory": "SecurityApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "description": "Check if your email address has been exposed in known public data breaches. No data stored."
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is a Data Breach Checker?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A Data Breach Checker is a tool that helps you find out if your email address has appeared in known public data breaches."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is this tool free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, this tool is completely free and runs entirely in your browser."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do you store my email address?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Your email is never stored on our servers. It is only used to query the public breach API."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How accurate is the data?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Results depend on publicly available breach databases. We use the XposedOrNot API, which aggregates known breaches."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What should I do if my email is breached?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Change your password immediately, enable two-factor authentication, and monitor your accounts for suspicious activity."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I check multiple emails?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, simply clear the results and enter another email address."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why do I get a rate limit error?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The free API has rate limits. Please wait a few minutes and try again."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is this tool secure?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, all requests are made directly from your browser to the public API. No data passes through our servers."
+        }
+      }
+    ]
+  }
+  </script>
+  <!-- Favicon placeholder (lazy) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="#" class="logo" aria-label="CrafterTools home">🛡️ CrafterTools</a>
+      <span class="badge">browser-only</span>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero + Tool -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <h1 id="hero-title">Data Breach Checker</h1>
+        <p class="hero-desc">Check whether your email address has appeared in known public data breaches. All checks run in your browser — we never store your email.</p>
+
+        <!-- Tool card -->
+        <div class="tool-card" role="region" aria-label="Email breach checker">
+          <div class="input-group">
+            <label for="emailInput" class="sr-only">Email address</label>
+            <input type="email" id="emailInput" placeholder="you@example.com" autocomplete="email" aria-describedby="emailError" required>
+            <button id="checkBtn" class="btn-primary" disabled>Check Breach</button>
+          </div>
+          <div id="emailError" class="error-msg" role="alert" aria-live="polite"></div>
+
+          <!-- Loading -->
+          <div id="loadingIndicator" class="loading hidden" aria-hidden="true">
+            <div class="spinner"></div>
+            <span>Checking breaches…</span>
+          </div>
+
+          <!-- Results container -->
+          <div id="resultsContainer" class="results" aria-live="polite">
+            <!-- filled dynamically -->
+          </div>
+
+          <!-- Clear button -->
+          <div class="actions">
+            <button id="clearBtn" class="btn-secondary hidden">Clear Results</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEO Content -->
+    <section class="content-section">
+      <div class="container">
+        <h2>What is a Data Breach Checker?</h2>
+        <p>A Data Breach Checker is a security tool that helps you determine if your email address or personal information has been exposed in a data breach. Data breaches occur when unauthorized individuals gain access to confidential databases containing user information such as emails, passwords, and personal details. This tool queries publicly available breach databases (via the XposedOrNot API) to see if your email appears in any known incidents.</p>
+
+        <h2>Why check your email?</h2>
+        <p>If your email appears in a breach, cybercriminals may use it for phishing, credential stuffing, or identity theft. Regularly checking your email helps you stay informed and take quick action to secure your accounts. Early detection can prevent further damage.</p>
+
+        <h2>How to use this tool</h2>
+        <ol>
+          <li>Enter your email address in the input field above.</li>
+          <li>Click <strong>Check Breach</strong>.</li>
+          <li>Wait a few seconds while we query the public breach database.</li>
+          <li>Review the results. If breaches are found, you'll see details such as breach name, date, and exposed data types.</li>
+          <li>Use the <strong>Clear Results</strong> button to start over.</li>
+        </ol>
+
+        <h2>What should you do if your email is breached?</h2>
+        <ul>
+          <li><strong>Change your password immediately</strong> on the affected service and any other site where you use the same password.</li>
+          <li><strong>Enable two-factor authentication (2FA)</strong> wherever possible.</li>
+          <li><strong>Monitor your accounts</strong> for suspicious activity.</li>
+          <li><strong>Be wary of phishing emails</strong> that reference the breach.</li>
+          <li><strong>Use a password manager</strong> to generate and store unique passwords.</li>
+        </ul>
+
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq">
+          <details>
+            <summary>What is a Data Breach Checker?</summary>
+            <p>A tool that checks if your email has been exposed in known public data breaches.</p>
+          </details>
+          <details>
+            <summary>Is this tool free?</summary>
+            <p>Yes, completely free and browser-based.</p>
+          </details>
+          <details>
+            <summary>Do you store my email address?</summary>
+            <p>No, your email is never stored on our servers. It is only used to query the public API.</p>
+          </details>
+          <details>
+            <summary>How accurate is the data?</summary>
+            <p>Results depend on publicly available breach databases aggregated by XposedOrNot.</p>
+          </details>
+          <details>
+            <summary>What should I do if my email is breached?</summary>
+            <p>Change passwords, enable 2FA, and monitor your accounts.</p>
+          </details>
+          <details>
+            <summary>Can I check multiple emails?</summary>
+            <p>Yes, just clear the results and enter another email.</p>
+          </details>
+          <details>
+            <summary>Why do I get a rate limit error?</summary>
+            <p>The free API has rate limits. Wait a few minutes and try again.</p>
+          </details>
+          <details>
+            <summary>Is this tool secure?</summary>
+            <p>Yes, all requests go directly from your browser to the public API. No data passes through us.</p>
+          </details>
+        </div>
+
+        <h2>Privacy Notice</h2>
+        <p>This website does not store, log, or share any email addresses you enter. All queries are made directly from your browser to the public XposedOrNot API. We have no backend server that receives your data.</p>
+
+        <h2>Disclaimer</h2>
+        <p>Results depend on publicly available breach databases. We do not guarantee the completeness or accuracy of the information. Always follow security best practices.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2025 CrafterTools – Data Breach Checker. All checks are client-side.</p>
+    </div>
+  </footer>
+
+  <script src="Data branch checker.js" defer></script>
+</body>
+</html>

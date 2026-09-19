@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Image to ASCII Art — CrafterTools</title>
+  <meta name="description" content="Convert any image to ASCII art instantly in your browser. No uploads, 100% local. Free, fast, and mobile-friendly.">
+  <!-- Open Graph -->
+  <meta property="og:title" content="Image to ASCII Art — CrafterTools">
+  <meta property="og:description" content="Convert any image to ASCII art instantly in your browser. No uploads, 100% local.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://craftertools.example/ascii.html">
+  <meta property="og:image" content="https://craftertools.example/og-ascii.jpg">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Image to ASCII Art — CrafterTools">
+  <meta name="twitter:description" content="Convert any image to ASCII art instantly in your browser. No uploads, 100% local.">
+  <meta name="twitter:image" content="https://craftertools.example/og-ascii.jpg">
+  <!-- Structured data JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Image to ASCII Art",
+    "description": "Convert any image to ASCII art instantly in your browser. No uploads, 100% local.",
+    "applicationCategory": "MultimediaApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "creator": {
+      "@type": "Organization",
+      "name": "CrafterTools"
+    }
+  }
+  </script>
+  <!-- CSS (link to external file) -->
+  <link rel="stylesheet" href="Image to ascii art.css">
+  <!-- Font Awesome for icons (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <!-- Existing CrafterTools header – unchanged -->
+  <header class="crafter-header">
+    <div class="header-inner">
+      <a href="/" class="logo" aria-label="CrafterTools home">
+        <i class="fas fa-tools"></i> CrafterTools
+      </a>
+      <nav aria-label="Main navigation">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="tools">Tools</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main tool section – only new content -->
+  <main class="crafter-main">
+    <section class="tool-card" aria-labelledby="tool-heading">
+      <h1 id="tool-heading" class="tool-title"><i class="fas fa-image"></i> Image to ASCII Art</h1>
+      <p class="privacy-badge"><i class="fas fa-lock"></i> Your image never leaves your device. Everything is processed locally in your browser.</p>
+
+      <!-- Upload area -->
+      <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Upload image: drag and drop or click to browse">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <p>Drag & drop an image here or <span class="browse-link">browse</span></p>
+        <p class="small-note">Supports JPG, PNG, WEBP, BMP, GIF (first frame)</p>
+        <input type="file" id="fileInput" accept="image/jpeg,image/jpg,image/png,image/webp,image/bmp,image/gif" hidden aria-hidden="true">
+      </div>
+
+      <!-- Preview + Controls grid -->
+      <div class="workspace">
+        <!-- Original preview -->
+        <div class="preview-panel">
+          <h2 class="section-label">Original preview</h2>
+          <div class="preview-container">
+            <img id="originalPreview" src="#" alt="Original uploaded image preview" class="hidden">
+            <div id="previewPlaceholder" class="preview-placeholder">
+              <i class="fas fa-image"></i>
+              <span>No image yet</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls-panel">
+          <h2 class="section-label">Adjustments</h2>
+          <div class="control-grid">
+            <!-- Output width -->
+            <div class="control-item">
+              <label for="widthSlider">Output width <span id="widthValue">120</span> chars</label>
+              <input type="range" id="widthSlider" min="20" max="300" value="120" step="1" aria-valuemin="20" aria-valuemax="300" aria-valuenow="120">
+            </div>
+            <!-- Font size -->
+            <div class="control-item">
+              <label for="fontSizeSlider">Font size <span id="fontSizeValue">10</span> px</label>
+              <input type="range" id="fontSizeSlider" min="4" max="24" value="10" step="1" aria-valuemin="4" aria-valuemax="24" aria-valuenow="10">
+            </div>
+            <!-- Brightness -->
+            <div class="control-item">
+              <label for="brightnessSlider">Brightness <span id="brightnessValue">100</span>%</label>
+              <input type="range" id="brightnessSlider" min="0" max="200" value="100" step="1" aria-valuemin="0" aria-valuemax="200" aria-valuenow="100">
+            </div>
+            <!-- Contrast -->
+            <div class="control-item">
+              <label for="contrastSlider">Contrast <span id="contrastValue">100</span>%</label>
+              <input type="range" id="contrastSlider" min="0" max="200" value="100" step="1" aria-valuemin="0" aria-valuemax="200" aria-valuenow="100">
+            </div>
+            <!-- Invert toggle -->
+            <div class="control-item toggle-item">
+              <label for="invertToggle">Invert colors</label>
+              <label class="switch">
+                <input type="checkbox" id="invertToggle" aria-label="Invert colors">
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <!-- Preserve aspect ratio -->
+            <div class="control-item toggle-item">
+              <label for="aspectToggle">Preserve aspect ratio</label>
+              <label class="switch">
+                <input type="checkbox" id="aspectToggle" checked aria-label="Preserve aspect ratio">
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Character set + color mode -->
+          <div class="control-row">
+            <div class="control-item">
+              <label for="charsetSelect">Character set</label>
+              <select id="charsetSelect" aria-label="Character set preset">
+                <option value="standard" selected>Standard: @#S%?*+;:,.</option>
+                <option value="dense">Dense: @%#*+=-:. </option>
+                <option value="light">Light: .:-=+*#%@</option>
+                <option value="blocks">Blocks: █▉▊▋▌▍▎▏ </option>
+                <option value="numbers">Numbers: 0123456789</option>
+                <option value="custom">Custom…</option>
+              </select>
+            </div>
+            <div class="control-item" id="customCharsetWrapper" style="display:none;">
+              <label for="customCharset">Custom characters (dark to light)</label>
+              <input type="text" id="customCharset" value="@#S%?*+;:,." aria-label="Custom character set" maxlength="50">
+            </div>
+            <div class="control-item">
+              <label for="colorMode">Color mode</label>
+              <select id="colorMode" aria-label="Color mode">
+                <option value="bw" selected>Black & White ASCII</option>
+                <option value="color">Colored ASCII</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Action buttons -->
+          <div class="button-group">
+            <button id="convertBtn" class="btn primary"><i class="fas fa-sync-alt"></i> Convert</button>
+            <button id="resetBtn" class="btn secondary"><i class="fas fa-undo-alt"></i> Reset</button>
+            <button id="copyBtn" class="btn secondary"><i class="fas fa-copy"></i> Copy ASCII</button>
+            <button id="downloadTxtBtn" class="btn secondary"><i class="fas fa-file-alt"></i> Download TXT</button>
+            <button id="downloadPngBtn" class="btn secondary"><i class="fas fa-file-image"></i> Download PNG</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ASCII output area -->
+      <div class="output-section">
+        <div class="output-header">
+          <h2 class="section-label">ASCII output</h2>
+          <span id="outputStats" class="stats"></span>
+        </div>
+        <textarea id="asciiOutput" class="ascii-output" readonly aria-label="ASCII art output" spellcheck="false"></textarea>
+      </div>
+    </section>
+  </main>
+
+  <!-- Existing CrafterTools footer – unchanged -->
+  <footer class="crafter-footer">
+    <p>© 2025 CrafterTools — All tools run locally in your browser.</p>
+  </footer>
+
+  <!-- JavaScript (external) -->
+  <script src="Image to ascii art.js"></script>
+</body>
+</html>

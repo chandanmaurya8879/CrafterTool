@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image to GIF Maker | CrafterTool</title>
+
+<link rel="stylesheet" href="Gif.css">
+
+<!-- GIF.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
+
+</head>
+<body>
+
+<header>
+<div class="logo">CrafterTool</div>
+
+<nav>
+<a href="index.html">Home</a>
+<a href="all-tools.html">All Tools</a>
+</nav>
+
+</header>
+
+<main class="container">
+
+<h1>Image to GIF Maker</h1>
+
+<p class="description">
+Upload multiple images, choose the animation speed, create an animated GIF, and download it instantly. Everything happens directly in your browser.
+</p>
+
+<div class="card">
+
+<label class="upload-box">
+
+<input
+type="file"
+id="imageInput"
+accept="image/*"
+multiple
+hidden>
+
+<span>Select Images</span>
+
+</label>
+
+<div id="preview" class="preview-grid"></div>
+
+<div class="controls">
+
+<label>
+Frame Delay
+</label>
+
+<input
+type="range"
+id="delay"
+min="100"
+max="1000"
+step="100"
+value="500">
+
+<span id="delayValue">
+500 ms
+</span>
+
+</div>
+
+<div class="buttons">
+
+<button id="createGif">
+Create GIF
+</button>
+
+<button
+id="downloadGif"
+disabled>
+Download GIF
+</button>
+
+</div>
+
+<div class="result">
+
+<img
+id="gifPreview"
+alt="GIF Preview">
+
+</div>
+    <p class="tool-description">
+Image to GIF Maker lets you combine multiple images into a high-quality animated GIF directly in your browser. Upload your images, arrange them in the desired order, adjust the animation speed, preview the result, and download your GIF instantly. No files are uploaded to any server, ensuring complete privacy.
+</p>
+    <br>
+
+    <h2>How to Use</h2>
+
+<ul>
+<li>Upload two or more images.</li>
+<li>Arrange the images in your preferred order.</li>
+<li>Select the animation speed.</li>
+<li>Click <strong>Create GIF</strong>.</li>
+<li>Preview the generated GIF.</li>
+<li>Click <strong>Download GIF</strong> to save it.</li>
+</ul>
+    <br>
+
+    <h2>Features</h2>
+
+<ul>
+<li>Create GIFs from multiple images.</li>
+<li>Supports JPG, PNG, and WebP.</li>
+<li>Adjust animation speed.</li>
+<li>Preview before downloading.</li>
+<li>Works completely offline in your browser.</li>
+<li>No uploads or registration required.</li>
+<li>Fast, secure, and mobile-friendly.</li>
+</ul>
+    <br>
+
+    
+</div>
+
+</main>
+
+<footer>
+
+© 2026 CrafterTool. All Rights Reserved.
+
+</footer>
+
+<script src="Gif.js"></script>
+    <script src="Giff.js"></script>
+    
+
+</body>
+</html>

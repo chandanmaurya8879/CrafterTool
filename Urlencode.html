@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- SEO Title & Meta Description -->
+  <title>Premium URL Encode / Decode Tool | CrafterTools</title>
+  <meta name="description" content="Free online URL encoder & decoder. Encode or decode URLs instantly in your browser. Handles special characters, percent encoding, live preview, drag & drop. No data leaves your device.">
+  <meta name="keywords" content="URL encode, URL decode, percent encoding, URL escape, query string, developer tools, CrafterTools">
+  <!-- Open Graph -->
+  <meta property="og:title" content="Premium URL Encode / Decode Tool | CrafterTools">
+  <meta property="og:description" content="Encode and decode URLs safely in your browser. Instant conversion, live preview, drag & drop support. 100% client-side.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://craftertools.com/url-encode-decode">
+  <meta property="og:site_name" content="CrafterTools">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Premium URL Encode / Decode Tool">
+  <meta name="twitter:description" content="Encode & decode URLs instantly. Live conversion, drag & drop, copy/download. Works offline.">
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "URL Encode / Decode Tool",
+      "url": "https://craftertools.com/url-encode-decode",
+      "description": "Free online URL encoder and decoder. Encode special characters or decode percent-encoded strings instantly in your browser.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "creator": {
+        "@type": "Organization",
+        "name": "CrafterTools"
+      }
+    }
+  </script>
+  <!-- Font Awesome for icons (optional but used for premium feel) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts (Inter) for clean typography -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="Urlencode.css">
+</head>
+<body>
+  <!-- CrafterTools header (placeholder – not modified) -->
+  <header class="crafter-header">
+    <div class="container header-inner">
+      <div class="logo">Crafter<span>Tools</span></div>
+      <nav aria-label="Main navigation">
+        <a href="#">Tools</a>
+        <a href="#">Blog</a>
+        <a href="#">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main tool section – created as per request, matching CrafterTools style -->
+  <main class="crafter-main">
+    <div class="container">
+      <!-- Tool card -->
+      <section class="tool-card" aria-labelledby="toolHeading">
+        <h1 id="toolHeading" class="tool-title">URL Encode / Decode</h1>
+        <p class="tool-subtitle">Encode or decode URLs and text instantly — all in your browser.</p>
+
+        <!-- Privacy note -->
+        <div class="privacy-badge" role="note">
+          <i class="fas fa-shield-alt" aria-hidden="true"></i>
+          <span>Your data never leaves your device. All encoding and decoding happens locally in your browser.</span>
+        </div>
+
+        <!-- Input / Output panels -->
+        <div class="dual-panel">
+          <!-- Input column -->
+          <div class="panel">
+            <div class="panel-header">
+              <label for="inputText" class="panel-label">Input</label>
+              <div class="panel-actions">
+                <button id="pasteBtn" class="icon-btn" title="Paste from clipboard" aria-label="Paste input">
+                  <i class="fas fa-paste"></i>
+                </button>
+                <button id="sampleBtn" class="icon-btn" title="Load sample" aria-label="Load sample example">
+                  <i class="fas fa-lightbulb"></i>
+                </button>
+              </div>
+            </div>
+            <textarea id="inputText" class="url-textarea" rows="5" placeholder="Type or paste URL or text here..." aria-label="Input text for encoding or decoding"></textarea>
+            <div class="counter-row">
+              <span id="inputCounter" class="counter">0 characters</span>
+              <span id="inputEncodedStatus" class="status-badge" aria-live="polite"></span>
+            </div>
+            <!-- Drag & drop area (invisible overlay, but textarea is primary) -->
+            <div id="dropZone" class="drop-zone" aria-hidden="true">Drop text file</div>
+          </div>
+
+          <!-- Swap button column (vertical on desktop) -->
+          <div class="swap-col">
+            <button id="swapBtn" class="swap-btn" title="Swap Input & Output" aria-label="Swap input and output">
+              <i class="fas fa-arrow-right-arrow-left"></i>
+            </button>
+          </div>
+
+          <!-- Output column -->
+          <div class="panel">
+            <div class="panel-header">
+              <label for="outputText" class="panel-label">Output</label>
+              <div class="panel-actions">
+                <button id="copyBtn" class="icon-btn" title="Copy output" aria-label="Copy output">
+                  <i class="fas fa-copy"></i>
+                </button>
+                <button id="downloadBtn" class="icon-btn" title="Download as .txt" aria-label="Download result">
+                  <i class="fas fa-download"></i>
+                </button>
+              </div>
+            </div>
+            <textarea id="outputText" class="url-textarea" rows="5" placeholder="Result will appear here..." readonly aria-label="Output text after encoding or decoding"></textarea>
+            <div class="counter-row">
+              <span id="outputCounter" class="counter">0 characters</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="action-bar">
+          <button id="encodeBtn" class="btn primary" aria-label="Encode input"><i class="fas fa-lock"></i> Encode</button>
+          <button id="decodeBtn" class="btn primary" aria-label="Decode input"><i class="fas fa-lock-open"></i> Decode</button>
+          <button id="clearBtn" class="btn secondary" aria-label="Clear all"><i class="fas fa-trash-alt"></i> Clear</button>
+          <div class="auto-toggle">
+            <input type="checkbox" id="autoToggle" class="toggle-checkbox">
+            <label for="autoToggle" class="toggle-label">Auto convert</label>
+          </div>
+        </div>
+
+        <!-- Error message container -->
+        <div id="errorMessage" class="error-message" role="alert" aria-live="assertive"></div>
+      </section>
+
+      <!-- Educational sections -->
+      <section class="edu-section">
+        <!-- What is URL Encoding? -->
+        <article class="edu-card">
+          <h2><i class="fas fa-question-circle"></i> What is URL Encoding?</h2>
+          <p>URL encoding (also called percent-encoding) converts characters into a format that can be safely transmitted over the internet. Special characters like spaces, <code>&</code>, <code>?</code>, <code>=</code>, and non-ASCII characters must be encoded because they have special meanings in URLs or are not allowed.</p>
+          <p>Each encoded character is replaced by a <code>%</code> followed by two hexadecimal digits. For example, a space becomes <code>%20</code>.</p>
+          <h3>Common examples</h3>
+          <table class="example-table">
+            <thead><tr><th>Character</th><th>Encoded</th></tr></thead>
+            <tbody>
+              <tr><td>Space</td><td><code>%20</code></td></tr>
+              <tr><td>@</td><td><code>%40</code></td></tr>
+              <tr><td>&</td><td><code>%26</code></td></tr>
+              <tr><td>?</td><td><code>%3F</code></td></tr>
+              <tr><td>=</td><td><code>%3D</code></td></tr>
+              <tr><td>+</td><td><code>%2B</code></td></tr>
+              <tr><td>#</td><td><code>%23</code></td></tr>
+            </tbody>
+          </table>
+        </article>
+
+        <!-- What is URL Decoding? -->
+        <article class="edu-card">
+          <h2><i class="fas fa-undo-alt"></i> What is URL Decoding?</h2>
+          <p>URL decoding is the reverse process: it converts percent-encoded strings back into human-readable text. This is useful when you receive an encoded URL and need to understand its parameters or content.</p>
+          <p>For example, <code>%20</code> becomes a space, <code>%40</code> becomes <code>@</code>, and so on. Decoding helps debug APIs, fix broken links, and read query strings.</p>
+        </article>
+
+        <!-- How to Use -->
+        <article class="edu-card">
+          <h2><i class="fas fa-compass"></i> How to Use This Tool</h2>
+          <ol class="steps-list">
+            <li>Paste or type your URL or text into the <strong>Input</strong> area.</li>
+            <li>Click <strong>Encode</strong> or <strong>Decode</strong> — or enable <strong>Auto convert</strong> for live updates.</li>
+            <li>Copy the result or download it as a .txt file.</li>
+            <li>Use the converted text in your application, website, or API.</li>
+          </ol>
+        </article>
+
+        <!-- Why Use This Tool? -->
+        <article class="edu-card">
+          <h2><i class="fas fa-star"></i> Why Use This Tool?</h2>
+          <ul class="benefits-list">
+            <li><i class="fas fa-check-circle"></i> Create safe URLs for browsers and servers</li>
+            <li><i class="fas fa-check-circle"></i> Encode special characters correctly</li>
+            <li><i class="fas fa-check-circle"></i> Prepare URLs for API requests</li>
+            <li><i class="fas fa-check-circle"></i> Fix broken links caused by unencoded characters</li>
+            <li><i class="fas fa-check-circle"></i> Work with query parameters and form submissions</li>
+            <li><i class="fas fa-check-circle"></i> Generate email links with encoded subjects/body</li>
+          </ul>
+        </article>
+
+        <!-- FAQ Accordion -->
+        <article class="edu-card faq-section">
+          <h2><i class="fas fa-question"></i> Frequently Asked Questions</h2>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">What is URL encoding? <i class="fas fa-chevron-down"></i></button>
+            <div class="faq-answer"><p>URL encoding converts characters into a percent-encoded format so they can be safely transmitted in a URL.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">Why is URL encoding important? <i class="fas fa-chevron-down"></i></button>
+            <div class="faq-answer"><p>It prevents ambiguity and errors when URLs contain spaces, special characters, or non-ASCII text.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">What characters are encoded? <i class="fas fa-chevron-down"></i></button>
+            <div class="faq-answer"><p>Reserved characters like <code>:/?#[]@!$&'()*+,;=</code> and any non-alphanumeric characters are typically encoded.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">Is URL encoding reversible? <i class="fas fa-chevron-down"></i></button>
+            <div class="faq-answer"><p>Yes, decoding reverses encoding perfectly, as long as the encoded string is valid.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">What's the difference between URL encoding and Base64? <i class="fas fa-chevron-down"></i></button>
+            <div class="faq-answer"><p>URL encoding is for making text URL-safe, while Base64 encodes binary data into ASCII. They serve different purposes.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">When should I encode a URL? <i class="fas fa-chevron-down"></i></button>
+            <div class="faq-answer"><p>Whenever you include dynamic values in a URL, like query parameters or path segments.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">Can I encode an entire URL? <i class="fas fa-chevron-down"></i></button>
+            <div class="faq-answer"><p>Yes, but be careful not to encode the scheme (https://) and domain if you plan to use it directly. Usually only parts are encoded.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">Does this tool upload my data? <i class="fas fa-chevron-down"></i></button>
+            <div class="faq-answer"><p>No. Everything runs in your browser using JavaScript. No data is sent to any server.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">Is this tool free? <i class="fas fa-chevron-down"></i></button>
+            <div class="faq-answer"><p>Yes, it's completely free with no limitations.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">Does it work on mobile? <i class="fas fa-chevron-down"></i></button>
+            <div class="faq-answer"><p>Absolutely, the interface is fully responsive and touch-friendly.</p></div>
+          </div>
+        </article>
+      </section>
+    </div>
+  </main>
+
+  <!-- CrafterTools footer (placeholder – not modified) -->
+  <footer class="crafter-footer">
+    <div class="container">
+      <p>© 2025 CrafterTools. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Stylesheet -->
+  
+  <!-- JavaScript -->
+  <script src="Urlencode.js"></script>
+</body>
+</html>

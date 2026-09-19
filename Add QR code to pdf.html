@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- SEO & Social Meta -->
+  <title>Add QR Code to PDF | CrafterTools – Free, Private, Online</title>
+  <meta name="description" content="Add QR codes to any PDF page. Customize colors, size, position, error correction. Works locally in your browser – no uploads, no server, 100% free.">
+  <meta property="og:title" content="Add QR Code to PDF – CrafterTools">
+  <meta property="og:description" content="Easily insert QR codes into PDFs. Live preview, multiple pages, custom placement. All processing happens in your browser.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://craftertools.com/add-qr-to-pdf">
+  <meta property="og:image" content="https://craftertools.com/og-qr-pdf.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Add QR Code to PDF – CrafterTools">
+  <meta name="twitter:description" content="Insert QR codes into PDFs without uploading. Free online tool.">
+  <meta name="twitter:image" content="https://craftertools.com/og-qr-pdf.jpg">
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Add QR Code to PDF",
+    "url": "https://craftertools.com/add-qr-to-pdf",
+    "description": "Add QR codes to PDF pages in your browser. Supports multiple pages, custom sizes, colors, and placement.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "creator": {
+      "@type": "Organization",
+      "name": "CrafterTools"
+    }
+  }
+  </script>
+  <!-- Font & Icons (free) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <!-- pdf-lib & qrcode.js from CDN (open source) -->
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <style>
+    /* ----- CrafterTools base style (simulated existing header/footer) ----- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    /* simulated existing header (not modified) */
+    .crafter-header {
+      background: white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      padding: 1rem 2rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .crafter-header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .crafter-header span {
+      color: #3b82f6;
+    }
+    /* simulated footer (not modified) */
+    .crafter-footer {
+      background: white;
+      border-top: 1px solid #e2e8f0;
+      padding: 1.5rem 2rem;
+      text-align: center;
+      color: #64748b;
+      font-size: 0.875rem;
+      margin-top: auto;
+    }
+    /* ----- Tool section starts here – all new styles below ----- */
+    .tool-section {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      width: 100%;
+      flex: 1;
+    }
+
+    /* modern card design */
+    .card {
+      background: white;
+      border-radius: 1.5rem;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.02);
+      padding: 1.75rem;
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
+      border: 1px solid rgba(226, 232, 240, 0.6);
+    }
+    .card:hover {
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.02);
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+      font-size: 1.25rem;
+      color: #0f172a;
+    }
+    .card-header svg {
+      width: 1.5rem;
+      height: 1.5rem;
+      color: #3b82f6;
+      flex-shrink: 0;
+    }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    @media (max-width: 900px) {
+      .grid-2col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Drop zone */
+    .drop-zone {
+      border: 2px dashed #cbd5e1;
+      border-radius: 1.25rem;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      background: #f8fafc;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      margin-bottom: 1rem;
+    }
+    .drop-zone.drag-over {
+      border-color: #3b82f6;
+      background: #eff6ff;
+    }
+    .drop-zone input[type="file"] {
+      display: none;
+    }
+    .drop-zone svg {
+      width: 3rem;
+      height: 3rem;
+      color: #64748b;
+      margin-bottom: 0.75rem;
+    }
+    .drop-zone p {
+      color: #475569;
+      font-weight: 500;
+    }
+    .drop-zone .small {
+      font-size: 0.875rem;
+      color: #94a3b8;
+      margin-top: 0.25rem;
+    }
+    .file-info {
+      background: #f1f5f9;
+      border-radius: 0.75rem;
+      padding: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem 2rem;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+    }
+    .file-info span {
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    /* form elements */
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #334155;
+      margin-bottom: 0.375rem;
+    }
+    input[type="text"],
+    input[type="url"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.65rem 1rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.75rem;
+      font-size: 0.95rem;
+      font-family: inherit;
+      background: white;
+      transition: border 0.15s, box-shadow 0.15s;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    }
+    .color-row {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .color-row input[type="color"] {
+      width: 3rem;
+      height: 2.75rem;
+      padding: 0.2rem;
+      border-radius: 0.75rem;
+      border: 1px solid #e2e8f0;
+      background: white;
+      cursor: pointer;
+    }
+
+    /* buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.4rem;
+      border-radius: 2rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: white;
+      color: #0f172a;
+      border: 1px solid #e2e8f0;
+    }
+    .btn-primary {
+      background: #3b82f6;
+      color: white;
+      border: 1px solid #3b82f6;
+    }
+    .btn-primary:hover {
+      background: #2563eb;
+      border-color: #2563eb;
+      transform: translateY(-1px);
+    }
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+    .btn-secondary:hover {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* preview area */
+    .preview-container {
+      margin-top: 1.5rem;
+      background: #f1f5f9;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 200px;
+    }
+    .preview-canvas-wrapper {
+      position: relative;
+      max-width: 100%;
+      overflow: auto;
+      background: white;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      padding: 1rem;
+    }
+    #previewCanvas {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 0.5rem;
+    }
+
+    /* QR preview */
+    .qr-preview-box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: white;
+      padding: 1rem;
+      border-radius: 1rem;
+      border: 1px solid #e2e8f0;
+      min-height: 160px;
+    }
+    #qrPreviewCanvas {
+      max-width: 140px;
+      width: 100%;
+      height: auto;
+      border-radius: 0.25rem;
+    }
+
+    /* privacy banner */
+    .privacy-banner {
+      background: #f0f9ff;
+      border-left: 4px solid #3b82f6;
+      border-radius: 0.75rem;
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0 0.5rem;
+      font-size: 0.9rem;
+      color: #1e293b;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .privacy-banner svg {
+      width: 1.5rem;
+      height: 1.5rem;
+      color: #3b82f6;
+      flex-shrink: 0;
+    }
+
+    /* accessibility & contrast */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      border: 0;
+    }
+    :focus-visible {
+      outline: 3px solid #3b82f6;
+      outline-offset: 2px;
+    }
+
+    /* responsive */
+    @media (max-width: 640px) {
+      .tool-section {
+        padding: 1rem;
+      }
+      .card {
+        padding: 1.25rem;
+      }
+      .color-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- existing CrafterTools header (not modified) -->
+  <header class="crafter-header">
+    <h1>Crafter<span>Tools</span></h1>
+  </header>
+
+  <!-- TOOL SECTION – everything inside main is new -->
+  <main class="tool-section">
+    <!-- SEO & accessibility h1 (visually hidden but present) -->
+    <h1 class="sr-only">Add QR Code to PDF – free online tool</h1>
+
+    <!-- Privacy banner -->
+    <div class="privacy-banner" role="note" aria-label="Privacy notice">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+      <span>Your PDF is processed locally in your browser. No files are uploaded to any server.</span>
+    </div>
+
+    <div class="grid-2col">
+      <!-- LEFT COLUMN: Upload + QR options -->
+      <div>
+        <!-- Upload card -->
+        <div class="card">
+          <div class="card-header">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m6.75 12l-3 3m0 0l-3-3m3 3v-6m1.5-3H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+            <span>1. Upload PDF</span>
+          </div>
+          <div class="drop-zone" id="dropZone" tabindex="0" role="button" aria-label="Upload PDF file, drag and drop or click">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" /></svg>
+            <p>Drag & drop a PDF here or <span style="color:#3b82f6;">browse</span></p>
+            <p class="small">Password-free PDFs only</p>
+            <input type="file" id="fileInput" accept="application/pdf">
+          </div>
+          <div class="file-info" id="fileInfo" style="display: none;">
+            <div>📄 <span id="fileName">—</span></div>
+            <div>📏 <span id="fileSize">—</span></div>
+            <div>📑 <span id="pageCount">—</span> pages</div>
+          </div>
+        </div>
+
+        <!-- QR content card -->
+        <div class="card" style="margin-top: 1.5rem;">
+          <div class="card-header">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z" /><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 6.75h.75v.75h-.75v-.75zM6.75 16.5h.75v.75h-.75v-.75zM16.5 6.75h.75v.75h-.75v-.75zM13.5 13.5h.75v.75h-.75v-.75zM13.5 16.5h.75v.75h-.75v-.75zM16.5 13.5h.75v.75h-.75v-.75zM16.5 16.5h.75v.75h-.75v-.75z" /></svg>
+            <span>2. QR Code Content</span>
+          </div>
+          <label for="qrType">Type</label>
+          <select id="qrType" aria-label="QR content type">
+            <option value="url">URL</option>
+            <option value="text">Text</option>
+            <option value="email">Email</option>
+            <option value="phone">Phone Number</option>
+            <option value="sms">SMS</option>
+            <option value="wifi">Wi-Fi</option>
+            <option value="whatsapp">WhatsApp Link</option>
+          </select>
+          <div style="margin-top: 1rem;" id="qrInputFields">
+            <!-- dynamic content will be injected by JS -->
+          </div>
+          <!-- live QR preview -->
+          <div style="margin-top: 1.5rem;">
+            <label>Live preview</label>
+            <div class="qr-preview-box">
+              <canvas id="qrPreviewCanvas" width="140" height="140"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: Customization + placement + preview + export -->
+      <div>
+        <!-- Customization card -->
+        <div class="card">
+          <div class="card-header">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42" /></svg>
+            <span>3. Customize QR</span>
+          </div>
+          <div>
+            <label for="qrSize">Size (px)</label>
+            <input type="range" id="qrSize" min="40" max="300" value="120" step="2" aria-label="QR size in pixels">
+            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #64748b;">
+              <span>Small</span><span id="qrSizeValue">120 px</span><span>Large</span>
+            </div>
+          </div>
+          <div style="margin-top: 1rem;">
+            <label for="qrMargin">Margin</label>
+            <input type="range" id="qrMargin" min="0" max="20" value="4" step="1">
+            <span id="qrMarginValue" style="font-size:0.85rem;">4 modules</span>
+          </div>
+          <div class="color-row" style="margin-top: 1rem;">
+            <div>
+              <label for="fgColor">Foreground</label>
+              <input type="color" id="fgColor" value="#000000">
+            </div>
+            <div>
+              <label for="bgColor">Background</label>
+              <input type="color" id="bgColor" value="#ffffff">
+            </div>
+          </div>
+          <div style="margin-top: 1rem;">
+            <label for="ecLevel">Error correction</label>
+            <select id="ecLevel">
+              <option value="L">L (Low)</option>
+              <option value="M" selected>M (Medium)</option>
+              <option value="Q">Q (Quartile)</option>
+              <option value="H">H (High)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Placement card -->
+        <div class="card" style="margin-top: 1.5rem;">
+          <div class="card-header">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125z" /></svg>
+            <span>4. Page & Position</span>
+          </div>
+          <label>Apply to pages</label>
+          <select id="pageSelection" style="margin-bottom: 0.75rem;">
+            <option value="all">All pages</option>
+            <option value="single">Single page (specify)</option>
+            <option value="multiple">Multiple pages (comma separated)</option>
+          </select>
+          <input type="text" id="pageNumbers" placeholder="e.g. 1,3,5" style="display: none; margin-bottom: 0.75rem;" aria-label="Page numbers">
+          <label>Position</label>
+          <select id="position">
+            <option value="top-left">Top Left</option>
+            <option value="top-right">Top Right</option>
+            <option value="bottom-left">Bottom Left</option>
+            <option value="bottom-right" selected>Bottom Right</option>
+            <option value="center">Center</option>
+            <option value="custom">Custom (X, Y)</option>
+          </select>
+          <div id="customPositionFields" style="display: none; margin-top: 0.75rem; gap: 0.5rem; display: flex;">
+            <div style="flex:1">
+              <label for="posX">X (pts)</label>
+              <input type="number" id="posX" value="50" min="0">
+            </div>
+            <div style="flex:1">
+              <label for="posY">Y (pts)</label>
+              <input type="number" id="posY" value="50" min="0">
+            </div>
+          </div>
+          <div style="margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <button class="btn btn-secondary" id="previewBtn" aria-label="Preview PDF page with QR">👁️ Preview</button>
+            <button class="btn btn-primary" id="downloadBtn" disabled aria-label="Download modified PDF">⬇️ Download PDF</button>
+          </div>
+        </div>
+
+        <!-- Preview canvas -->
+        <div class="preview-container" id="previewContainer" style="display: none;">
+          <p style="margin-bottom: 0.5rem; font-weight: 500;">Page preview</p>
+          <div class="preview-canvas-wrapper">
+            <canvas id="previewCanvas"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- existing CrafterTools footer (not modified) -->
+  <footer class="crafter-footer">
+    <p>© 2025 CrafterTools. All processing happens in your browser.</p>
+  </footer>
+
+  <script>
+    // ============================================================
+    // add-qr-to-pdf.js
+    // Clean, production-ready, fully client-side.
+    // ============================================================
+
+    (function() {
+      'use strict';
+
+      // ----- DOM elements -----
+      const dropZone = document.getElementById('dropZone');
+      const fileInput = document.getElementById('fileInput');
+      const fileInfo = document.getElementById('fileInfo');
+      const fileName = document.getElementById('fileName');
+      const fileSize = document.getElementById('fileSize');
+      const pageCountSpan = document.getElementById('pageCount');
+
+      const qrType = document.getElementById('qrType');
+      const qrInputFields = document.getElementById('qrInputFields');
+      const qrPreviewCanvas = document.getElementById('qrPreviewCanvas');
+
+      const qrSize = document.getElementById('qrSize');
+      const qrSizeValue = document.getElementById('qrSizeValue');
+      const qrMargin = document.getElementById('qrMargin');
+      const qrMarginValue = document.getElementById('qrMarginValue');
+      const fgColor = document.getElementById('fgColor');
+      const bgColor = document.getElementById('bgColor');
+      const ecLevel = document.getElementById('ecLevel');
+
+      const pageSelection = document.getElementById('pageSelection');
+      const pageNumbers = document.getElementById('pageNumbers');
+      const position = document.getElementById('position');
+      const customPositionFields = document.getElementById('customPositionFields');
+      const posX = document.getElementById('posX');
+      const posY = document.getElementById('posY');
+      const previewBtn = document.getElementById('previewBtn');
+      const downloadBtn = document.getElementById('downloadBtn');
+      const previewContainer = document.getElementById('previewContainer');
+      const previewCanvas = document.getElementById('previewCanvas');
+
+      // ----- State -----
+      let currentPdfBytes = null;        // Uint8Array of uploaded PDF
+      let currentPdfName = '';
+      let currentPdfPageCount = 0;
+      let currentPdfDoc = null;          // pdf-lib document (for metadata)
+      let qrDataUrl = null;              // cached QR data URL
+
+      // ----- Utility: format bytes -----
+      function formatBytes(bytes) {
+        if (bytes === 0) return '0 B';
+        const k = 1024;
+        const sizes = ['B', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+      }
+
+      // ----- Update QR preview and cache -----
+      async function updateQRPreview() {
+        const type = qrType.value;
+        const fields = qrInputFields.querySelectorAll('input, textarea');
+        let qrText = '';
+
+        try {
+          // Build content string based on type
+          switch (type) {
+            case 'url':
+            case 'text': {
+              const val = document.getElementById('qrContent')?.value || '';
+              qrText = val.trim();
+              break;
+            }
+            case 'email': {
+              const email = document.getElementById('qrEmail')?.value || '';
+              const subject = document.getElementById('qrEmailSubject')?.value || '';
+              const body = document.getElementById('qrEmailBody')?.value || '';
+              if (email.trim()) {
+                qrText = `mailto:${email.trim()}`;
+                const params = [];
+                if (subject.trim()) params.push(`subject=${encodeURIComponent(subject.trim())}`);
+                if (body.trim()) params.push(`body=${encodeURIComponent(body.trim())}`);
+                if (params.length) qrText += '?' + params.join('&');
+              }
+              break;
+            }
+            case 'phone': {
+              const phone = document.getElementById('qrPhone')?.value || '';
+              if (phone.trim()) qrText = `tel:${phone.trim()}`;
+              break;
+            }
+            case 'sms': {
+              const phone = document.getElementById('qrSmsPhone')?.value || '';
+              const msg = document.getElementById('qrSmsMessage')?.value || '';
+              if (phone.trim()) {
+                qrText = `SMSTO:${phone.trim()}:${msg.trim()}`;
+              }
+              break;
+            }
+            case 'wifi': {
+              const ssid = document.getElementById('qrWifiSsid')?.value || '';
+              const pass = document.getElementById('qrWifiPass')?.value || '';
+              const enc = document.getElementById('qrWifiEnc')?.value || 'WPA';
+              if (ssid.trim()) {
+                qrText = `WIFI:T:${enc};S:${ssid.trim()};P:${pass.trim()};;`;
+              }
+              break;
+            }
+            case 'whatsapp': {
+              const phone = document.getElementById('qrWhatsappPhone')?.value || '';
+              const msg = document.getElementById('qrWhatsappMsg')?.value || '';
+              if (phone.trim()) {
+                const cleanPhone = phone.replace(/\D/g, '');
+                qrText = `https://wa.me/${cleanPhone}${msg.trim() ? '?text=' + encodeURIComponent(msg.trim()) : ''}`;
+              }
+              break;
+            }
+          }
+
+          if (!qrText) {
+            // Clear canvas
+            const ctx = qrPreviewCanvas.getContext('2d');
+            ctx.clearRect(0, 0, qrPreviewCanvas.width, qrPreviewCanvas.height);
+            qrDataUrl = null;
+            return;
+          }
+
+          // Generate QR using qrcode.js
+          const size = parseInt(qrSize.value, 10);
+          const margin = parseInt(qrMargin.value, 10);
+          const fg = fgColor.value;
+          const bg = bgColor.value;
+          const ecc = ecLevel.value;
+
+          // Use QRCode.toCanvas for preview
+          await QRCode.toCanvas(qrPreviewCanvas, qrText, {
+            width: Math.min(size, 300),
+            margin: margin,
+            color: {
+              dark: fg,
+              light: bg
+            },
+            errorCorrectionLevel: ecc
+          });
+
+          // Also generate data URL for PDF embedding (full resolution)
+          qrDataUrl = await QRCode.toDataURL(qrText, {
+            width: size,
+            margin: margin,
+            color: {
+              dark: fg,
+              light: bg
+            },
+            errorCorrectionLevel: ecc
+          });
+
+        } catch (err) {
+          console.warn('QR generation error:', err);
+          qrDataUrl = null;
+        }
+      }
+
+      // ----- Render dynamic QR input fields based on type -----
+      function renderQrInputs() {
+        const type = qrType.value;
+        let html = '';
+        switch (type) {
+          case 'url':
+          case 'text':
+            html = `
+              <label for="qrContent">${type === 'url' ? 'URL' : 'Text'}</label>
+              <input type="text" id="qrContent" placeholder="${type === 'url' ? 'https://example.com' : 'Enter any text'}" value="${type === 'url' ? 'https://' : ''}">
+            `;
+            break;
+          case 'email':
+            html = `
+              <label for="qrEmail">Email address</label>
+              <input type="email" id="qrEmail" placeholder="name@example.com">
+              <label for="qrEmailSubject" style="margin-top:0.5rem;">Subject (optional)</label>
+              <input type="text" id="qrEmailSubject" placeholder="Subject">
+              <label for="qrEmailBody" style="margin-top:0.5rem;">Body (optional)</label>
+              <textarea id="qrEmailBody" rows="2" placeholder="Message..."></textarea>
+            `;
+            break;
+          case 'phone':
+            html = `
+              <label for="qrPhone">Phone number</label>
+              <input type="tel" id="qrPhone" placeholder="+1234567890">
+            `;
+            break;
+          case 'sms':
+            html = `
+              <label for="qrSmsPhone">Phone number</label>
+              <input type="tel" id="qrSmsPhone" placeholder="+1234567890">
+              <label for="qrSmsMessage" style="margin-top:0.5rem;">Message</label>
+              <textarea id="qrSmsMessage" rows="2" placeholder="Your SMS text..."></textarea>
+            `;
+            break;
+          case 'wifi':
+            html = `
+              <label for="qrWifiSsid">Network name (SSID)</label>
+              <input type="text" id="qrWifiSsid" placeholder="MyWiFi">
+              <label for="qrWifiPass" style="margin-top:0.5rem;">Password</label>
+              <input type="text" id="qrWifiPass" placeholder="Password">
+              <label for="qrWifiEnc" style="margin-top:0.5rem;">Encryption</label>
+              <select id="qrWifiEnc">
+                <option value="WPA">WPA/WPA2</option>
+                <option value="WEP">WEP</option>
+                <option value="nopass">None</option>
+              </select>
+            `;
+            break;
+          case 'whatsapp':
+            html = `
+              <label for="qrWhatsappPhone">Phone number (with country code)</label>
+              <input type="tel" id="qrWhatsappPhone" placeholder="1234567890">
+              <label for="qrWhatsappMsg" style="margin-top:0.5rem;">Pre-filled message (optional)</label>
+              <input type="text" id="qrWhatsappMsg" placeholder="Hello!">
+            `;
+            break;
+        }
+        qrInputFields.innerHTML = html;
+
+        // Attach input listeners to update preview
+        qrInputFields.querySelectorAll('input, textarea, select').forEach(el => {
+          el.addEventListener('input', updateQRPreview);
+          el.addEventListener('change', updateQRPreview);
+        });
+
+        updateQRPreview();
+      }
+
+      // ----- Update UI based on page selection and position -----
+      function updatePlacementUI() {
+        const sel = pageSelection.value;
+        pageNumbers.style.display = sel === 'all' ? 'none' : 'block';
+        if (sel === 'single') {
+          pageNumbers.placeholder = 'e.g. 2';
+        } else if (sel === 'multiple') {
+          pageNumbers.placeholder = 'e.g. 1,3,5';
+        }
+
+        const pos = position.value;
+        customPositionFields.style.display = pos === 'custom' ? 'flex' : 'none';
+      }
+
+      // ----- Reset file info when new file uploaded -----
+      async function loadPdfFile(file) {
+        if (!file || file.type !== 'application/pdf') {
+          alert('Please select a valid PDF file.');
+          return;
+        }
+
+        const arrayBuffer = await file.arrayBuffer();
+        const bytes = new Uint8Array(arrayBuffer);
+
+        try {
+          const { PDFDocument } = PDFLib;
+          const pdfDoc = await PDFDocument.load(bytes, { ignoreEncryption: true });
+          const pages = pdfDoc.getPageCount();
+          currentPdfBytes = bytes;
+          currentPdfName = file.name;
+          currentPdfPageCount = pages;
+          currentPdfDoc = pdfDoc;
+
+          fileName.textContent = file.name;
+          fileSize.textContent = formatBytes(file.size);
+          pageCountSpan.textContent = pages;
+          fileInfo.style.display = 'flex';
+          downloadBtn.disabled = false;
+          previewContainer.style.display = 'none';
+
+        } catch (err) {
+          console.error('PDF load error:', err);
+          alert('Could not read PDF. It may be encrypted or corrupted.');
+        }
+      }
+
+      // ----- Generate final PDF with QR codes -----
+      async function generateModifiedPdf() {
+        if (!currentPdfBytes || !qrDataUrl) {
+          alert('Please upload a PDF and provide QR content.');
+          return null;
+        }
+
+        const { PDFDocument, rgb } = PDFLib;
+        const pdfDoc = await PDFDocument.load(currentPdfBytes, { ignoreEncryption: true });
+        const pages = pdfDoc.getPages();
+        const totalPages = pages.length;
+
+        // Determine which pages to apply
+        let targetPages = [];
+        const sel = pageSelection.value;
+        if (sel === 'all') {
+          targetPages = pages.map((_, i) => i);
+        } else {
+          const raw = pageNumbers.value.trim();
+          if (!raw) {
+            alert('Please enter page numbers.');
+            return null;
+          }
+          const parts = raw.split(',').map(s => s.trim()).filter(Boolean);
+          const nums = parts.map(p => parseInt(p, 10)).filter(n => !isNaN(n) && n >= 1 && n <= totalPages);
+          if (nums.length === 0) {
+            alert('No valid page numbers provided.');
+            return null;
+          }
+          targetPages = nums.map(n => n - 1); // zero-index
+        }
+
+        // Embed QR image
+        const qrImageBytes = await fetch(qrDataUrl).then(res => res.arrayBuffer());
+        const qrImage = await pdfDoc.embedPng(qrImageBytes);
+
+        // QR dimensions
+        const qrSizeVal = parseInt(qrSize.value, 10);
+        const qrWidth = qrSizeVal;
+        const qrHeight = qrSizeVal;
+
+        // Position options
+        const pos = position.value;
+        const margin = 20; // pts from edges
+
+        targetPages.forEach(pageIndex => {
+          const page = pages[pageIndex];
+          const { width, height } = page.getSize();
+
+          let x, y;
+
+          if (pos === 'custom') {
+            x = parseFloat(posX.value) || 0;
+            y = parseFloat(posY.value) || 0;
+          } else if (pos === 'top-left') {
+            x = margin;
+            y = height - qrHeight - margin;
+          } else if (pos === 'top-right') {
+            x = width - qrWidth - margin;
+            y = height - qrHeight - margin;
+          } else if (pos === 'bottom-left') {
+            x = margin;
+            y = margin;
+          } else if (pos === 'bottom-right') {
+            x = width - qrWidth - margin;
+            y = margin;
+          } else if (pos === 'center') {
+            x = (width - qrWidth) / 2;
+            y = (height - qrHeight) / 2;
+          } else {
+            x = margin;
+            y = margin;
+          }
+
+          page.drawImage(qrImage, {
+            x: x,
+            y: y,
+            width: qrWidth,
+            height: qrHeight,
+          });
+        });
+
+        const modifiedBytes = await pdfDoc.save();
+        return modifiedBytes;
+      }
+
+      // ----- Preview handler (draw on canvas) -----
+      async function renderPreview() {
+        if (!currentPdfBytes) {
+          alert('Please upload a PDF first.');
+          return;
+        }
+
+        // Get a page to preview (first target page or first page)
+        const { PDFDocument } = PDFLib;
+        const pdfDoc = await PDFDocument.load(currentPdfBytes, { ignoreEncryption: true });
+        const pages = pdfDoc.getPages();
+        let previewPageIndex = 0;
+
+        if (pageSelection.value !== 'all') {
+          const raw = pageNumbers.value.trim();
+          if (raw) {
+            const first = parseInt(raw.split(',')[0].trim(), 10);
+            if (!isNaN(first) && first >= 1 && first <= pages.length) {
+              previewPageIndex = first - 1;
+            }
+          }
+        }
+
+        const page = pages[previewPageIndex];
+        const { width, height } = page.getSize();
+
+        // Set canvas dimensions (keep aspect ratio, max 500px width)
+        const maxW = 500;
+        const scale = Math.min(1, maxW / width);
+        const canvasW = width * scale;
+        const canvasH = height * scale;
+        previewCanvas.width = canvasW;
+        previewCanvas.height = canvasH;
+
+        const ctx = previewCanvas.getContext('2d');
+        ctx.clearRect(0, 0, canvasW, canvasH);
+
+        // White page background
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvasW, canvasH);
+
+        // Try to render page content using pdf.js? No, we only use pdf-lib.
+        // We'll draw a simple representation: border + page number.
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(0, 0, canvasW, canvasH);
+
+        // Page number text
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '14px Inter, sans-serif';
+        ctx.fillText(`Page ${previewPageIndex + 1} / ${pages.length}`, 12, 24);
+
+        // Draw QR placeholder box at chosen position
+        if (qrDataUrl) {
+          const img = new Image();
+          img.src = qrDataUrl;
+          await new Promise(resolve => { img.onload = resolve; });
+
+          const qrSizeVal = parseInt(qrSize.value, 10);
+          const qrScaledW = qrSizeVal * scale;
+          const qrScaledH = qrSizeVal * scale;
+
+          const pos = position.value;
+          const margin = 20 * scale;
+
+          let x, y;
+
+          if (pos === 'custom') {
+            x = (parseFloat(posX.value) || 0) * scale;
+            y = canvasH - ((parseFloat(posY.value) || 0) * scale) - qrScaledH; // invert Y
+          } else if (pos === 'top-left') {
+            x = margin;
+            y = margin;
+          } else if (pos === 'top-right') {
+            x = canvasW - qrScaledW - margin;
+            y = margin;
+          } else if (pos === 'bottom-left') {
+            x = margin;
+            y = canvasH - qrScaledH - margin;
+          } else if (pos === 'bottom-right') {
+            x = canvasW - qrScaledW - margin;
+            y = canvasH - qrScaledH - margin;
+          } else if (pos === 'center') {
+            x = (canvasW - qrScaledW) / 2;
+            y = (canvasH - qrScaledH) / 2;
+          } else {
+            x = margin;
+            y = margin;
+          }
+
+          ctx.drawImage(img, x, y, qrScaledW, qrScaledH);
+        } else {
+          // No QR content yet
+          ctx.fillStyle = '#f1f5f9';
+          ctx.font = '16px Inter, sans-serif';
+          ctx.fillText('Add QR content to see preview', 20, 60);
+        }
+
+        previewContainer.style.display = 'block';
+      }
+
+      // ----- Download handler -----
+      async function downloadPdf() {
+        try {
+          const modifiedBytes = await generateModifiedPdf();
+          if (!modifiedBytes) return;
+
+          const blob = new Blob([modifiedBytes], { type: 'application/pdf' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = currentPdfName.replace(/\.pdf$/i, '') + '_with_qr.pdf';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        } catch (err) {
+          console.error('Download error:', err);
+          alert('Error generating PDF: ' + err.message);
+        }
+      }
+
+      // ----- Event Listeners -----
+      dropZone.addEventListener('click', () => fileInput.click());
+      dropZone.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          fileInput.click();
+        }
+      });
+
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length) {
+          loadPdfFile(e.target.files[0]);
+        }
+      });
+
+      // Drag & drop
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        });
+      });
+      dropZone.addEventListener('dragenter', () => dropZone.classList.add('drag-over'));
+      dropZone.addEventListener('dragover', () => dropZone.classList.add('drag-over'));
+      dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+      dropZone.addEventListener('drop', (e) => {
+        dropZone.classList.remove('drag-over');
+        const files = e.dataTransfer.files;
+        if (files.length && files[0].type === 'application/pdf') {
+          loadPdfFile(files[0]);
+        } else {
+          alert('Please drop a PDF file.');
+        }
+      });
+
+      // QR type change
+      qrType.addEventListener('change', renderQrInputs);
+
+      // Customization inputs
+      qrSize.addEventListener('input', () => {
+        qrSizeValue.textContent = qrSize.value + ' px';
+        updateQRPreview();
+      });
+      qrMargin.addEventListener('input', () => {
+        qrMarginValue.textContent = qrMargin.value + ' modules';
+        updateQRPreview();
+      });
+      fgColor.addEventListener('input', updateQRPreview);
+      bgColor.addEventListener('input', updateQRPreview);
+      ecLevel.addEventListener('change', updateQRPreview);
+
+      // Placement UI
+      pageSelection.addEventListener('change', updatePlacementUI);
+      position.addEventListener('change', updatePlacementUI);
+
+      // Buttons
+      previewBtn.addEventListener('click', renderPreview);
+      downloadBtn.addEventListener('click', downloadPdf);
+
+      // Init
+      renderQrInputs();
+      updatePlacementUI();
+
+      // Initialize with empty QR preview
+      updateQRPreview();
+
+      // Set default position fields
+      posX.value = 50;
+      posY.value = 50;
+
+      // Keyboard navigation: improve for custom position inputs
+      // All inputs are naturally focusable
+
+      // Expose for debugging? Not needed.
+
+    })();
+  </script>
+</body>
+</html>

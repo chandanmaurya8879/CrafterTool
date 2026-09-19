@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>CrafterTools · Secure File Encryption & Decryption (AES-256-GCM)</title>
+  <meta name="description" content="Free, offline, browser-based file encryption & decryption tool. AES-256-GCM, PBKDF2, local processing. No uploads, no servers.">
+  <link rel="canonical" href="https://craftertools.example.com/encrypt-decrypt">
+  <!-- Open Graph -->
+  <meta property="og:title" content="CrafterTools · Secure File Encryption & Decryption">
+  <meta property="og:description" content="Encrypt & decrypt files in your browser with AES-256-GCM. No uploads, fully private.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://craftertools.example.com/encrypt-decrypt">
+  <meta property="og:image" content="https://craftertools.example.com/og-encrypt.jpg">
+  <meta property="og:site_name" content="CrafterTools">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CrafterTools · File Encryption & Decryption">
+  <meta name="twitter:description" content="AES-256-GCM file encryption in your browser. No uploads.">
+  <meta name="twitter:image" content="https://craftertools.example.com/tw-encrypt.jpg">
+  <!-- Styles -->
+  <link rel="stylesheet" href="File encryption and decryption.css">
+  <!-- Font Awesome via CDN for icons (minimal) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/" class="logo" aria-label="CrafterTools home">
+        <i class="fas fa-tools"></i> CrafterTools
+      </a>
+      <nav class="main-nav" aria-label="Main">
+        <a href="/">Home</a>
+        <a href="/encrypt-decrypt" class="active">Encrypt/Decrypt</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Tool Card -->
+    <section class="tool-card" aria-labelledby="tool-heading">
+      <h1 id="tool-heading" class="tool-title">File Encryption & Decryption</h1>
+      <p class="privacy-notice"><i class="fas fa-shield-alt"></i> Your files never leave your device. All encryption and decryption are performed locally in your browser. No file or password is uploaded, stored, or shared.</p>
+
+      <!-- File Drop Zone -->
+      <div id="dropZone" class="drop-zone" role="button" tabindex="0" aria-label="Drag and drop a file here or click to browse">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <p>Drag & drop a file here or <span class="browse-link">browse</span></p>
+        <input type="file" id="fileInput" hidden>
+      </div>
+
+      <!-- File Info -->
+      <div id="fileInfo" class="file-info hidden" aria-live="polite">
+        <div class="file-details">
+          <i class="fas fa-file"></i>
+          <div>
+            <span id="fileName"></span>
+            <span id="fileMeta"></span>
+          </div>
+        </div>
+        <button id="clearFileBtn" class="icon-btn" aria-label="Remove file"><i class="fas fa-times"></i></button>
+      </div>
+
+      <!-- Password Section -->
+      <div class="password-section">
+        <div class="input-group">
+          <label for="password">Password</label>
+          <div class="password-wrapper">
+            <input type="password" id="password" placeholder="Enter password" autocomplete="new-password">
+            <button type="button" id="togglePassword" class="toggle-password" aria-label="Show password"><i class="fas fa-eye"></i></button>
+          </div>
+        </div>
+
+        <!-- Confirm Password (encrypt only) -->
+        <div class="input-group" id="confirmGroup">
+          <label for="confirmPassword">Confirm Password</label>
+          <div class="password-wrapper">
+            <input type="password" id="confirmPassword" placeholder="Confirm password" autocomplete="new-password">
+            <button type="button" id="toggleConfirm" class="toggle-password" aria-label="Show confirm password"><i class="fas fa-eye"></i></button>
+          </div>
+        </div>
+
+        <!-- Strength Meter -->
+        <div class="strength-meter" aria-hidden="true">
+          <div class="strength-bar"><span id="strengthFill"></span></div>
+          <span id="strengthText">Weak</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button id="encryptBtn" class="btn primary"><i class="fas fa-lock"></i> Encrypt File</button>
+        <button id="decryptBtn" class="btn secondary"><i class="fas fa-lock-open"></i> Decrypt File</button>
+        <button id="resetBtn" class="btn outline"><i class="fas fa-undo-alt"></i> Reset</button>
+      </div>
+
+      <!-- Progress / Loading -->
+      <div id="progressContainer" class="progress-container hidden" aria-live="polite">
+        <div class="spinner"></div>
+        <p id="progressText">Processing…</p>
+      </div>
+
+      <!-- Result Download -->
+      <div id="resultContainer" class="result-container hidden" aria-live="polite">
+        <p id="resultMessage"></p>
+        <a id="downloadLink" class="btn primary download-btn" download><i class="fas fa-download"></i> Download File</a>
+      </div>
+
+      <!-- Error Message -->
+      <div id="errorMessage" class="error-message hidden" role="alert"></div>
+    </section>
+
+    <!-- SEO Sections -->
+    <section class="seo-section">
+      <h2>What is File Encryption?</h2>
+      <p>File encryption is the process of converting readable data (plaintext) into an unreadable format (ciphertext) using a cryptographic algorithm and a secret key. Only someone with the correct password/key can reverse the process and recover the original file. Our tool uses AES-256-GCM, a strong, authenticated encryption standard.</p>
+
+      <h2>What is File Decryption?</h2>
+      <p>File decryption is the reverse process: transforming encrypted data back into its original, usable form using the correct password. Without the right password, the file remains inaccessible. We store the necessary salt and IV alongside the encrypted data so you can decrypt later.</p>
+
+      <h2>Why encrypt your files?</h2>
+      <ul>
+        <li>Protect sensitive documents from unauthorized access.</li>
+        <li>Safely store files in cloud storage or share via email.</li>
+        <li>Add an extra layer of security for personal or business data.</li>
+        <li>Comply with privacy regulations (GDPR, HIPAA, etc.).</li>
+      </ul>
+
+      <h2>How to use this tool</h2>
+      <ol>
+        <li>Drag & drop a file or click “browse” to select a file.</li>
+        <li>Enter a strong password. For encryption, confirm it.</li>
+        <li>Click <strong>Encrypt File</strong> to create an encrypted version (download starts automatically).</li>
+        <li>To decrypt, select the encrypted file, enter the same password, and click <strong>Decrypt File</strong>.</li>
+        <li>Download the result using the download button.</li>
+      </ol>
+
+      <h2>Features</h2>
+      <ul>
+        <li>AES-256-GCM encryption with PBKDF2 key derivation (100,000 iterations).</li>
+        <li>Random salt and IV per encryption.</li>
+        <li>Works fully offline – no server, no uploads.</li>
+        <li>Drag & drop, browse, password strength meter, show/hide password.</li>
+        <li>Responsive, dark mode based on system preference, keyboard accessible.</li>
+      </ul>
+
+      <h2>Security & Privacy</h2>
+      <p><strong>Your files never leave your device.</strong> All encryption and decryption are performed locally in your browser using the Web Crypto API. No file or password is uploaded, stored, or shared. We do not use any backend, database, or external servers.</p>
+
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq">
+        <details>
+          <summary>1. Is this tool really free?</summary>
+          <p>Yes, completely free and open to use.</p>
+        </details>
+        <details>
+          <summary>2. What encryption algorithm is used?</summary>
+          <p>AES-256-GCM with PBKDF2 (SHA-256, 100,000 iterations).</p>
+        </details>
+        <details>
+          <summary>3. Can I decrypt a file if I forget the password?</summary>
+          <p>No. Without the correct password, decryption is impossible. There is no backdoor.</p>
+        </details>
+        <details>
+          <summary>4. Are my files uploaded to a server?</summary>
+          <p>No. Everything runs in your browser. We have no server to receive your files.</p>
+        </details>
+        <details>
+          <summary>5. What file types are supported?</summary>
+          <p>All file types: PDF, DOCX, XLSX, PPTX, ZIP, images, videos, audio, text, etc.</p>
+        </details>
+        <details>
+          <summary>6. How large can the files be?</summary>
+          <p>Depends on your device memory. Modern browsers handle large files; we use efficient chunked reading to avoid freezing.</p>
+        </details>
+        <details>
+          <summary>7. Does it work on mobile?</summary>
+          <p>Yes, the interface is fully responsive and works on smartphones and tablets.</p>
+        </details>
+        <details>
+          <summary>8. Can I encrypt multiple files at once?</summary>
+          <p>Currently one file at a time. Encrypt them individually or zip them first.</p>
+        </details>
+        <details>
+          <summary>9. Is there a password strength requirement?</summary>
+          <p>We recommend at least 12 characters with mix of cases, numbers, and symbols. The meter shows strength.</p>
+        </details>
+        <details>
+          <summary>10. What happens to the encrypted file extension?</summary>
+          <p>The encrypted file is saved with a <code>.enc</code> extension. You can rename it after decryption.</p>
+        </details>
+      </div>
+
+      <h2>Disclaimer</h2>
+      <p>This tool is provided for educational and personal use. CrafterTools is not responsible for any data loss or security breaches resulting from misuse. Always keep your passwords safe; lost passwords cannot be recovered.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2025 CrafterTools. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type":"Question","name":"Is this tool really free?","acceptedAnswer":{"@type":"Answer","text":"Yes, completely free and open to use."}},
+      {"@type":"Question","name":"What encryption algorithm is used?","acceptedAnswer":{"@type":"Answer","text":"AES-256-GCM with PBKDF2 (SHA-256, 100,000 iterations)."}},
+      {"@type":"Question","name":"Can I decrypt a file if I forget the password?","acceptedAnswer":{"@type":"Answer","text":"No. Without the correct password, decryption is impossible. There is no backdoor."}},
+      {"@type":"Question","name":"Are my files uploaded to a server?","acceptedAnswer":{"@type":"Answer","text":"No. Everything runs in your browser. We have no server to receive your files."}},
+      {"@type":"Question","name":"What file types are supported?","acceptedAnswer":{"@type":"Answer","text":"All file types: PDF, DOCX, XLSX, PPTX, ZIP, images, videos, audio, text, etc."}},
+      {"@type":"Question","name":"How large can the files be?","acceptedAnswer":{"@type":"Answer","text":"Depends on your device memory. Modern browsers handle large files; we use efficient chunked reading to avoid freezing."}},
+      {"@type":"Question","name":"Does it work on mobile?","acceptedAnswer":{"@type":"Answer","text":"Yes, the interface is fully responsive and works on smartphones and tablets."}},
+      {"@type":"Question","name":"Can I encrypt multiple files at once?","acceptedAnswer":{"@type":"Answer","text":"Currently one file at a time. Encrypt them individually or zip them first."}},
+      {"@type":"Question","name":"Is there a password strength requirement?","acceptedAnswer":{"@type":"Answer","text":"We recommend at least 12 characters with mix of cases, numbers, and symbols. The meter shows strength."}},
+      {"@type":"Question","name":"What happens to the encrypted file extension?","acceptedAnswer":{"@type":"Answer","text":"The encrypted file is saved with a .enc extension. You can rename it after decryption."}}
+    ]
+  }
+  </script>
+
+  <!-- WebApplication Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "CrafterTools File Encryption & Decryption",
+    "url": "https://craftertools.example.com/encrypt-decrypt",
+    "applicationCategory": "SecurityApplication",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires JavaScript and Web Crypto API",
+    "offers": {"@type":"Offer","price":"0","priceCurrency":"USD"},
+    "description": "Encrypt and decrypt files locally in your browser using AES-256-GCM. No uploads."
+  }
+  </script>
+
+  <script src="File encryption and decryption.js"></script>
+</body>
+</html>

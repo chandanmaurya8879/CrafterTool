@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Random Text Generator | CrafterTool</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#f4f6fb;
+}
+
+header{
+background:#5a43ea;
+color:#fff;
+padding:25px;
+text-align:center;
+}
+
+header h1{
+font-size:42px;
+margin-bottom:10px;
+}
+
+nav a{
+color:#fff;
+text-decoration:none;
+margin:0 10px;
+font-size:18px;
+}
+
+.container{
+max-width:800px;
+margin:40px auto;
+background:#fff;
+padding:30px;
+border-radius:15px;
+box-shadow:0 5px 20px rgba(0,0,0,.1);
+}
+
+h2{
+text-align:center;
+margin-bottom:10px;
+}
+
+.description{
+text-align:center;
+color:#666;
+margin-bottom:25px;
+}
+
+label{
+display:block;
+margin-top:15px;
+font-weight:bold;
+}
+
+select,
+input{
+width:100%;
+padding:12px;
+margin-top:8px;
+border:1px solid #ccc;
+border-radius:8px;
+font-size:16px;
+}
+
+.buttons{
+margin-top:20px;
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+}
+
+button{
+flex:1;
+padding:12px;
+background:#5a43ea;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-size:16px;
+}
+
+button:hover{
+background:#4633c9;
+}
+
+textarea{
+margin-top:20px;
+width:100%;
+height:250px;
+padding:15px;
+border:1px solid #ccc;
+border-radius:10px;
+resize:vertical;
+font-size:16px;
+}
+
+footer{
+text-align:center;
+padding:20px;
+margin-top:40px;
+color:#777;
+font-size:15px;
+}
+
+@media(max-width:600px){
+
+header h1{
+font-size:30px;
+}
+
+button{
+width:100%;
+}
+
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>CrafterTool</h1>
+
+<nav>
+<a href="index.html">Home</a>
+<a href="all-tools.html">All Tools</a>
+</nav>
+
+</header>
+
+<div class="container">
+
+<h2>Random Text Generator</h2>
+
+<p class="description">
+Generate random words, sentences, or paragraphs instantly.
+Everything works directly in your browser.
+</p>
+
+<label>Text Type</label>
+
+<select id="type">
+<option value="word">Words</option>
+<option value="sentence">Sentences</option>
+<option value="paragraph">Paragraphs</option>
+</select>
+
+<label>Quantity</label>
+
+<input
+type="number"
+id="count"
+value="3"
+min="1"
+max="50">
+
+<div class="buttons">
+
+<button onclick="generateText()">
+Generate
+</button>
+
+<button onclick="copyText()">
+Copy
+</button>
+
+<button onclick="clearText()">
+Clear
+</button>
+
+</div>
+
+<textarea
+id="output"
+placeholder="Generated text will appear here..."
+readonly>
+</textarea>
+
+<br>
+    <p class="tool-description">
+Random Text Generator lets you instantly create placeholder text for websites, apps, documents, presentations, and design projects. Generate random words, sentences, or paragraphs with a single click. All text is created instantly in your browser, making the tool fast, secure, and easy to use.
+</p><br>
+
+    <h2>How to Use</h2>
+
+<p>Follow these simple steps to generate random text:</p>
+
+<ul>
+<li>Select the type of content you want to generate (words, sentences, or paragraphs).</li>
+<li>Choose the desired quantity.</li>
+<li>Click the <strong>Generate</strong> button.</li>
+<li>Your random text will appear instantly.</li>
+<li>Click the <strong>Copy</strong> button to copy the generated text.</li>
+<li>Use the generated text for testing, web design, app development, or content layouts.</li>
+</ul><br>
+
+
+    <h2>Features</h2>
+
+<ul>
+<li>Generate random words, sentences, and paragraphs.</li>
+<li>Choose the amount of text to generate.</li>
+<li>One-click copy to clipboard.</li>
+<li>Fast and lightweight.</li>
+<li>100% browser-based.</li>
+<li>No registration required.</li>
+<li>Mobile and desktop friendly.</li>
+<li>Free to use.</li>
+</ul><br>
+
+
+    <h2>Why Use This Tool?</h2>
+
+<p>
+Random Text Generator is useful for designers, developers, students, and content creators who need placeholder text quickly. It helps you test layouts, create mockups, fill templates, and preview content without using real text. Since everything runs locally in your browser, the tool is fast, private, and easy to access from any device.
+</p><br>
+
+    
+</div>
+
+<footer>
+
+© 2026 CrafterTool. All Rights Reserved.
+
+</footer>
+
+<script >
+
+    const words = [
+"apple","banana","orange","computer","keyboard","mouse","internet",
+"website","design","developer","coding","technology","future",
+"browser","coffee","travel","music","education","science","nature",
+"mountain","river","ocean","creative","digital","security","cloud",
+"network","mobile","system","learning","random","generator","simple",
+"modern","professional","performance","responsive","beautiful","fast"
+];
+
+const sentenceTemplates = [
+"The quick brown fox jumps over the lazy dog.",
+"Learning new skills every day leads to success.",
+"Technology continues to change the world rapidly.",
+"Simple tools make everyday tasks much easier.",
+"Creativity and practice produce better results.",
+"Web development is fun and rewarding.",
+"Always use strong passwords to protect your accounts.",
+"Responsive websites work well on every device.",
+"Small improvements create big achievements over time.",
+"Keep learning and never stop exploring new ideas."
+];
+
+function randomWord(){
+return words[Math.floor(Math.random()*words.length)];
+}
+
+function randomSentence(){
+return sentenceTemplates[Math.floor(Math.random()*sentenceTemplates.length)];
+}
+
+function randomParagraph(){
+let p="";
+for(let i=0;i<5;i++){
+p+=randomSentence()+" ";
+}
+return p.trim();
+}
+
+function generateText(){
+
+const type=document.getElementById("type").value;
+const count=parseInt(document.getElementById("count").value);
+
+let output=[];
+
+for(let i=0;i<count;i++){
+
+if(type==="word"){
+output.push(randomWord());
+}
+
+else if(type==="sentence"){
+output.push(randomSentence());
+}
+
+else{
+output.push(randomParagraph());
+}
+
+}
+
+if(type==="word"){
+document.getElementById("output").value=output.join(" ");
+}
+else if(type==="sentence"){
+document.getElementById("output").value=output.join("\n");
+}
+else{
+document.getElementById("output").value=output.join("\n\n");
+}
+
+}
+
+function copyText(){
+
+const text=document.getElementById("output");
+
+if(text.value===""){
+alert("Generate some text first.");
+return;
+}
+
+navigator.clipboard.writeText(text.value);
+
+alert("Text copied successfully!");
+
+}
+
+function clearText(){
+
+document.getElementById("output").value="";
+
+}
+</script>
+
+</body>
+</html>

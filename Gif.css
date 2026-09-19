@@ -1,0 +1,173 @@
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#f4f6fb;
+color:#333;
+}
+
+header{
+background:#5b45f2;
+color:#fff;
+padding:18px 25px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+}
+
+.logo{
+font-size:28px;
+font-weight:bold;
+}
+
+nav a{
+color:#fff;
+text-decoration:none;
+margin-left:20px;
+font-size:16px;
+}
+
+.container{
+max-width:900px;
+margin:35px auto;
+padding:0 15px;
+}
+
+h1{
+text-align:center;
+margin-bottom:10px;
+}
+
+.description{
+text-align:center;
+color:#666;
+margin-bottom:25px;
+line-height:1.6;
+}
+
+.card{
+background:#fff;
+padding:25px;
+border-radius:12px;
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.upload-box{
+display:block;
+border:2px dashed #5b45f2;
+padding:25px;
+text-align:center;
+border-radius:10px;
+cursor:pointer;
+font-weight:bold;
+color:#5b45f2;
+margin-bottom:20px;
+transition:.3s;
+}
+
+.upload-box:hover{
+background:#f7f5ff;
+}
+
+.preview-grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
+gap:15px;
+margin-bottom:20px;
+}
+
+.preview-grid img{
+width:100%;
+height:120px;
+object-fit:cover;
+border-radius:8px;
+border:1px solid #ddd;
+}
+
+.controls{
+margin:20px 0;
+}
+
+.controls label{
+display:block;
+margin-bottom:10px;
+font-weight:bold;
+}
+
+.controls input[type=range]{
+width:100%;
+}
+
+#delayValue{
+display:block;
+margin-top:8px;
+color:#666;
+}
+
+.buttons{
+display:flex;
+gap:12px;
+flex-wrap:wrap;
+margin-top:20px;
+}
+
+.buttons button{
+flex:1;
+padding:12px;
+border:none;
+background:#5b45f2;
+color:#fff;
+border-radius:8px;
+cursor:pointer;
+font-size:16px;
+}
+
+.buttons button:hover{
+background:#4733d8;
+}
+
+.buttons button:disabled{
+background:#bbb;
+cursor:not-allowed;
+}
+
+.result{
+margin-top:30px;
+text-align:center;
+}
+
+.result img{
+max-width:100%;
+border-radius:10px;
+display:none;
+}
+
+footer{
+margin-top:40px;
+text-align:center;
+padding:20px;
+color:#777;
+font-size:14px;
+}
+
+@media(max-width:600px){
+
+header{
+flex-direction:column;
+gap:10px;
+}
+
+nav a{
+margin:0 10px;
+}
+
+.buttons{
+flex-direction:column;
+}
+
+}

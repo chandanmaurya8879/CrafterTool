@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- SEO & Social Meta -->
+  <title>Base64 Encode / Decode — CrafterTools</title>
+  <meta name="description" content="Free online Base64 encoder and decoder. Convert text, files, and Unicode (emojis, multilingual) instantly in your browser. No upload, 100% private.">
+  <meta name="theme-color" content="#0a0a0f">
+  <!-- Open Graph -->
+  <meta property="og:title" content="Base64 Encode / Decode — CrafterTools">
+  <meta property="og:description" content="Encode & decode Base64 instantly with file support, Unicode, drag & drop. Private, local, free.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://craftertools.com/base64-encode-decode">
+  <meta property="og:image" content="https://craftertools.com/og-base64.png">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Base64 Encode / Decode — CrafterTools">
+  <meta name="twitter:description" content="Fast, private Base64 converter with file support and live preview.">
+  <meta name="twitter:image" content="https://craftertools.com/og-base64.png">
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Base64 Encode / Decode",
+    "description": "Encode and decode Base64 text and files locally in your browser. Supports Unicode, emojis, drag & drop, and instant conversion.",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "CrafterTools"
+    }
+  }
+  </script>
+  <link rel="stylesheet" href="Base64.css">
+</head>
+<body>
+  <!-- 
+    IMPORTANT: CrafterTools header and footer are NOT modified.
+    This section is meant to be placed inside the main content area.
+  -->
+  <main class="crafter-tool-wrapper" id="base64-tool-app">
+    <!-- Tool Card -->
+    <div class="tool-card">
+      <div class="tool-header">
+        <h1 class="tool-title">Base64 Encode / Decode</h1>
+        <div class="privacy-badge" role="status" aria-live="polite">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span>All encoding and decoding happens locally in your browser. Your data is never uploaded.</span>
+        </div>
+      </div>
+
+      <!-- Input/Output Grid -->
+      <div class="io-grid">
+        <!-- INPUT -->
+        <div class="io-panel">
+          <div class="panel-header">
+            <label for="input-text" class="panel-label">Input (Text / Base64)</label>
+            <div class="panel-actions">
+              <button type="button" class="icon-btn" id="clear-input" aria-label="Clear input">✕</button>
+            </div>
+          </div>
+          <textarea 
+            id="input-text" 
+            class="io-textarea" 
+            placeholder="Type or paste text / Base64 here…"
+            spellcheck="false"
+            aria-label="Input text or Base64 data"
+          ></textarea>
+          <div class="file-drop-zone" id="drop-zone" role="button" tabindex="0" aria-label="Drop file here or click to upload">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <span>Drag & drop a file, or <u>browse</u></span>
+            <input type="file" id="file-input" accept=".txt,.json,.xml,.csv,.html,.css,.js" hidden>
+          </div>
+        </div>
+
+        <!-- OUTPUT -->
+        <div class="io-panel">
+          <div class="panel-header">
+            <label for="output-text" class="panel-label">Output</label>
+            <div class="panel-actions">
+              <button type="button" class="icon-btn" id="copy-output" aria-label="Copy output">📋</button>
+            </div>
+          </div>
+          <textarea 
+            id="output-text" 
+            class="io-textarea" 
+            placeholder="Result will appear here…"
+            spellcheck="false"
+            aria-label="Output result"
+            readonly
+          ></textarea>
+          <div class="output-actions">
+            <button type="button" class="btn btn-outline" id="download-output">⬇ Download</button>
+            <button type="button" class="btn btn-outline" id="swap-io">⇄ Swap</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Bar -->
+      <div class="action-bar">
+        <div class="action-group">
+          <button type="button" class="btn btn-primary" id="encode-btn">🔒 Encode</button>
+          <button type="button" class="btn btn-primary" id="decode-btn">🔓 Decode</button>
+        </div>
+        <div class="action-group">
+          <button type="button" class="btn btn-ghost" id="clear-all">Clear</button>
+        </div>
+      </div>
+
+      <!-- Error / Status -->
+      <div id="error-message" class="error-message" role="alert" aria-live="assertive"></div>
+
+      <!-- Live toggle -->
+      <div class="live-toggle">
+        <label class="switch-label" for="live-checkbox">
+          <input type="checkbox" id="live-checkbox" checked>
+          <span>Auto-convert while typing</span>
+        </label>
+      </div>
+    </div>
+  </main>
+
+  <script src="Base64.js"></script>
+</body>
+</html>

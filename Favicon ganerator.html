@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Favicon Generator — Create All Favicon Sizes in Browser | CrafterTools</title>
+  <meta name="description" content="Generate favicon.ico, PNG, SVG, and web manifest files locally in your browser. Drag & drop, crop, zoom, rotate, and download all favicon sizes as a ZIP. No uploads, 100% private.">
+  <link rel="canonical" href="https://craftertools.com/favicon-generator/">
+  <!-- Open Graph -->
+  <meta property="og:title" content="Favicon Generator — Create All Favicon Sizes in Browser">
+  <meta property="og:description" content="Generate favicon.ico, PNG, SVG, and web manifest files locally in your browser. Drag & drop, crop, zoom, rotate, download ZIP. No server uploads.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://craftertools.com/favicon-generator/">
+  <meta property="og:image" content="https://craftertools.com/og/favicon-generator.jpg">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Favicon Generator — All Sizes, Browser-Only">
+  <meta name="twitter:description" content="Create favicon.ico, PNG, SVG, and manifest files. Drag & drop, crop, zoom, rotate, download ZIP. 100% client-side.">
+  <meta name="twitter:image" content="https://craftertools.com/og/favicon-generator.jpg">
+  <!-- Favicon (for the tool itself) -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <!-- Styles -->
+  <link rel="stylesheet" href="Favicon ganerator.css">
+  <!-- WebApplication Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Favicon Generator",
+    "url": "https://craftertools.com/favicon-generator/",
+    "description": "Generate favicon.ico, PNG, SVG, and web manifest files locally in your browser. Drag & drop, crop, zoom, rotate, and download all favicon sizes as a ZIP.",
+    "applicationCategory": "MultimediaApplication",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires JavaScript and HTML5 Canvas",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "creator": { "@type": "Organization", "name": "CrafterTools" }
+  }
+  </script>
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type":"Question","name":"What is a favicon?","acceptedAnswer":{"@type":"Answer","text":"A favicon is a small icon that represents your website, shown in browser tabs, bookmarks, and history."}},
+      {"@type":"Question","name":"Why does every website need a favicon?","acceptedAnswer":{"@type":"Answer","text":"Favicons improve brand recognition, professionalism, and user experience across browser tabs and bookmarks."}},
+      {"@type":"Question","name":"How do I use this favicon generator?","acceptedAnswer":{"@type":"Answer","text":"Upload an image, crop/zoom/rotate as needed, then download individual files or a ZIP package. Copy the generated HTML into your site's <head>."}},
+      {"@type":"Question","name":"What image formats are supported?","acceptedAnswer":{"@type":"Answer","text":"PNG, JPG, JPEG, WebP, and SVG up to 20 MB."}},
+      {"@type":"Question","name":"Which favicon sizes are generated?","acceptedAnswer":{"@type":"Answer","text":"16×16, 32×32, 48×48, 64×64, apple-touch-icon 180×180, android-chrome 192×192 and 512×512, mstile 150×150, plus favicon.ico and safari-pinned-tab.svg."}},
+      {"@type":"Question","name":"Does this tool upload my images?","acceptedAnswer":{"@type":"Answer","text":"No. All processing happens locally in your browser using the Canvas API. Your images never leave your device."}},
+      {"@type":"Question","name":"Can I use a transparent background?","acceptedAnswer":{"@type":"Answer","text":"Yes. You can keep transparency or set a custom background color for formats that don't support alpha (like some .ico and mstile)."}},
+      {"@type":"Question","name":"How do I download all favicons at once?","acceptedAnswer":{"@type":"Answer","text":"Click the 'Download ZIP' button to get all generated files in a single package."}},
+      {"@type":"Question","name":"Is this favicon generator free?","acceptedAnswer":{"@type":"Answer","text":"Yes, it's completely free and works offline after loading."}},
+      {"@type":"Question","name":"Does it work on mobile?","acceptedAnswer":{"@type":"Answer","text":"Yes, the interface is mobile-first and fully responsive."}},
+      {"@type":"Question","name":"Can I edit the image before generating?","acceptedAnswer":{"@type":"Answer","text":"Yes — crop, zoom, pan, and rotate the image inside the crop area."}},
+      {"@type":"Question","name":"What is site.webmanifest used for?","acceptedAnswer":{"@type":"Answer","text":"It helps Android and PWA installs show the correct icons and theme color."}}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <!-- ========== HEADER ========== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/" class="logo" aria-label="CrafterTools home">🧰 CrafterTools</a>
+      <nav aria-label="Breadcrumb">
+        <ol class="breadcrumb">
+          <li><a href="/">Home</a></li>
+          <li aria-current="page">Favicon Generator</li>
+        </ol>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ========== TOOL SECTION ========== -->
+    <section class="tool-section">
+      <div class="container">
+        <div class="tool-header">
+          <h1>Favicon Generator</h1>
+          <p class="subtitle">Create all standard favicon sizes directly in your browser. Drag &amp; drop, crop, zoom, rotate, and download as ZIP.</p>
+        </div>
+
+        <!-- Privacy notice -->
+        <div class="privacy-badge" role="note">
+          <span aria-hidden="true">🔒</span>
+          <strong>Your images never leave your device.</strong> All favicon generation is performed locally in your browser.
+        </div>
+
+        <div class="tool-grid">
+          <!-- LEFT: Upload + Editor -->
+          <div class="card editor-card">
+            <h2 class="card-title">1. Upload &amp; Edit</h2>
+
+            <!-- Drag & Drop zone -->
+            <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Upload image: drag and drop or press Enter to browse">
+              <div class="drop-zone-content">
+                <span class="drop-icon" aria-hidden="true">🖼️</span>
+                <p><strong>Drag &amp; drop</strong> an image here</p>
+                <p class="muted">or</p>
+                <button type="button" id="browseBtn" class="btn btn-primary">Browse Image</button>
+                <p class="muted small">PNG, JPG, JPEG, WebP, SVG · Max 20 MB</p>
+              </div>
+              <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp,image/svg+xml,.png,.jpg,.jpeg,.webp,.svg" hidden>
+            </div>
+
+            <!-- Error message -->
+            <div id="errorMsg" class="error-msg" role="alert" hidden></div>
+
+            <!-- Editor (hidden until image loaded) -->
+            <div id="editorArea" class="editor-area" hidden>
+              <div class="crop-wrapper">
+                <canvas id="cropCanvas" width="320" height="320" aria-label="Crop preview canvas"></canvas>
+              </div>
+
+              <!-- Controls -->
+              <div class="controls">
+                <div class="control-group">
+                  <label for="zoomRange">Zoom</label>
+                  <input type="range" id="zoomRange" min="0.2" max="4" step="0.01" value="1" aria-label="Zoom level">
+                  <span id="zoomValue" class="control-value">100%</span>
+                </div>
+                <div class="control-group">
+                  <label for="rotateRange">Rotate</label>
+                  <input type="range" id="rotateRange" min="-180" max="180" step="1" value="0" aria-label="Rotation angle">
+                  <span id="rotateValue" class="control-value">0°</span>
+                </div>
+                <div class="control-group">
+                  <label for="bgColor">Background</label>
+                  <input type="color" id="bgColor" value="#ffffff" aria-label="Background color for transparent images">
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="transparentBg" checked> Transparent
+                  </label>
+                </div>
+                <div class="control-actions">
+                  <button type="button" id="centerBtn" class="btn btn-secondary" title="Center image">🎯 Center</button>
+                  <button type="button" id="resetBtn" class="btn btn-secondary" title="Reset transform">↺ Reset</button>
+                </div>
+              </div>
+
+              <!-- Generate button -->
+              <button type="button" id="generateBtn" class="btn btn-primary btn-block">⚡ Generate Favicons</button>
+            </div>
+          </div>
+
+          <!-- RIGHT: Preview & Downloads -->
+          <div class="card preview-card">
+            <h2 class="card-title">2. Preview &amp; Download</h2>
+
+            <!-- Live favicon preview -->
+            <div class="live-preview">
+              <h3>Live Favicon Preview</h3>
+              <div class="browser-mockup">
+                <div class="browser-tab">
+                  <img id="liveFavicon" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Crect width='16' height='16' fill='%23ccc'/%3E%3C/svg%3E" alt="Favicon preview" width="16" height="16">
+                  <span>Your Site</span>
+                </div>
+                <div class="browser-bar"></div>
+              </div>
+            </div>
+
+            <!-- Generated list -->
+            <div id="resultsArea" class="results-area" hidden>
+              <h3>Generated Files</h3>
+              <ul id="fileList" class="file-list" role="list"></ul>
+              <div class="download-actions">
+                <button type="button" id="downloadZipBtn" class="btn btn-primary btn-block">📦 Download ZIP (all files)</button>
+              </div>
+            </div>
+
+            <!-- HTML snippet -->
+            <div class="html-snippet" id="htmlSnippet" hidden>
+              <h3>HTML Code</h3>
+              <pre id="htmlCode" class="code-block" tabindex="0"><code></code></pre>
+              <button type="button" id="copyHtmlBtn" class="btn btn-secondary btn-block">📋 Copy HTML Code</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SEO CONTENT ========== -->
+    <section class="seo-section">
+      <div class="container">
+        <article>
+          <h2>What is a Favicon?</h2>
+          <p>A favicon (favorite icon) is a small graphic that represents a website. It appears in browser tabs, bookmarks, history lists, and even search results. Typically 16×16 or 32×32 pixels, a favicon helps users quickly identify your site among many open tabs.</p>
+
+          <h2>Why does every website need a favicon?</h2>
+          <p>Favicons build brand recognition and professionalism. They make your site look polished, improve user experience, and help visitors find your tab instantly. Modern browsers also use larger icons (like apple-touch-icon) when saving to home screens, so a complete favicon set is essential for a production website.</p>
+
+          <h2>How to use this tool</h2>
+          <ol>
+            <li>Upload an image by dragging &amp; dropping or clicking "Browse Image".</li>
+            <li>Use the crop area to zoom, pan, and rotate your image.</li>
+            <li>Choose a background color if you want to replace transparency.</li>
+            <li>Click "Generate Favicons" to create all sizes.</li>
+            <li>Download individual files or the complete ZIP package.</li>
+            <li>Copy the generated HTML into your website's <code>&lt;head&gt;</code>.</li>
+          </ol>
+
+          <h2>Supported image formats</h2>
+          <p>PNG, JPG, JPEG, WebP, and SVG. Maximum upload size is 20 MB. Transparency is preserved where the format supports it (PNG, WebP, SVG).</p>
+
+          <h2>Generated favicon sizes explained</h2>
+          <ul>
+            <li><strong>favicon.ico</strong> — Classic multi-resolution icon (16, 32, 48).</li>
+            <li><strong>favicon-16x16.png / 32x32 / 48x48 / 64x64</strong> — Standard browser tab and bookmark icons.</li>
+            <li><strong>apple-touch-icon.png (180×180)</strong> — iOS home screen icon.</li>
+            <li><strong>android-chrome-192x192 / 512x512</strong> — Android and PWA icons.</li>
+            <li><strong>mstile-150x150.png</strong> — Windows tile icon.</li>
+            <li><strong>safari-pinned-tab.svg</strong> — Monochrome SVG for Safari pinned tabs.</li>
+            <li><strong>site.webmanifest</strong> — Web app manifest for Android/PWA.</li>
+            <li><strong>browserconfig.xml</strong> — Legacy Windows tile configuration.</li>
+          </ul>
+
+          <h2>Features</h2>
+          <ul>
+            <li>Drag &amp; drop and browse upload</li>
+            <li>Crop, zoom, pan, rotate</li>
+            <li>Background color for transparent images</li>
+            <li>Automatic centering</li>
+            <li>Live favicon preview</li>
+            <li>Generate all common sizes</li>
+            <li>Download individually or as ZIP</li>
+            <li>Copy HTML code with one click</li>
+            <li>100% client-side — no server uploads</li>
+            <li>Dark mode based on system preference</li>
+          </ul>
+
+          <h2>Frequently Asked Questions</h2>
+          <details>
+            <summary>What is a favicon?</summary>
+            <p>A favicon is a small icon that represents your website, shown in browser tabs, bookmarks, and history.</p>
+          </details>
+          <details>
+            <summary>Why does every website need a favicon?</summary>
+            <p>Favicons improve brand recognition, professionalism, and user experience across browser tabs and bookmarks.</p>
+          </details>
+          <details>
+            <summary>How do I use this favicon generator?</summary>
+            <p>Upload an image, crop/zoom/rotate as needed, then download individual files or a ZIP package. Copy the generated HTML into your site's <code>&lt;head&gt;</code>.</p>
+          </details>
+          <details>
+            <summary>What image formats are supported?</summary>
+            <p>PNG, JPG, JPEG, WebP, and SVG up to 20 MB.</p>
+          </details>
+          <details>
+            <summary>Which favicon sizes are generated?</summary>
+            <p>16×16, 32×32, 48×48, 64×64, apple-touch-icon 180×180, android-chrome 192×192 and 512×512, mstile 150×150, plus favicon.ico and safari-pinned-tab.svg.</p>
+          </details>
+          <details>
+            <summary>Does this tool upload my images?</summary>
+            <p>No. All processing happens locally in your browser using the Canvas API. Your images never leave your device.</p>
+          </details>
+          <details>
+            <summary>Can I use a transparent background?</summary>
+            <p>Yes. You can keep transparency or set a custom background color for formats that don't support alpha (like some .ico and mstile).</p>
+          </details>
+          <details>
+            <summary>How do I download all favicons at once?</summary>
+            <p>Click the 'Download ZIP' button to get all generated files in a single package.</p>
+          </details>
+          <details>
+            <summary>Is this favicon generator free?</summary>
+            <p>Yes, it's completely free and works offline after loading.</p>
+          </details>
+          <details>
+            <summary>Does it work on mobile?</summary>
+            <p>Yes, the interface is mobile-first and fully responsive.</p>
+          </details>
+          <details>
+            <summary>Can I edit the image before generating?</summary>
+            <p>Yes — crop, zoom, pan, and rotate the image inside the crop area.</p>
+          </details>
+          <details>
+            <summary>What is site.webmanifest used for?</summary>
+            <p>It helps Android and PWA installs show the correct icons and theme color.</p>
+          </details>
+
+          <h2>Privacy Policy</h2>
+          <p>This tool runs entirely in your browser. We do not upload, store, or transmit your images. All processing is local. No analytics or tracking is used in the favicon generation process.</p>
+
+          <h2>Disclaimer</h2>
+          <p>This favicon generator is provided as-is. CrafterTools is not responsible for any issues arising from generated files. Always test favicons on your production site. Trademarks and logos belong to their respective owners.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2025 CrafterTools — Favicon Generator. All processing is client-side.</p>
+    </div>
+  </footer>
+
+  <script src="Favicon ganerator.js"></script>
+</body>
+</html>
