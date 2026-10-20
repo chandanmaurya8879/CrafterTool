@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Craftertools | Image Compressor</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="imagecompress.css">
+</head>
+<body>
+
+    <!-- ========== NAVBAR (unchanged theme) ========== -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-compress-alt" style="color: #8b5cf6;"></i>
+                <span>Image compress</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#how-it-works">How it works</a></li>
+                <li><a href="#other-tools">Tools</a></li>
+                <li><a href="#" class="btn-nav">Home </a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <main class="container" id="home">
+
+        <!-- Header -->
+        <div class="page-header fade-up">
+            <h1>Compress Images <span class="highlight">Beautifully</span></h1>
+            <p>Reduce image size without losing quality — fast, free and private.</p>
+        </div>
+
+        <!-- ========== UPLOAD CARD ========== -->
+        <section class="card upload-card fade-up">
+            <div class="upload-area" id="uploadArea">
+                <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                <h3>Drag & drop your image here</h3>
+                <p>or <span class="browse-link">browse files</span> — JPG, PNG, WEBP (max 10MB)</p>
+                <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden>
+            </div>
+
+            <!-- Preview placeholder (hidden by default) -->
+            <div id="previewSection" class="preview-section hidden">
+                <div id="previewSkeleton" class="skeleton hidden">
+                    <div class="skeleton-avatar"></div>
+                    <div class="skeleton-lines">
+                        <div class="skeleton-line"></div>
+                        <div class="skeleton-line short"></div>
+                    </div>
+                </div>
+                <div id="previewContent" class="preview-content">
+                    <div class="preview-thumb">
+                        <img id="previewImage" src="#" alt="preview">
+                    </div>
+                    <div class="preview-meta">
+                        <div class="meta-row"><i class="fas fa-image"></i> <span id="previewName">—</span></div>
+                        <div class="meta-row"><i class="fas fa-weight-hanging"></i> <span id="previewSize">—</span></div>
+                        <div class="meta-row"><i class="fas fa-expand"></i> <span id="previewDimensions">—</span></div>
+                        <div class="meta-row"><i class="fas fa-file"></i> <span id="previewType">—</span></div>
+                    </div>
+                    <button class="reset-btn" id="resetBtn" title="Remove image"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+
+            <!-- Compress button & animation area -->
+            <div class="compress-action">
+                <button id="compressBtn" class="btn-primary" disabled>
+                    <i class="fas fa-bolt"></i> Compress Image
+                </button>
+
+                <!-- Loading animation -->
+                <div id="loadingAnimation" class="loading-animation hidden">
+                    <div class="ring-wrapper">
+                        <svg class="progress-ring" width="80" height="80">
+                            <circle class="ring-bg" cx="40" cy="40" r="34" stroke="#e2e8f0" stroke-width="6" fill="none"/>
+                            <circle class="ring-fill" cx="40" cy="40" r="34" stroke="#8b5cf6" stroke-width="6" fill="none" stroke-dasharray="213.6" stroke-dashoffset="213.6"/>
+                        </svg>
+                        <div class="percent-text" id="percentText">0%</div>
+                    </div>
+                    <div class="loading-dots">
+                        <span>.</span><span>.</span><span>.</span>
+                    </div>
+                    <p class="loading-label">Compressing</p>
+                </div>
+
+                <!-- Success animation -->
+                <div id="successAnimation" class="success-animation hidden">
+                    <div class="checkmark-circle">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <p class="success-text">✅ Image Compressed Successfully</p>
+                    <div class="confetti">
+                        <span></span><span></span><span></span><span></span><span></span>
+                        <span></span><span></span><span></span><span></span><span></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== RESULT CARD ========== -->
+        <section id="resultCard" class="card result-card hidden">
+            <h2 class="card-title"><i class="fas fa-chart-line" style="color:#8b5cf6;"></i> Compression Result</h2>
+
+            <div class="compare-grid">
+                <div class="compare-item">
+                    <h4>Original</h4>
+                    <div class="compare-preview">
+                        <img id="resultOriginalImg" src="#" alt="original">
+                    </div>
+                    <div class="compare-stats">
+                        <span><i class="fas fa-arrows-alt-h"></i> <span id="origDim">—</span></span>
+                        <span><i class="fas fa-database"></i> <span id="origSize">—</span></span>
+                    </div>
+                </div>
+
+                <div class="compare-item">
+                    <h4>Compressed</h4>
+                    <div class="compare-preview">
+                        <img id="resultCompressedImg" src="#" alt="compressed">
+                    </div>
+                    <div class="compare-stats">
+                        <span><i class="fas fa-arrows-alt-h"></i> <span id="compDim">—</span></span>
+                        <span><i class="fas fa-database"></i> <span id="compSize">—</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card fade-in">
+                    <span class="stat-label">Original Size</span>
+                    <span class="stat-value" id="statOrigSize">0 MB</span>
+                </div>
+                <div class="stat-card fade-in">
+                    <span class="stat-label">Compressed Size</span>
+                    <span class="stat-value" id="statCompSize">0 MB</span>
+                </div>
+                <div class="stat-card fade-in">
+                    <span class="stat-label">Saved</span>
+                    <span class="stat-value" id="statSaved">0 MB</span>
+                </div>
+                <div class="stat-card fade-in">
+                    <span class="stat-label">Reduction</span>
+                    <span class="stat-value" id="statReduction">0%</span>
+                </div>
+            </div>
+
+            <p class="comp-time"><i class="far fa-clock"></i> Compression time: <span id="compTime">0.0s</span></p>
+
+            <button id="downloadBtn" class="btn-primary download-btn">
+                <i class="fas fa-download"></i> Download Compressed Image
+            </button>
+
+            <button id="newImageBtn" class="btn-secondary">Compress another image</button>
+        </section>
+
+        <!-- ========== HOW IT WORKS ========== -->
+        <section class="card info-section fade-up" id="how-it-works">
+            <h2 class="card-title"><i class="fas fa-cogs" style="color:#8b5cf6;"></i> How It Works</h2>
+            <p class="section-subtitle">Three simple steps — no signup, no upload to a server.</p>
+
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <span class="step-number">1</span>
+                    <h3>Upload Your Image</h3>
+                    <p>Drag & drop or browse to select a JPG, PNG, or WEBP file. Your image never leaves your browser.</p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-icon">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <span class="step-number">2</span>
+                    <h3>Smart Compression</h3>
+                    <p>Our algorithm reduces file size by up to 80% while keeping visual quality crisp using canvas-based optimization.</p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-icon">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <span class="step-number">3</span>
+                    <h3>Download Instantly</h3>
+                    <p>Preview before/after results, check size savings, and download your compressed image in one click.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== HOW TO USE ========== -->
+        <section class="card info-section fade-up" id="how-to-use">
+            <h2 class="card-title"><i class="fas fa-question-circle" style="color:#8b5cf6;"></i> How to Use</h2>
+            <p class="section-subtitle">Get started in seconds — it's really that simple.</p>
+
+            <div class="usage-list">
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-hand-pointer"></i></span>
+                    <div>
+                        <h4>Select your image</h4>
+                        <p>Click the upload area or drag your image file directly into the box. Supported formats: JPG, PNG, WEBP (max 10MB).</p>
+                    </div>
+                </div>
+
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-eye"></i></span>
+                    <div>
+                        <h4>Review the preview</h4>
+                        <p>Instantly see the image name, file size, dimensions, and format before compressing.</p>
+                    </div>
+                </div>
+
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-bolt"></i></span>
+                    <div>
+                        <h4>Click "Compress Image"</h4>
+                        <p>Watch the progress ring animate while your image is optimized in real time.</p>
+                    </div>
+                </div>
+
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-chart-bar"></i></span>
+                    <div>
+                        <h4>Check your savings</h4>
+                        <p>Compare original vs. compressed side-by-side with detailed statistics on size reduction.</p>
+                    </div>
+                </div>
+
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-download"></i></span>
+                    <div>
+                        <h4>Download & done!</h4>
+                        <p>Click the purple download button to save your compressed image instantly.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== OTHER TOOLS ========== -->
+        <section class="card info-section fade-up" id="other-tools">
+            <h2 class="card-title"><i class="fas fa-toolbox" style="color:#8b5cf6;"></i> Other Tools</h2>
+            <p class="section-subtitle">Explore more free tools from our suite — all privacy-first.</p>
+
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                        <i class="fas fa-crop-alt"></i>
+                    </div>
+                    <h3>Image Resizer</h3>
+                    <p>Resize images to exact dimensions for web, print, or social media.</p>
+                    <a href="#" class="tool-link">Try Resizer <i class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3>Format Converter</h3>
+                    <p>Convert between JPG, PNG, WEBP, and more without losing quality.</p>
+                    <a href="#" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="fas fa-cut"></i>
+                    </div>
+                    <h3>Background Remover</h3>
+                    <p>Remove image backgrounds automatically with AI precision.</p>
+                    <a href="#" class="tool-link">Try Remover <i class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3>Color Picker</h3>
+                    <p>Extract color palettes from any image with a single click.</p>
+                    <a href="#" class="tool-link">Try Picker <i class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #ec4899, #db2777);">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <h3>Image to PDF</h3>
+                    <p>Merge multiple images into a single PDF document instantly.</p>
+                    <a href="#" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">
+                        <i class="fas fa-filter"></i>
+                    </div>
+                    <h3>Photo Filters</h3>
+                    <p>Apply beautiful filters and effects to your photos online.</p>
+                    <a href="#" class="tool-link">Try Filters <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <p>© 2025 Craftertools  compress smarter, not harder.</p>
+    </footer>
+
+    <!-- Toast notification -->
+    <div id="toast" class="toast">📥 Download started!</div>
+
+    <script src="imagecompress.js"></script>
+</body>
+</html>
