@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrafterTools · PNG to JPG Converter</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="pngtojpg.css">
+</head>
+<body>
+
+    <!-- ========== NAVBAR ========== -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-compress-alt"></i>
+                <span>CrafterTools</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="about.html">About us</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#other-tools">Tools</a></li>
+                <li><a href="index.html" class="btn-nav">Home </a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container" id="home">
+
+        <!-- ========== HERO ========== -->
+        <div class="page-header fade-up">
+            <h1>PNG to <span class="highlight">JPG</span> Converter</h1>
+            <p>Convert PNG images into high-quality JPG instantly. Fast, secure, free and browser-based.</p>
+        </div>
+
+        <!-- ========== UPLOAD + CONVERT CARD ========== -->
+        <section class="card upload-card fade-up" id="uploadCard">
+
+            <!-- Upload area -->
+            <div class="upload-area" id="uploadArea">
+                <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                <h3>Drag & drop your PNG here</h3>
+                <p>or <span class="browse-link">browse files</span> — PNG (max 20MB)</p>
+                <input type="file" id="fileInput" accept="image/png" hidden>
+            </div>
+
+            <!-- Preview -->
+            <div id="previewSection" class="preview-section hidden">
+                <div id="previewSkeleton" class="skeleton hidden">
+                    <div class="skeleton-avatar"></div>
+                    <div class="skeleton-lines">
+                        <div class="skeleton-line"></div>
+                        <div class="skeleton-line short"></div>
+                    </div>
+                </div>
+                <div id="previewContent" class="preview-content">
+                    <div class="preview-thumb checkerboard">
+                        <img id="previewImage" src="#" alt="preview">
+                    </div>
+                    <div class="preview-meta">
+                        <div class="meta-row"><i class="fas fa-image"></i> <span id="previewName">—</span></div>
+                        <div class="meta-row"><i class="fas fa-weight-hanging"></i> <span id="previewSize">—</span></div>
+                        <div class="meta-row"><i class="fas fa-expand"></i> <span id="previewDimensions">—</span></div>
+                        <div class="meta-row"><i class="fas fa-file"></i> <span id="previewType">PNG</span></div>
+                    </div>
+                    <button class="reset-btn" id="resetBtn" title="Remove image"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+
+            <!-- Convert button + animations -->
+            <div class="convert-action">
+                <button id="convertBtn" class="btn-primary" disabled>
+                    <i class="fas fa-exchange-alt"></i> Convert to JPG
+                </button>
+
+                <!-- Loading animation -->
+                <div id="loadingAnimation" class="loading-animation hidden">
+                    <div class="ring-wrapper">
+                        <svg class="progress-ring" width="90" height="90">
+                            <circle class="ring-bg" cx="45" cy="45" r="38" stroke="#e2e8f0" stroke-width="6" fill="none"/>
+                            <circle class="ring-fill" cx="45" cy="45" r="38" stroke="#8b5cf6" stroke-width="6" fill="none" stroke-dasharray="238.76" stroke-dashoffset="238.76"/>
+                        </svg>
+                        <div class="percent-text" id="percentText">0%</div>
+                    </div>
+                    <div class="progress-stage" id="progressStage">Preparing Image...</div>
+                    <div class="loading-dots"><span>.</span><span>.</span><span>.</span></div>
+                    <div class="particles" id="particles">
+                        <span></span><span></span><span></span><span></span>
+                        <span></span><span></span><span></span><span></span>
+                    </div>
+                </div>
+
+                <!-- Success animation -->
+                <div id="successAnimation" class="success-animation hidden">
+                    <div class="checkmark-circle"><i class="fas fa-check"></i></div>
+                    <p class="success-text">✅ Conversion Successful</p>
+                    <div class="confetti">
+                        <span></span><span></span><span></span><span></span><span></span>
+                        <span></span><span></span><span></span><span></span><span></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== RESULT CARD ========== -->
+        <section id="resultCard" class="card result-card hidden">
+            <h2 class="card-title"><i class="fas fa-check-circle" style="color:#10b981;"></i> Conversion Successful</h2>
+
+            <div class="convert-result">
+                <div class="convert-side">
+                    <span class="convert-label">Original PNG</span>
+                    <div class="compare-preview checkerboard">
+                        <img id="resultOriginalImg" src="#" alt="original">
+                    </div>
+                </div>
+
+                <div class="convert-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+
+                <div class="convert-side">
+                    <span class="convert-label">Converted JPG</span>
+                    <div class="compare-preview">
+                        <img id="resultJpgImg" src="#" alt="jpg">
+                    </div>
+                </div>
+            </div>
+
+            <div class="convert-details">
+                <div class="detail-row">
+                    <span><i class="fas fa-file-signature"></i> File Name</span>
+                    <strong id="detailFilename">—</strong>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-expand"></i> Dimensions</span>
+                    <strong id="detailDimensions">—</strong>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-file-image"></i> Format</span>
+                    <strong>JPG</strong>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-weight-hanging"></i> Estimated Size</span>
+                    <strong id="detailSize">—</strong>
+                </div>
+            </div>
+
+            <p class="comp-time"><i class="far fa-clock"></i> Conversion time: <span id="convertTime">0.0s</span></p>
+
+            <button id="downloadBtn" class="btn-primary btn-success download-btn">
+                <i class="fas fa-download"></i> Download JPG
+            </button>
+            <button id="convertAnotherBtn" class="btn-secondary">🔄 Convert Another Image</button>
+        </section>
+
+        <!-- ========== HOW IT WORKS ========== -->
+        <section class="card info-section fade-up" id="how-it-works">
+            <h2 class="card-title"><i class="fas fa-cogs" style="color:#8b5cf6;"></i> How It Works</h2>
+            <p class="section-subtitle">Three simple steps — no signup, no upload to a server.</p>
+
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <span class="step-number">1</span>
+                    <h3>Upload PNG Image</h3>
+                    <p>Choose or drag your PNG image. Your file never leaves your browser.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-exchange-alt"></i></div>
+                    <span class="step-number">2</span>
+                    <h3>Convert to JPG</h3>
+                    <p>Our browser converts it into JPG — transparent areas are flattened to white automatically.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-download"></i></div>
+                    <span class="step-number">3</span>
+                    <h3>Download JPG</h3>
+                    <p>Download instantly with one click — high quality, optimized JPG output.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== HOW TO USE ========== -->
+        <section class="card info-section fade-up" id="how-to-use">
+            <h2 class="card-title"><i class="fas fa-question-circle" style="color:#8b5cf6;"></i> How to Use</h2>
+            <p class="section-subtitle">Get started in seconds — it's really that simple.</p>
+
+            <div class="usage-list">
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-hand-pointer"></i></span>
+                    <div>
+                        <h4>Select your PNG image</h4>
+                        <p>Click the upload area or drag your PNG file into the box (max 20MB).</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-eye"></i></span>
+                    <div>
+                        <h4>Review preview</h4>
+                        <p>Instantly see filename, dimensions, size, and format before converting.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-exchange-alt"></i></span>
+                    <div>
+                        <h4>Click Convert to JPG</h4>
+                        <p>Start the browser-based conversion — no uploads, no waiting on servers.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-spinner"></i></span>
+                    <div>
+                        <h4>Wait for conversion</h4>
+                        <p>Watch the progress ring complete with live status updates.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-image"></i></span>
+                    <div>
+                        <h4>Preview converted JPG</h4>
+                        <p>Compare original PNG with the converted JPG and check details.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-download"></i></span>
+                    <div>
+                        <h4>Download JPG instantly</h4>
+                        <p>Click the green Download button to save your JPG immediately.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== WHY CHOOSE THIS TOOL ========== -->
+        <section class="card info-section fade-up" id="why-choose">
+            <h2 class="card-title"><i class="fas fa-star" style="color:#8b5cf6;"></i> Why Choose This Tool</h2>
+            <p class="section-subtitle">Built for speed, quality, and privacy.</p>
+
+            <div class="features-grid">
+                <div class="feature-chip"><i class="fas fa-bolt"></i> Fast Conversion</div>
+                <div class="feature-chip"><i class="fas fa-gem"></i> High Quality JPG</div>
+                <div class="feature-chip"><i class="fas fa-infinity"></i> Free Forever</div>
+                <div class="feature-chip"><i class="fas fa-globe"></i> Browser Based</div>
+                <div class="feature-chip"><i class="fas fa-shield-alt"></i> Secure</div>
+                <div class="feature-chip"><i class="fas fa-mobile-alt"></i> Mobile Friendly</div>
+                <div class="feature-chip"><i class="fas fa-ban"></i> No Watermark</div>
+                <div class="feature-chip"><i class="fas fa-download"></i> Instant Download</div>
+            </div>
+        </section>
+
+        <!-- ========== FEATURES ========== -->
+        <section class="card info-section fade-up" id="features">
+            <h2 class="card-title"><i class="fas fa-list-check" style="color:#8b5cf6;"></i> Features</h2>
+            <p class="section-subtitle">Everything you need from a premium converter.</p>
+
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Lightning Fast</h3>
+                    <p>Convert PNG to JPG in under a second using the browser's native Canvas API.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <h3>High Quality</h3>
+                    <p>Export JPG at 92% quality — crisp visuals with maximum size efficiency.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                        <i class="fas fa-hand-pointer"></i>
+                    </div>
+                    <h3>Easy to Use</h3>
+                    <p>Three simple steps: upload, convert, download. No learning curve.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="fas fa-user-slash"></i>
+                    </div>
+                    <h3>No Registration</h3>
+                    <p>Use it instantly — no account, no email, no signup required.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #ec4899, #db2777);">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Privacy First</h3>
+                    <p>100% client-side processing. Files never leave your device.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Responsive Design</h3>
+                    <p>Works beautifully on mobile, tablet, laptop, and desktop.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #3b82f6);">
+                        <i class="fas fa-wifi"></i>
+                    </div>
+                    <h3>Works Offline</h3>
+                    <p>Once loaded, the tool functions without an internet connection.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #3b82f6);">
+                        <i class="fas fa-infinity"></i>
+                    </div>
+                    <h3>100% Free</h3>
+                    <p>Unlimited conversions. No hidden fees, no watermarks, no limits.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== OTHER TOOLS ========== -->
+        <section class="card info-section fade-up" id="other-tools">
+            <h2 class="card-title"><i class="fas fa-toolbox" style="color:#8b5cf6;"></i> Other Tools</h2>
+            <p class="section-subtitle">Explore more free tools from our suite — all privacy-first.</p>
+
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                        <i class="fas fa-compress-alt"></i>
+                    </div>
+                    <h3>Image Compressor</h3>
+                    <p>Reduce image file sizes by up to 80% without visible quality loss.</p>
+                    <a href="imagecompress.html" class="tool-link">Try Compressor <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </div>
+                    <h3>Image Resizer</h3>
+                    <p>Resize images to exact dimensions for web, print, or social media.</p>
+                    <a href="imageresize.html" class="tool-link">Try Resizer <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="fas fa-file-image"></i>
+                    </div>
+                    <h3>JPG to PNG</h3>
+                    <p>Convert JPG images to lossless PNG with transparency support.</p>
+                    <a href="jpgtopng.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3>WEBP to PNG</h3>
+                    <p>Convert WEBP images to PNG instantly with lossless quality.</p>
+                    <a href="webptopng.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #ec4899, #db2777);">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3>WEBP to JPG</h3>
+                    <p>Convert WEBP to JPG in one click — no quality loss.</p>
+                    <a href="webptojpg.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3>PNG to WEBP</h3>
+                    <p>Shrink PNG images by converting to optimized WEBP format.</p>
+                    <a href="pngtowebp.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #3b82f6);">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3>JPG to WEBP</h3>
+                    <p>Convert JPG to WEBP for faster web loading.</p>
+                    <a href="jpgtowebp.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #3b82f6);">
+                        <i class="fas fa-crop-alt"></i>
+                    </div>
+                    <h3>Image Cropper</h3>
+                    <p>Crop any image to the exact area you need.</p>
+                    <a href="image-cropper.html" class="tool-link">Try Cropper <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #ec4899);">
+                        <i class="fas fa-undo-alt"></i>
+                    </div>
+                    <h3>Rotate Image</h3>
+                    <p>Rotate images left, right or by any custom angle.</p>
+                    <a href="image-flip.html" class="tool-link">Try Rotator <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #ec4899);">
+                        <i class="fas fa-arrows-alt-h"></i>
+                    </div>
+                    <h3>Flip Image</h3>
+                    <p>Flip images horizontally or vertically in one click.</p>
+                    <a href="image-flip.html" class="tool-link">Try Flipper <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #06b6d4, #10b981);">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3>Color Picker</h3>
+                    <p>Extract color palettes from any image with a single click.</p>
+                    <a href="colourpicker.html" class="tool-link">Try Picker <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #1e1b4b, #3b82f6);">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <h3>QR Code Generator</h3>
+                    <p>Generate QR codes for links, text, or any data instantly.</p>
+                    <a href="#" class="tool-link">Try Generator <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== FAQ ========== -->
+        <section class="card info-section fade-up" id="faq">
+            <h2 class="card-title"><i class="fas fa-question" style="color:#8b5cf6;"></i> Frequently Asked Questions</h2>
+            <p class="section-subtitle">Quick answers to common questions about this tool.</p>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>What is PNG to JPG?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>PNG to JPG conversion transforms a lossless PNG image into a compressed JPEG image. JPG files are typically much smaller, making them ideal for sharing, email, and web use where file size matters. The conversion happens entirely in your browser using the HTML5 Canvas API.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Is it free?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes, it's 100% free with no limits, no signup, no watermarks, and no hidden fees. You can convert as many PNG files as you want.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Will transparent backgrounds become white?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes. JPG format does not support transparency, so any transparent areas in your PNG will be automatically filled with a solid white background before conversion. This is the standard behavior and ensures the resulting JPG looks clean and consistent across all devices.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Is my image uploaded?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>No. Everything runs locally in your browser using the Canvas API. No files are uploaded to any server, and nothing is stored or tracked. Your privacy is fully preserved.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Can I use it on mobile?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Absolutely. The tool is fully responsive and works perfectly on smartphones, tablets, laptops, and desktops. You can drag &amp; drop on desktop or tap to upload on mobile.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <p>© 2025 CrafterTools — convert smarter, not harder.</p>
+    </footer>
+
+    <div id="toast" class="toast">📥 Download started!</div>
+
+    <script src="pngtojpg.js"></script>
+</body>
+</html>
