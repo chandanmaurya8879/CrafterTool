@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrafterTools · Sharpen Image</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="sharpenimage.css">
+</head>
+<body>
+
+    <!-- ========== NAVBAR ========== -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-compress-alt"></i>
+                <span>CrafterTools</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="about.html">About us</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#other-tools">Tools</a></li>
+                <li><a href="index.html" class="btn-nav">Home</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container" id="home">
+
+        <!-- ========== HERO ========== -->
+        <div class="page-header fade-up">
+            <h1><span class="highlight">Sharpen</span> Image</h1>
+            <p>Improve image clarity and make photos look sharper with adjustable sharpening strength. Fast, secure and completely browser-based.</p>
+        </div>
+
+        <!-- ========== UPLOAD + SHARPEN CARD ========== -->
+        <section class="card upload-card fade-up" id="uploadCard">
+
+            <!-- Upload area -->
+            <div class="upload-area" id="uploadArea">
+                <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                <h3>Drag & drop your image here</h3>
+                <p>or <span class="browse-link">browse files</span> — JPG, JPEG, PNG, WEBP (max 20MB)</p>
+                <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp" hidden>
+            </div>
+
+            <!-- Preview + Sharpen Controls -->
+            <div id="editorSection" class="editor-section hidden">
+
+                <!-- Skeleton -->
+                <div id="previewSkeleton" class="skeleton hidden">
+                    <div class="skeleton-avatar"></div>
+                    <div class="skeleton-lines">
+                        <div class="skeleton-line"></div>
+                        <div class="skeleton-line short"></div>
+                    </div>
+                </div>
+
+                <!-- Live preview -->
+                <div id="previewContent" class="preview-content">
+                    <div class="live-preview-wrap" id="livePreviewWrap">
+                        <div class="edge-glow" id="edgeGlow"></div>
+                        <div class="preview-thumb live-preview-thumb">
+                            <canvas id="previewCanvas" width="100" height="100"></canvas>
+                        </div>
+                        <div class="sharpen-value-badge" id="sharpenValueBadge">0%</div>
+                    </div>
+
+                    <div class="preview-meta">
+                        <div class="meta-row"><i class="fas fa-image"></i> <span id="previewName">—</span></div>
+                        <div class="meta-row"><i class="fas fa-weight-hanging"></i> <span id="previewSize">—</span></div>
+                        <div class="meta-row"><i class="fas fa-expand"></i> <span id="previewDimensions">—</span></div>
+                        <div class="meta-row"><i class="fas fa-file"></i> <span id="previewType">—</span></div>
+                    </div>
+                    <button class="reset-btn" id="resetBtn" title="Remove image"><i class="fas fa-times"></i></button>
+                </div>
+
+                <!-- Sharpen Controls -->
+                <div class="sharpen-controls">
+                    <h3 class="options-title"><i class="fas fa-magic" style="color:#8b5cf6;"></i> Sharpen Controls</h3>
+
+                    <div class="sharpen-slider-wrap">
+                        <div class="sharpen-slider-header">
+                            <label for="sharpenSlider">Sharpen Strength</label>
+                            <span class="sharpen-readout" id="sharpenReadout">0%</span>
+                        </div>
+                        <input type="range" id="sharpenSlider" class="sharpen-slider" min="0" max="100" value="0" step="1">
+                        <div class="sharpen-ticks">
+                            <span>0%</span>
+                            <span>25%</span>
+                            <span>50%</span>
+                            <span>75%</span>
+                            <span>100%</span>
+                        </div>
+                    </div>
+
+                    <!-- Quick presets -->
+                    <div class="option-group">
+                        <label class="group-label">Quick Presets</label>
+                        <div class="chip-row" id="presetRow">
+                            <button class="chip" data-sharpen="0">None</button>
+                            <button class="chip" data-sharpen="25">Light</button>
+                            <button class="chip" data-sharpen="50">Medium</button>
+                            <button class="chip" data-sharpen="75">Strong</button>
+                            <button class="chip" data-sharpen="100">Extreme</button>
+                        </div>
+                    </div>
+
+                    <!-- Live preview label -->
+                    <div class="live-preview">
+                        <i class="fas fa-eye"></i>
+                        <span>Live preview updates in real time as you drag the slider</span>
+                    </div>
+                </div>
+
+                <!-- Apply button + UNIQUE scan-line animation -->
+                <div class="apply-action">
+                    <button id="applyBtn" class="btn-primary" disabled>
+                        <i class="fas fa-magic"></i> Apply Sharpen
+                    </button>
+
+                    <!-- UNIQUE ANIMATION: Scan line + sparkles + edges glow -->
+                    <div id="sharpenAnimation" class="sharpen-animation hidden">
+                        <!-- Floating sparkles -->
+                        <div class="sparkles">
+                            <span></span><span></span><span></span><span></span>
+                            <span></span><span></span><span></span><span></span>
+                            <span></span><span></span><span></span><span></span>
+                        </div>
+
+                        <!-- Image stage with scan line -->
+                        <div class="sharpen-stage">
+                            <div class="sharpen-stage-img-wrap">
+                                <img id="sharpenStageImg" src="#" alt="sharpening preview">
+                                <div class="scan-line" id="scanLine"></div>
+                                <div class="edge-overlay" id="edgeOverlay"></div>
+                            </div>
+                        </div>
+
+                        <!-- Status + progress -->
+                        <div class="sharpen-progress-info">
+                            <div class="sharpen-status" id="sharpenStatus">Analyzing Image...</div>
+                            <div class="sharpen-counter">
+                                <span id="sharpenCountValue">0</span><span class="sharpen-unit">%</span>
+                            </div>
+                        </div>
+
+                        <div class="sharpen-progress-bar">
+                            <div class="sharpen-progress-fill" id="sharpenProgressFill"></div>
+                        </div>
+                    </div>
+
+                    <!-- Success animation -->
+                    <div id="successAnimation" class="success-animation hidden">
+                        <div class="checkmark-circle"><i class="fas fa-check"></i></div>
+                        <p class="success-text">✅ Image Sharpened Successfully</p>
+                        <div class="confetti">
+                            <span></span><span></span><span></span><span></span><span></span>
+                            <span></span><span></span><span></span><span></span><span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== RESULT CARD ========== -->
+        <section id="resultCard" class="card result-card hidden">
+            <h2 class="card-title"><i class="fas fa-check-circle" style="color:#10b981;"></i> Image Sharpened Successfully</h2>
+
+            <!-- Before/After comparison slider -->
+            <div class="compare-slider-wrapper">
+                <div class="compare-slider" id="compareSlider">
+                    <img id="compareBefore" class="compare-img" src="#" alt="before">
+                    <div class="compare-after-clip" id="compareAfterClip">
+                        <img id="compareAfter" class="compare-img" src="#" alt="after">
+                    </div>
+                    <div class="compare-handle" id="compareHandle">
+                        <i class="fas fa-arrows-alt-h"></i>
+                    </div>
+                </div>
+                <div class="compare-labels">
+                    <span>Original</span>
+                    <span>Sharpened</span>
+                </div>
+            </div>
+
+            <!-- Side-by-side -->
+            <div class="convert-result">
+                <div class="convert-side">
+                    <span class="convert-label">Original</span>
+                    <div class="compare-preview">
+                        <img id="resultOriginalImg" src="#" alt="original">
+                    </div>
+                </div>
+
+                <div class="convert-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+
+                <div class="convert-side">
+                    <span class="convert-label">Sharpened</span>
+                    <div class="compare-preview">
+                        <img id="resultSharpenedImg" src="#" alt="sharpened">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details -->
+            <div class="convert-details">
+                <div class="detail-row">
+                    <span><i class="fas fa-expand"></i> Resolution</span>
+                    <strong id="detailResolution">—</strong>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-file-image"></i> Format</span>
+                    <strong id="detailFormat">—</strong>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-weight-hanging"></i> File Size</span>
+                    <strong id="detailSize">—</strong>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-magic"></i> Sharpen Strength</span>
+                    <strong id="detailSharpen">—</strong>
+                </div>
+            </div>
+
+            <p class="comp-time"><i class="far fa-clock"></i> Processing time: <span id="processTime">0.0s</span></p>
+
+            <button id="downloadBtn" class="btn-primary download-btn">
+                <i class="fas fa-download"></i> Download Image
+            </button>
+            <button id="sharpenAnotherBtn" class="btn-secondary">🔄 Sharpen Another Image</button>
+        </section>
+
+        <!-- ========== HOW IT WORKS ========== -->
+        <section class="card info-section fade-up" id="how-it-works">
+            <h2 class="card-title"><i class="fas fa-cogs" style="color:#8b5cf6;"></i> How It Works</h2>
+            <p class="section-subtitle">Three simple steps — no signup, no upload to a server.</p>
+
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <span class="step-number">1</span>
+                    <h3>Upload Image</h3>
+                    <p>Choose or drag your PNG, JPG, JPEG or WEBP image. Your file never leaves your browser.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-sliders-h"></i></div>
+                    <span class="step-number">2</span>
+                    <h3>Adjust Sharpen Strength</h3>
+                    <p>Slide from 0% to 100% and watch the live preview sharpen in real time.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-download"></i></div>
+                    <span class="step-number">3</span>
+                    <h3>Download Enhanced Image</h3>
+                    <p>Apply, compare before/after, then download your sharpened image in one click.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== HOW TO USE ========== -->
+        <section class="card info-section fade-up" id="how-to-use">
+            <h2 class="card-title"><i class="fas fa-question-circle" style="color:#8b5cf6;"></i> How to Use</h2>
+            <p class="section-subtitle">Get started in seconds — it's really that simple.</p>
+
+            <div class="usage-list">
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-hand-pointer"></i></span>
+                    <div>
+                        <h4>Upload your image</h4>
+                        <p>Click the upload area or drag your image file into the box (max 20MB).</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-sliders-h"></i></span>
+                    <div>
+                        <h4>Adjust sharpen strength</h4>
+                        <p>Drag the slider anywhere from 0% to 100% — the live preview updates instantly.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-magic"></i></span>
+                    <div>
+                        <h4>Click Apply Sharpen</h4>
+                        <p>Watch the unique scan-line animation with real-time enhancement.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-hourglass-half"></i></span>
+                    <div>
+                        <h4>Wait for enhancement animation</h4>
+                        <p>The status text guides you through Analyzing → Enhancing → Optimizing → Done.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-columns"></i></span>
+                    <div>
+                        <h4>Compare Before &amp; After</h4>
+                        <p>Use the before/after slider to see the difference side-by-side.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-download"></i></span>
+                    <div>
+                        <h4>Download the sharpened image</h4>
+                        <p>Click the purple download button to save your sharpened image instantly.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== WHY USE THIS TOOL ========== -->
+        <section class="card info-section fade-up" id="why-choose">
+            <h2 class="card-title"><i class="fas fa-star" style="color:#8b5cf6;"></i> Why Use This Tool</h2>
+            <p class="section-subtitle">Built for clarity, speed, and privacy.</p>
+
+            <div class="features-grid">
+                <div class="feature-chip"><i class="fas fa-magic"></i> AI-like Enhancement</div>
+                <div class="feature-chip"><i class="fas fa-sliders-h"></i> Adjustable Strength</div>
+                <div class="feature-chip"><i class="fas fa-gem"></i> High Quality</div>
+                <div class="feature-chip"><i class="fas fa-bolt"></i> Fast Processing</div>
+                <div class="feature-chip"><i class="fas fa-infinity"></i> 100% Free</div>
+                <div class="feature-chip"><i class="fas fa-shield-alt"></i> Privacy Protected</div>
+                <div class="feature-chip"><i class="fas fa-ban"></i> No Watermark</div>
+                <div class="feature-chip"><i class="fas fa-mobile-alt"></i> Mobile Friendly</div>
+            </div>
+        </section>
+
+        <!-- ========== FEATURES ========== -->
+        <section class="card info-section fade-up" id="features">
+            <h2 class="card-title"><i class="fas fa-list-check" style="color:#8b5cf6;"></i> Features</h2>
+            <p class="section-subtitle">Everything you need from a premium sharpen tool.</p>
+
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h3>Live Preview</h3>
+                    <p>See exactly how your image looks as you drag the slider — real-time canvas rendering.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                        <i class="fas fa-columns"></i>
+                    </div>
+                    <h3>Before &amp; After Comparison</h3>
+                    <p>Drag the comparison slider to see the exact difference side-by-side.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="fas fa-sliders-h"></i>
+                    </div>
+                    <h3>Adjustable Sharpening</h3>
+                    <p>Smooth 0–100% range with quick presets for common sharpen strengths.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h3>Instant Download</h3>
+                    <p>Get your sharpened image immediately — no waiting, no processing queues.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">
+                        <i class="fas fa-wifi"></i>
+                    </div>
+                    <h3>Works Offline</h3>
+                    <p>Once loaded, the tool functions without an internet connection.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #ec4899, #db2777);">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Responsive Design</h3>
+                    <p>Works perfectly on mobile, tablet, laptop, and desktop.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #ec4899);">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3>Modern Interface</h3>
+                    <p>Scan-line animation, sparkles, and smooth transitions throughout.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #1e1b4b, #3b82f6);">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <h3>High Quality Output</h3>
+                    <p>Sharpening applied via convolution filter for smooth, high-quality results.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== OTHER TOOLS ========== -->
+        <section class="card info-section fade-up" id="other-tools">
+            <h2 class="card-title"><i class="fas fa-toolbox" style="color:#8b5cf6;"></i> Other Tools</h2>
+            <p class="section-subtitle">Explore more free tools from our suite — all privacy-first.</p>
+
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                        <i class="fas fa-compress-alt"></i>
+                    </div>
+                    <h3>Image Compressor</h3>
+                    <p>Reduce image file sizes by up to 80% without visible quality loss.</p>
+                    <a href="imagecompress.html" class="tool-link">Try Compressor <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </div>
+                    <h3>Image Resizer</h3>
+                    <p>Resize images to exact dimensions for web, print, or social media.</p>
+                    <a href="imageresize.html" class="tool-link">Try Resizer <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #a78bfa, #8b5cf6);">
+                        <i class="fas fa-low-vision"></i>
+                    </div>
+                    <h3>Blur Image</h3>
+                    <p>Apply adjustable blur to any image with a smooth slider.</p>
+                    <a href="blurimage.html" class="tool-link">Try Blur <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="fas fa-file-image"></i>
+                    </div>
+                    <h3>JPG to PNG</h3>
+                    <p>Convert JPG images to lossless PNG with transparency support.</p>
+                    <a href="jpgtopng.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3>PNG to JPG</h3>
+                    <p>Convert PNG to JPG with automatic white background flatten.</p>
+                    <a href="pngtojpg.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3>WEBP Converter</h3>
+                    <p>Convert WEBP to PNG, JPG, and back with lossless quality.</p>
+                    <a href="webptopng.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #ec4899);">
+                        <i class="fas fa-undo-alt"></i>
+                    </div>
+                    <h3>Rotate Image</h3>
+                    <p>Rotate images left, right or by any custom angle.</p>
+                    <a href="image-flip.html" class="tool-link">Try Rotator <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #ec4899);">
+                        <i class="fas fa-arrows-alt-h"></i>
+                    </div>
+                    <h3>Flip Image</h3>
+                    <p>Flip images horizontally or vertically in one click.</p>
+                    <a href="image-flip.html" class="tool-link">Try Flipper <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #3b82f6);">
+                        <i class="fas fa-crop-alt"></i>
+                    </div>
+                    <h3>Crop Image</h3>
+                    <p>Crop any image to the exact area you need.</p>
+                    <a href="image-cropper.html" class="tool-link">Try Cropper <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #06b6d4, #10b981);">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3>Color Picker</h3>
+                    <p>Extract color palettes from any image with a single click.</p>
+                    <a href="colourpicker.html" class="tool-link">Try Picker <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #1e1b4b, #3b82f6);">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <h3>QR Code Generator</h3>
+                    <p>Generate QR codes for links, text, or any data instantly.</p>
+                    <a href="urltoqr.html" class="tool-link">Try Generator <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== FAQ ========== -->
+        <section class="card info-section fade-up" id="faq">
+            <h2 class="card-title"><i class="fas fa-question" style="color:#8b5cf6;"></i> Frequently Asked Questions</h2>
+            <p class="section-subtitle">Quick answers to common questions about this tool.</p>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>What does Sharpen Image do?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Sharpen Image enhances the clarity and edge definition of a photo by applying a convolution-based sharpening filter. It increases local contrast along edges, making details look crisper and more defined. The effect is applied entirely in your browser using the HTML5 Canvas API — no uploads, no servers.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Can I control sharpening strength?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes! Use the smooth slider to set any sharpen value between 0% (no sharpening) and 100% (maximum sharpening). There are also five quick presets — None, Light, Medium, Strong, and Extreme — for common use cases. The live preview updates instantly as you drag.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Will image quality decrease?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>No. Sharpening doesn't reduce quality — it enhances edge clarity using a convolution filter that preserves the original pixel data. However, applying extreme sharpening on a low-resolution or already noisy image can emphasize artifacts. For best results, use moderate sharpening strength (25–60%) on clean, well-lit photos.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Is this tool free?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes, it's 100% free with no limits, no signup, no watermarks, and no hidden fees. You can sharpen as many images as you want.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Does my image leave my browser?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>No. Everything runs locally in your browser using the Canvas API. No files are uploaded to any server, and nothing is stored or tracked. Your privacy is fully preserved — the tool even works offline once loaded.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <p>© 2025 CrafterTools — sharpen smarter, not harder.</p>
+    </footer>
+
+    <div id="toast" class="toast">📥 Download started!</div>
+
+    <script src="sharpenimage.js"></script>
+</body>
+</html>
