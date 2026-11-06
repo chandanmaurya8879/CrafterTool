@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrafterTools · Brightness & Contrast</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="brightness-contrast.css">
+</head>
+<body>
+
+    <!-- ========== NAVBAR ========== -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-compress-alt"></i>
+                <span>CrafterTools</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">About us </a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#other-tools">Tools</a></li>
+                <li><a href="index.html" class="btn-nav">Home</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container" id="home">
+
+        <!-- ========== HERO ========== -->
+        <div class="page-header fade-up">
+            <h1><span class="highlight">Brightness</span> &amp; <span class="highlight">Contrast</span></h1>
+            <p>Adjust image brightness and contrast instantly with live preview. Fast, secure, free and completely browser-based.</p>
+        </div>
+
+        <!-- ========== UPLOAD + ADJUST CARD ========== -->
+        <section class="card upload-card fade-up" id="uploadCard">
+
+            <!-- Upload area -->
+            <div class="upload-area" id="uploadArea">
+                <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                <h3>Drag & drop your image here</h3>
+                <p>or <span class="browse-link">browse files</span> — JPG, JPEG, PNG, WEBP (max 20MB)</p>
+                <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp" hidden>
+            </div>
+
+            <!-- Preview + Adjustment Controls -->
+            <div id="editorSection" class="editor-section hidden">
+
+                <!-- Skeleton -->
+                <div id="previewSkeleton" class="skeleton hidden">
+                    <div class="skeleton-avatar"></div>
+                    <div class="skeleton-lines">
+                        <div class="skeleton-line"></div>
+                        <div class="skeleton-line short"></div>
+                    </div>
+                </div>
+
+                <!-- Live preview with glow -->
+                <div id="previewContent" class="preview-content">
+                    <div class="live-preview-wrap" id="livePreviewWrap">
+                        <div class="glow-frame" id="glowFrame"></div>
+                        <div class="preview-thumb live-preview-thumb">
+                            <canvas id="previewCanvas" width="100" height="100"></canvas>
+                        </div>
+                        <div class="bc-badge" id="bcBadge">B: 0 · C: 0</div>
+                    </div>
+
+                    <div class="preview-meta">
+                        <div class="meta-row"><i class="fas fa-image"></i> <span id="previewName">—</span></div>
+                        <div class="meta-row"><i class="fas fa-weight-hanging"></i> <span id="previewSize">—</span></div>
+                        <div class="meta-row"><i class="fas fa-expand"></i> <span id="previewDimensions">—</span></div>
+                        <div class="meta-row"><i class="fas fa-file"></i> <span id="previewType">—</span></div>
+                    </div>
+                    <button class="reset-btn" id="resetBtn" title="Remove image"><i class="fas fa-times"></i></button>
+                </div>
+
+                <!-- Adjustment Controls -->
+                <div class="adjust-controls">
+                    <h3 class="options-title"><i class="fas fa-sun" style="color:#8b5cf6;"></i> Adjustment Controls</h3>
+
+                    <!-- Brightness slider -->
+                    <div class="adjust-slider-wrap">
+                        <div class="adjust-slider-header">
+                            <label for="brightnessSlider"><i class="fas fa-sun"></i> Brightness</label>
+                            <span class="adjust-readout" id="brightnessReadout">0</span>
+                        </div>
+                        <input type="range" id="brightnessSlider" class="adjust-slider brightness-slider"
+                               min="-100" max="100" value="0" step="1">
+                        <div class="adjust-ticks">
+                            <span>-100</span>
+                            <span>-50</span>
+                            <span>0</span>
+                            <span>+50</span>
+                            <span>+100</span>
+                        </div>
+                    </div>
+
+                    <!-- Contrast slider -->
+                    <div class="adjust-slider-wrap">
+                        <div class="adjust-slider-header">
+                            <label for="contrastSlider"><i class="fas fa-adjust"></i> Contrast</label>
+                            <span class="adjust-readout" id="contrastReadout">0</span>
+                        </div>
+                        <input type="range" id="contrastSlider" class="adjust-slider contrast-slider"
+                               min="-100" max="100" value="0" step="1">
+                        <div class="adjust-ticks">
+                            <span>-100</span>
+                            <span>-50</span>
+                            <span>0</span>
+                            <span>+50</span>
+                            <span>+100</span>
+                        </div>
+                    </div>
+
+                    <!-- Quick presets -->
+                    <div class="option-group">
+                        <label class="group-label">Quick Presets</label>
+                        <div class="chip-row" id="presetRow">
+                            <button class="chip" data-bright="0" data-contrast="0">Original</button>
+                            <button class="chip" data-bright="20" data-contrast="15">Bright</button>
+                            <button class="chip" data-bright="-15" data-contrast="25">Dramatic</button>
+                            <button class="chip" data-bright="10" data-contrast="30">Vivid</button>
+                            <button class="chip" data-bright="-20" data-contrast="-10">Moody</button>
+                            <button class="chip" data-bright="30" data-contrast="0">Soft Light</button>
+                        </div>
+                    </div>
+
+                    <!-- Reset sliders -->
+                    <button class="reset-sliders-btn" id="resetSlidersBtn">
+                        <i class="fas fa-undo-alt"></i> Reset sliders to 0
+                    </button>
+
+                    <!-- Live preview label -->
+                    <div class="live-preview">
+                        <i class="fas fa-eye"></i>
+                        <span>Live preview updates in real time as you drag the sliders</span>
+                    </div>
+                </div>
+
+                <!-- Apply button + UNIQUE light sweep animation -->
+                <div class="apply-action">
+                    <button id="applyBtn" class="btn-primary" disabled>
+                        <i class="fas fa-magic"></i> Apply Changes
+                    </button>
+
+                    <!-- UNIQUE ANIMATION: Light sweep + glow + gentle zoom -->
+                    <div id="adjustAnimation" class="adjust-animation hidden">
+                        <!-- Light sweep overlay -->
+                        <div class="light-sweep" id="lightSweep"></div>
+
+                        <!-- Ambient glow orbs -->
+                        <div class="ambient-orbs">
+                            <span></span><span></span><span></span>
+                            <span></span><span></span><span></span>
+                        </div>
+
+                        <!-- Image stage -->
+                        <div class="adjust-stage">
+                            <div class="adjust-stage-img-wrap" id="adjustStageWrap">
+                                <img id="adjustStageImg" src="#" alt="adjusting preview">
+                            </div>
+                        </div>
+
+                        <!-- Status + progress -->
+                        <div class="adjust-progress-info">
+                            <div class="adjust-status" id="adjustStatus">Loading Image...</div>
+                            <div class="adjust-counter">
+                                <span id="adjustCountValue">0</span><span class="adjust-unit">%</span>
+                            </div>
+                        </div>
+
+                        <div class="adjust-progress-bar">
+                            <div class="adjust-progress-fill" id="adjustProgressFill"></div>
+                        </div>
+                    </div>
+
+                    <!-- Success animation -->
+                    <div id="successAnimation" class="success-animation hidden">
+                        <div class="checkmark-circle"><i class="fas fa-check"></i></div>
+                        <p class="success-text">✅ Image Enhanced Successfully</p>
+                        <div class="confetti">
+                            <span></span><span></span><span></span><span></span><span></span>
+                            <span></span><span></span><span></span><span></span><span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== RESULT CARD ========== -->
+        <section id="resultCard" class="card result-card hidden">
+            <h2 class="card-title"><i class="fas fa-check-circle" style="color:#10b981;"></i> Image Enhanced Successfully</h2>
+
+            <!-- Before/After comparison slider -->
+            <div class="compare-slider-wrapper">
+                <div class="compare-slider" id="compareSlider">
+                    <img id="compareBefore" class="compare-img" src="#" alt="before">
+                    <div class="compare-after-clip" id="compareAfterClip">
+                        <img id="compareAfter" class="compare-img" src="#" alt="after">
+                    </div>
+                    <div class="compare-handle" id="compareHandle">
+                        <i class="fas fa-arrows-alt-h"></i>
+                    </div>
+                </div>
+                <div class="compare-labels">
+                    <span>Original</span>
+                    <span>Enhanced</span>
+                </div>
+            </div>
+
+            <!-- Side-by-side -->
+            <div class="convert-result">
+                <div class="convert-side">
+                    <span class="convert-label">Original</span>
+                    <div class="compare-preview">
+                        <img id="resultOriginalImg" src="#" alt="original">
+                    </div>
+                </div>
+
+                <div class="convert-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+
+                <div class="convert-side">
+                    <span class="convert-label">Enhanced</span>
+                    <div class="compare-preview">
+                        <img id="resultEnhancedImg" src="#" alt="enhanced">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details -->
+            <div class="convert-details">
+                <div class="detail-row">
+                    <span><i class="fas fa-sun"></i> Brightness Level</span>
+                    <strong id="detailBrightness">—</strong>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-adjust"></i> Contrast Level</span>
+                    <strong id="detailContrast">—</strong>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-expand"></i> Resolution</span>
+                    <strong id="detailResolution">—</strong>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-weight-hanging"></i> File Size</span>
+                    <strong id="detailSize">—</strong>
+                </div>
+            </div>
+
+            <p class="comp-time"><i class="far fa-clock"></i> Processing time: <span id="processTime">0.0s</span></p>
+
+            <button id="downloadBtn" class="btn-primary download-btn">
+                <i class="fas fa-download"></i> Download Image
+            </button>
+            <button id="editAnotherBtn" class="btn-secondary">🔄 Edit Another Image</button>
+        </section>
+
+        <!-- ========== HOW IT WORKS ========== -->
+        <section class="card info-section fade-up" id="how-it-works">
+            <h2 class="card-title"><i class="fas fa-cogs" style="color:#8b5cf6;"></i> How It Works</h2>
+            <p class="section-subtitle">Three simple steps — no signup, no upload to a server.</p>
+
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <span class="step-number">1</span>
+                    <h3>Upload Image</h3>
+                    <p>Choose or drag your PNG, JPG, JPEG or WEBP image. Your file never leaves your browser.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-sliders-h"></i></div>
+                    <span class="step-number">2</span>
+                    <h3>Adjust Brightness &amp; Contrast</h3>
+                    <p>Move both sliders from -100 to +100 and watch the live preview update instantly.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-download"></i></div>
+                    <span class="step-number">3</span>
+                    <h3>Download Enhanced Image</h3>
+                    <p>Apply changes, compare before/after, then download your enhanced image in one click.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== HOW TO USE ========== -->
+        <section class="card info-section fade-up" id="how-to-use">
+            <h2 class="card-title"><i class="fas fa-question-circle" style="color:#8b5cf6;"></i> How to Use</h2>
+            <p class="section-subtitle">Get started in seconds — it's really that simple.</p>
+
+            <div class="usage-list">
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-hand-pointer"></i></span>
+                    <div>
+                        <h4>Upload your image</h4>
+                        <p>Click the upload area or drag your image file into the box (max 20MB).</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-sun"></i></span>
+                    <div>
+                        <h4>Move the Brightness slider</h4>
+                        <p>Adjust from -100 (darker) to +100 (brighter) and see the live preview.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-adjust"></i></span>
+                    <div>
+                        <h4>Adjust the Contrast slider</h4>
+                        <p>Fine-tune contrast from -100 (flat) to +100 (dramatic) to match your style.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-magic"></i></span>
+                    <div>
+                        <h4>Click Apply Changes</h4>
+                        <p>Watch the unique light-sweep animation as your adjustments are applied.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-columns"></i></span>
+                    <div>
+                        <h4>Compare Before &amp; After</h4>
+                        <p>Use the interactive slider to see the exact difference side-by-side.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-download"></i></span>
+                    <div>
+                        <h4>Download your enhanced image</h4>
+                        <p>Click the purple download button to save your image instantly.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== WHY USE THIS TOOL ========== -->
+        <section class="card info-section fade-up" id="why-choose">
+            <h2 class="card-title"><i class="fas fa-star" style="color:#8b5cf6;"></i> Why Use This Tool</h2>
+            <p class="section-subtitle">Built for clarity, speed, and privacy.</p>
+
+            <div class="features-grid">
+                <div class="feature-chip"><i class="fas fa-eye"></i> Live Preview</div>
+                <div class="feature-chip"><i class="fas fa-sliders-h"></i> Easy Controls</div>
+                <div class="feature-chip"><i class="fas fa-gem"></i> High Quality Output</div>
+                <div class="feature-chip"><i class="fas fa-bolt"></i> Fast Processing</div>
+                <div class="feature-chip"><i class="fas fa-infinity"></i> 100% Free</div>
+                <div class="feature-chip"><i class="fas fa-shield-alt"></i> Privacy Protected</div>
+                <div class="feature-chip"><i class="fas fa-ban"></i> No Watermark</div>
+                <div class="feature-chip"><i class="fas fa-mobile-alt"></i> Mobile Friendly</div>
+            </div>
+        </section>
+
+        <!-- ========== FEATURES ========== -->
+        <section class="card info-section fade-up" id="features">
+            <h2 class="card-title"><i class="fas fa-list-check" style="color:#8b5cf6;"></i> Features</h2>
+            <p class="section-subtitle">Everything you need from a premium brightness &amp; contrast tool.</p>
+
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h3>Real-Time Preview</h3>
+                    <p>See exactly how your image looks as you drag the sliders — instant canvas rendering.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                        <i class="fas fa-sliders-h"></i>
+                    </div>
+                    <h3>Dual Sliders</h3>
+                    <p>Independent brightness and contrast controls from -100 to +100.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Instant Processing</h3>
+                    <p>Apply adjustments in a fraction of a second using Canvas pixel math.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-columns"></i>
+                    </div>
+                    <h3>Before &amp; After Comparison</h3>
+                    <p>Drag the interactive slider to see the exact difference side-by-side.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Responsive Design</h3>
+                    <p>Works perfectly on mobile, tablet, laptop, and desktop.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #ec4899, #db2777);">
+                        <i class="fas fa-wifi"></i>
+                    </div>
+                    <h3>Works Offline</h3>
+                    <p>Once loaded, the tool functions without an internet connection.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #ec4899);">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <h3>High Quality Export</h3>
+                    <p>Adjustments applied via pixel-level math for smooth, high-quality results.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #1e1b4b, #3b82f6);">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3>Modern Interface</h3>
+                    <p>Light-sweep animation, glow effects, and smooth transitions throughout.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== OTHER TOOLS ========== -->
+        <section class="card info-section fade-up" id="other-tools">
+            <h2 class="card-title"><i class="fas fa-toolbox" style="color:#8b5cf6;"></i> Other Tools</h2>
+            <p class="section-subtitle">Explore more free tools from our suite — all privacy-first.</p>
+
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                        <i class="fas fa-compress-alt"></i>
+                    </div>
+                    <h3>Image Compressor</h3>
+                    <p>Reduce image file sizes by up to 80% without visible quality loss.</p>
+                    <a href="imagecompress.html" class="tool-link">Try Compressor <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </div>
+                    <h3>Image Resizer</h3>
+                    <p>Resize images to exact dimensions for web, print, or social media.</p>
+                    <a href="imageresize.html" class="tool-link">Try Resizer <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #a78bfa, #8b5cf6);">
+                        <i class="fas fa-low-vision"></i>
+                    </div>
+                    <h3>Blur Image</h3>
+                    <p>Apply adjustable blur to any image with a smooth slider.</p>
+                    <a href="blurimage.html" class="tool-link">Try Blur <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #ec4899, #db2777);">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h3>Sharpen Image</h3>
+                    <p>Enhance image clarity with adjustable sharpening strength.</p>
+                    <a href="sharpenimage.html" class="tool-link">Try Sharpen <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="fas fa-file-image"></i>
+                    </div>
+                    <h3>JPG to PNG</h3>
+                    <p>Convert JPG images to lossless PNG with transparency support.</p>
+                    <a href="jpgtopng.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3>PNG to JPG</h3>
+                    <p>Convert PNG to JPG with automatic white background flatten.</p>
+                    <a href="pngtojpg.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #ec4899);">
+                        <i class="fas fa-undo-alt"></i>
+                    </div>
+                    <h3>Rotate Image</h3>
+                    <p>Rotate images left, right or by any custom angle.</p>
+                    <a href="image-flip.html" class="tool-link">Try Rotator <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #ec4899);">
+                        <i class="fas fa-arrows-alt-h"></i>
+                    </div>
+                    <h3>Flip Image</h3>
+                    <p>Flip images horizontally or vertically in one click.</p>
+                    <a href="image-flip.html" class="tool-link">Try Flipper <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #3b82f6);">
+                        <i class="fas fa-crop-alt"></i>
+                    </div>
+                    <h3>Crop Image</h3>
+                    <p>Crop any image to the exact area you need.</p>
+                    <a href="image-cropper.html" class="tool-link">Try Cropper <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #06b6d4, #10b981);">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3>Color Picker</h3>
+                    <p>Extract color palettes from any image with a single click.</p>
+                    <a href="colourpicker.html" class="tool-link">Try Picker <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #1e1b4b, #3b82f6);">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <h3>QR Code Generator</h3>
+                    <p>Generate QR codes for links, text, or any data instantly.</p>
+                    <a href="urltoqr.html" class="tool-link">Try Generator <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== FAQ ========== -->
+        <section class="card info-section fade-up" id="faq">
+            <h2 class="card-title"><i class="fas fa-question" style="color:#8b5cf6;"></i> Frequently Asked Questions</h2>
+            <p class="section-subtitle">Quick answers to common questions about this tool.</p>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>What does Brightness &amp; Contrast do?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Brightness increases or decreases the overall lightness of an image, making it appear brighter or darker. Contrast adjusts the difference between light and dark areas — higher contrast makes images punchier and more dramatic, while lower contrast produces a softer, flatter look. Both adjustments are applied using precise pixel-level math via the HTML5 Canvas API.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Can I adjust both at the same time?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Absolutely! The two sliders work independently, so you can combine any brightness and contrast values from -100 to +100. The live preview updates instantly as you adjust either slider, so you can dial in the perfect look before applying.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Will image quality decrease?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>No. Brightness and contrast adjustments are applied at full resolution using the Canvas API's pixel data, preserving all image detail. The final export uses the same format as your original image with high-quality settings, so there's no additional compression loss.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Is this tool free?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes, it's 100% free with no limits, no signup, no watermarks, and no hidden fees. You can enhance as many images as you want.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Does my image leave my browser?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>No. Everything runs locally in your browser using the Canvas API. No files are uploaded to any server, and nothing is stored or tracked. Your privacy is fully preserved — the tool even works offline once loaded.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <p>© 2025 CrafterTools — enhance smarter, not harder.</p>
+    </footer>
+
+    <div id="toast" class="toast">📥 Download started!</div>
+
+    <script src="brightness-contrast.js"></script>
+</body>
+</html>
