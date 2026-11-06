@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrafterTools · Image Metadata Viewer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="image-metadata.css">
+</head>
+<body>
+
+    <!-- ========== NAVBAR ========== -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-compress-alt"></i>
+                <span>CrafterTools</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">About us</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#other-tools">Tools</a></li>
+                <li><a href="#" class="btn-nav">Home</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container" id="home">
+
+        <!-- ========== HERO ========== -->
+        <div class="page-header fade-up">
+            <h1>Image <span class="highlight">Metadata</span> Viewer</h1>
+            <p>View image information instantly including file details, dimensions, format, color depth and EXIF data (when available). Fast, secure and completely browser-based.</p>
+        </div>
+
+        <!-- ========== UPLOAD + SCAN CARD ========== -->
+        <section class="card upload-card fade-up" id="uploadCard">
+
+            <!-- Upload area -->
+            <div class="upload-area" id="uploadArea">
+                <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                <h3>Drag & drop your image here</h3>
+                <p>or <span class="browse-link">browse files</span> — JPG, PNG, WEBP, GIF, BMP (max 20MB)</p>
+                <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp,image/gif,image/bmp" hidden>
+            </div>
+
+            <!-- Preview + Scan -->
+            <div id="editorSection" class="editor-section hidden">
+
+                <!-- Skeleton -->
+                <div id="previewSkeleton" class="skeleton hidden">
+                    <div class="skeleton-avatar"></div>
+                    <div class="skeleton-lines">
+                        <div class="skeleton-line"></div>
+                        <div class="skeleton-line short"></div>
+                    </div>
+                </div>
+
+                <!-- Live preview -->
+                <div id="previewContent" class="preview-content">
+                    <div class="live-preview-wrap" id="livePreviewWrap">
+                        <div class="glow-frame" id="glowFrame"></div>
+                        <div class="preview-thumb live-preview-thumb">
+                            <img id="previewImage" src="#" alt="preview">
+                            <div class="scan-overlay hidden" id="scanOverlay">
+                                <div class="scan-beam" id="scanBeam"></div>
+                            </div>
+                        </div>
+                        <div class="format-badge" id="formatBadge">—</div>
+                    </div>
+
+                    <div class="preview-meta">
+                        <div class="meta-row"><i class="fas fa-image"></i> <span id="previewName">—</span></div>
+                        <div class="meta-row"><i class="fas fa-weight-hanging"></i> <span id="previewSize">—</span></div>
+                        <div class="meta-row"><i class="fas fa-expand"></i> <span id="previewDimensions">—</span></div>
+                        <div class="meta-row"><i class="fas fa-file"></i> <span id="previewType">—</span></div>
+                    </div>
+                    <button class="reset-btn" id="resetBtn" title="Remove image"><i class="fas fa-times"></i></button>
+                </div>
+
+                <!-- View Metadata button + UNIQUE scan animation -->
+                <div class="scan-action">
+                    <button id="scanBtn" class="btn-primary" disabled>
+                        <i class="fas fa-search"></i> View Metadata
+                    </button>
+
+                    <!-- UNIQUE scan animation -->
+                    <div id="scanAnimation" class="scan-animation hidden">
+                        <!-- Data particles floating upward -->
+                        <div class="data-particles">
+                            <span></span><span></span><span></span><span></span><span></span>
+                            <span></span><span></span><span></span><span></span><span></span>
+                            <span></span><span></span>
+                        </div>
+
+                        <!-- Metadata icons popping in -->
+                        <div class="meta-icons-row">
+                            <span class="meta-icon-pop" style="animation-delay: 0.2s"><i class="fas fa-file-image"></i></span>
+                            <span class="meta-icon-pop" style="animation-delay: 0.5s"><i class="fas fa-camera"></i></span>
+                            <span class="meta-icon-pop" style="animation-delay: 0.8s"><i class="fas fa-expand"></i></span>
+                            <span class="meta-icon-pop" style="animation-delay: 1.1s"><i class="fas fa-palette"></i></span>
+                            <span class="meta-icon-pop" style="animation-delay: 1.4s"><i class="fas fa-clock"></i></span>
+                            <span class="meta-icon-pop" style="animation-delay: 1.7s"><i class="fas fa-map-marker-alt"></i></span>
+                        </div>
+
+                        <!-- Scan stage with beam -->
+                        <div class="scan-stage">
+                            <div class="scan-stage-img-wrap" id="scanStageWrap">
+                                <img id="scanStageImg" src="#" alt="scanning preview">
+                                <div class="scan-line-beam" id="scanLineBeam"></div>
+                            </div>
+                        </div>
+
+                        <!-- Status + counter -->
+                        <div class="scan-progress-info">
+                            <div class="scan-status" id="scanStatus">Loading Image...</div>
+                            <div class="scan-counter">
+                                <span id="scanCountValue">0</span><span class="scan-unit">%</span>
+                            </div>
+                        </div>
+
+                        <div class="scan-progress-bar">
+                            <div class="scan-progress-fill" id="scanProgressFill"></div>
+                        </div>
+                    </div>
+
+                    <!-- Success -->
+                    <div id="successAnimation" class="success-animation hidden">
+                        <div class="checkmark-circle"><i class="fas fa-check"></i></div>
+                        <p class="success-text">✅ Metadata Extracted Successfully</p>
+                        <div class="confetti">
+                            <span></span><span></span><span></span><span></span><span></span>
+                            <span></span><span></span><span></span><span></span><span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== METADATA RESULT ========== -->
+        <section id="resultCard" class="card result-card hidden">
+            <h2 class="card-title"><i class="fas fa-info-circle" style="color:#8b5cf6;"></i> Image Metadata</h2>
+
+            <!-- File & Image Info -->
+            <h3 class="section-mini-title"><i class="fas fa-file"></i> File &amp; Image Information</h3>
+            <div class="metadata-table" id="fileInfoTable">
+                <!-- Filled dynamically -->
+            </div>
+
+            <!-- EXIF Section -->
+            <div id="exifSection" class="exif-section">
+                <h3 class="section-mini-title"><i class="fas fa-camera"></i> EXIF Data</h3>
+                <div class="metadata-table" id="exifTable">
+                    <!-- Filled dynamically -->
+                </div>
+            </div>
+
+            <p class="comp-time"><i class="far fa-clock"></i> Scan time: <span id="scanTime">0.0s</span></p>
+
+            <button id="downloadReportBtn" class="btn-primary download-btn">
+                <i class="fas fa-file-download"></i> Download Metadata Report (.txt)
+            </button>
+            <button id="chooseAnotherBtn" class="btn-secondary">🔄 Choose Another Image</button>
+        </section>
+
+        <!-- ========== HOW IT WORKS ========== -->
+        <section class="card info-section fade-up" id="how-it-works">
+            <h2 class="card-title"><i class="fas fa-cogs" style="color:#8b5cf6;"></i> How It Works</h2>
+            <p class="section-subtitle">Three simple steps — no signup, no upload to a server.</p>
+
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <span class="step-number">1</span>
+                    <h3>Upload Image</h3>
+                    <p>Choose or drag your image — JPG, PNG, WEBP, GIF or BMP (max 20MB). Your file never leaves your browser.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-search"></i></div>
+                    <span class="step-number">2</span>
+                    <h3>Scan Metadata</h3>
+                    <p>Click View Metadata and watch the scanner extract all available file, image and EXIF data.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-file-alt"></i></div>
+                    <span class="step-number">3</span>
+                    <h3>View Report</h3>
+                    <p>Review the complete metadata report and download it as a text file if needed.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== HOW TO USE ========== -->
+        <section class="card info-section fade-up" id="how-to-use">
+            <h2 class="card-title"><i class="fas fa-question-circle" style="color:#8b5cf6;"></i> How to Use</h2>
+            <p class="section-subtitle">Get started in seconds — it's really that simple.</p>
+
+            <div class="usage-list">
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-hand-pointer"></i></span>
+                    <div>
+                        <h4>Upload your image</h4>
+                        <p>Click the upload area or drag your image file into the box (max 20MB).</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-search"></i></span>
+                    <div>
+                        <h4>Click View Metadata</h4>
+                        <p>Trigger the scanning animation to read all available file and EXIF properties.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-hourglass-half"></i></span>
+                    <div>
+                        <h4>Wait for the scan animation</h4>
+                        <p>The status text guides you through Loading → Scanning → Reading → Extracting → Analyzing → Generating → Complete.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-table"></i></span>
+                    <div>
+                        <h4>Review all available information</h4>
+                        <p>File info, dimensions, aspect ratio, MIME type, and full EXIF data if present.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-download"></i></span>
+                    <div>
+                        <h4>Download the metadata report</h4>
+                        <p>Click the download button to save all data as a .txt report.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== WHY USE THIS TOOL ========== -->
+        <section class="card info-section fade-up" id="why-choose">
+            <h2 class="card-title"><i class="fas fa-star" style="color:#8b5cf6;"></i> Why Use This Tool</h2>
+            <p class="section-subtitle">Built for speed, accuracy, and privacy.</p>
+
+            <div class="features-grid">
+                <div class="feature-chip"><i class="fas fa-bolt"></i> Fast Scanning</div>
+                <div class="feature-chip"><i class="fas fa-shield-alt"></i> Privacy Protected</div>
+                <div class="feature-chip"><i class="fas fa-globe"></i> Browser Based</div>
+                <div class="feature-chip"><i class="fas fa-infinity"></i> Free Forever</div>
+                <div class="feature-chip"><i class="fas fa-camera"></i> EXIF Support</div>
+                <div class="feature-chip"><i class="fas fa-mobile-alt"></i> Mobile Friendly</div>
+                <div class="feature-chip"><i class="fas fa-clock"></i> Instant Results</div>
+                <div class="feature-chip"><i class="fas fa-ban"></i> No Upload Required</div>
+            </div>
+        </section>
+
+        <!-- ========== FEATURES ========== -->
+        <section class="card info-section fade-up" id="features">
+            <h2 class="card-title"><i class="fas fa-list-check" style="color:#8b5cf6;"></i> Features</h2>
+            <p class="section-subtitle">Everything you need from a premium metadata viewer.</p>
+
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h3>EXIF Metadata Viewer</h3>
+                    <p>Reads embedded camera data including model, lens, ISO, exposure, and GPS when available.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                        <i class="fas fa-file-image"></i>
+                    </div>
+                    <h3>Image Properties</h3>
+                    <p>Dimensions, aspect ratio, color depth, DPI, MIME type, and full file info.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="fas fa-camera-retro"></i>
+                    </div>
+                    <h3>Camera Information</h3>
+                    <p>Extracts make, model, lens, and shooting settings from EXIF blocks.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-expand"></i>
+                    </div>
+                    <h3>Resolution Details</h3>
+                    <p>Full width, height, aspect ratio and DPI detection.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #ec4899, #db2777);">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h3>Download Report</h3>
+                    <p>Export the full metadata report as a clean .txt file.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Responsive Design</h3>
+                    <p>Works perfectly on mobile, tablet, laptop, and desktop.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #3b82f6);">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3>Modern UI</h3>
+                    <p>Scan-line animation, floating data particles, and smooth transitions.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #1e1b4b, #3b82f6);">
+                        <i class="fas fa-wifi"></i>
+                    </div>
+                    <h3>Works Offline</h3>
+                    <p>Once loaded, the tool functions without an internet connection.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== OTHER TOOLS ========== -->
+        <section class="card info-section fade-up" id="other-tools">
+            <h2 class="card-title"><i class="fas fa-toolbox" style="color:#8b5cf6;"></i> Other Tools</h2>
+            <p class="section-subtitle">Explore more free tools from our suite — all privacy-first.</p>
+
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                        <i class="fas fa-compress-alt"></i>
+                    </div>
+                    <h3>Image Compressor</h3>
+                    <p>Reduce image file sizes by up to 80% without visible quality loss.</p>
+                    <a href="imagecompress.html" class="tool-link">Try Compressor <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </div>
+                    <h3>Image Resizer</h3>
+                    <p>Resize images to exact dimensions for web, print, or social media.</p>
+                    <a href="imageresize.html" class="tool-link">Try Resizer <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #a78bfa, #8b5cf6);">
+                        <i class="fas fa-low-vision"></i>
+                    </div>
+                    <h3>Blur Image</h3>
+                    <p>Apply adjustable blur to any image with a smooth slider.</p>
+                    <a href="blurimage.html" class="tool-link">Try Blur <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #ec4899, #db2777);">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h3>Sharpen Image</h3>
+                    <p>Enhance image clarity with adjustable sharpening strength.</p>
+                    <a href="sharpenimage.html" class="tool-link">Try Sharpen <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <h3>Brightness &amp; Contrast</h3>
+                    <p>Adjust image brightness and contrast with live preview.</p>
+                    <a href="brightness-contrast.html" class="tool-link">Try Adjuster <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="fas fa-file-image"></i>
+                    </div>
+                    <h3>JPG to PNG</h3>
+                    <p>Convert JPG images to lossless PNG with transparency support.</p>
+                    <a href="jpgtopng.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #ec4899);">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3>PNG to JPG</h3>
+                    <p>Convert PNG to JPG with automatic white background flatten.</p>
+                    <a href="pngtojpg.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #ec4899);">
+                        <i class="fas fa-undo-alt"></i>
+                    </div>
+                    <h3>Rotate Image</h3>
+                    <p>Rotate images left, right or by any custom angle.</p>
+                    <a href="image-flip.html" class="tool-link">Try Rotator <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #3b82f6);">
+                        <i class="fas fa-crop-alt"></i>
+                    </div>
+                    <h3>Crop Image</h3>
+                    <p>Crop any image to the exact area you need.</p>
+                    <a href="image-cropper.html" class="tool-link">Try Cropper <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                        <i class="fas fa-eraser"></i>
+                    </div>
+                    <h3>Remove Metadata</h3>
+                    <p>Strip EXIF and private data from images before sharing.</p>
+                    <a href="#" class="tool-link">Try Remover <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #1e1b4b, #3b82f6);">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <h3>QR Code Generator</h3>
+                    <p>Generate QR codes for links, text, or any data instantly.</p>
+                    <a href="urltoqr.html" class="tool-link">Try Generator <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== FAQ ========== -->
+        <section class="card info-section fade-up" id="faq">
+            <h2 class="card-title"><i class="fas fa-question" style="color:#8b5cf6;"></i> Frequently Asked Questions</h2>
+            <p class="section-subtitle">Quick answers to common questions about this tool.</p>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>What is image metadata?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Image metadata is descriptive information embedded inside the file itself. It can include file properties like dimensions, color depth, and MIME type, as well as shooting information such as camera model, lens, exposure, and GPS coordinates. This tool extracts all of that data and presents it in a clean, readable table — entirely in your browser.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>What is EXIF data?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>EXIF (Exchangeable Image File Format) is a standard that stores camera-related metadata inside JPG and TIFF files. It typically includes camera make/model, lens type, ISO, exposure time, aperture (F-number), focal length, flash usage, orientation, GPS coordinates, and sometimes even software used to edit the image. Not all images contain EXIF — PNGs usually don't, and many images have it stripped for privacy.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Can I remove metadata?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes, but not with this tool — this is a viewer only. To remove metadata, use our companion "Remove Metadata" tool, which re-encodes the image through the Canvas API and strips all EXIF, GPS, and other private data in the process.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Does this tool upload my image?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>No. Everything runs locally in your browser. Files are read using the FileReader API, and EXIF data is parsed by a small JavaScript routine included directly in the page. No files are uploaded to any server, and nothing is stored or tracked. The tool works fully offline once loaded.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Is this tool free?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes, it's 100% free with no limits, no signup, no watermarks, and no hidden fees. You can scan as many images as you want.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <p>© 2025 CrafterTools — inspect smarter, not harder.</p>
+    </footer>
+
+    <div id="toast" class="toast">📥 Download started!</div>
+
+    <script src="image-metadata.js"></script>
+</body>
+</html>
