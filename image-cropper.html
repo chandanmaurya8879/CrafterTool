@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrafterTools · Image Crop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="image-cropper.css">
+</head>
+<body>
+
+    <!-- ========== NAVBAR ========== -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-compress-alt"></i>
+                <span>CrafterTools</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">About us </a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#other-tools">Tools</a></li>
+                <li><a href="index.html" class="btn-nav">Home</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container" id="home">
+
+        <!-- ========== HERO ========== -->
+        <div class="page-header fade-up">
+            <h1>Image <span class="highlight">Crop</span></h1>
+            <p>Crop your images with precision using an interactive crop box. Fast, secure, free and completely browser-based.</p>
+        </div>
+
+        <!-- ========== UPLOAD + CROP CARD ========== -->
+        <section class="card upload-card fade-up" id="uploadCard">
+
+            <!-- Upload area -->
+            <div class="upload-area" id="uploadArea">
+                <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                <h3>Drag & drop your image here</h3>
+                <p>or <span class="browse-link">browse files</span> — JPG, JPEG, PNG, WEBP (max 20MB)</p>
+                <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden>
+            </div>
+
+            <!-- Crop Editor -->
+            <div id="editorSection" class="editor-section hidden">
+
+                <!-- Preview info -->
+                <div id="previewContent" class="preview-content">
+                    <div class="preview-meta">
+                        <div class="meta-row"><i class="fas fa-image"></i> <span id="previewName">—</span></div>
+                        <div class="meta-row"><i class="fas fa-weight-hanging"></i> <span id="previewSize">—</span></div>
+                        <div class="meta-row"><i class="fas fa-expand"></i> <span id="previewDimensions">—</span></div>
+                        <div class="meta-row"><i class="fas fa-crop-alt"></i> <span id="previewCropDims">Crop: —</span></div>
+                    </div>
+                    <button class="reset-btn" id="resetBtn" title="Remove image"><i class="fas fa-times"></i></button>
+                </div>
+
+                <!-- Crop Toolbar -->
+                <div class="crop-toolbar">
+                    <div class="toolbar-group">
+                        <label class="toolbar-label">Aspect Ratio</label>
+                        <div class="chip-row" id="aspectRow">
+                            <button class="chip active" data-ratio="free">Free</button>
+                            <button class="chip" data-ratio="1:1">1:1</button>
+                            <button class="chip" data-ratio="4:3">4:3</button>
+                            <button class="chip" data-ratio="16:9">16:9</button>
+                            <button class="chip" data-ratio="3:2">3:2</button>
+                            <button class="chip" data-ratio="1:1" data-preset="ig-square">Instagram Square</button>
+                            <button class="chip" data-ratio="9:16" data-preset="ig-story">Instagram Story</button>
+                            <button class="chip" data-ratio="820:312" data-preset="fb-cover">Facebook Cover</button>
+                            <button class="chip" data-ratio="16:9" data-preset="yt-thumb">YouTube Thumbnail</button>
+                        </div>
+                    </div>
+
+                    <div class="toolbar-group">
+                        <label class="toolbar-label">Tools</label>
+                        <div class="tool-btn-row">
+                            <button class="tool-btn" id="zoomInBtn" title="Zoom In"><i class="fas fa-search-plus"></i></button>
+                            <button class="tool-btn" id="zoomOutBtn" title="Zoom Out"><i class="fas fa-search-minus"></i></button>
+                            <button class="tool-btn" id="rotateLeftBtn" title="Rotate Left"><i class="fas fa-undo-alt"></i></button>
+                            <button class="tool-btn" id="rotateRightBtn" title="Rotate Right"><i class="fas fa-redo-alt"></i></button>
+                            <button class="tool-btn reset-tool" id="resetCropBtn" title="Reset Crop"><i class="fas fa-sync-alt"></i> Reset</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Crop Canvas Area -->
+                <div class="crop-editor-wrap" id="cropEditorWrap">
+                    <div class="crop-canvas-container" id="cropCanvasContainer">
+                        <canvas id="cropCanvas"></canvas>
+                        <!-- Overlay crop box -->
+                        <div class="crop-overlay" id="cropOverlay">
+                            <div class="crop-box" id="cropBox">
+                                <div class="crop-grid">
+                                    <div class="grid-line-v" style="left:33.33%"></div>
+                                    <div class="grid-line-v" style="left:66.66%"></div>
+                                    <div class="grid-line-h" style="top:33.33%"></div>
+                                    <div class="grid-line-h" style="top:66.66%"></div>
+                                </div>
+                                <div class="crop-handle tl" data-handle="tl"></div>
+                                <div class="crop-handle tr" data-handle="tr"></div>
+                                <div class="crop-handle bl" data-handle="bl"></div>
+                                <div class="crop-handle br" data-handle="br"></div>
+                                <div class="crop-handle t" data-handle="t"></div>
+                                <div class="crop-handle b" data-handle="b"></div>
+                                <div class="crop-handle l" data-handle="l"></div>
+                                <div class="crop-handle r" data-handle="r"></div>
+                                <div class="crop-scan-border"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Apply button + UNIQUE crop animation -->
+                <div class="crop-action">
+                    <button id="cropBtn" class="btn-primary" disabled>
+                        <i class="fas fa-crop-alt"></i> Crop Image
+                    </button>
+
+                    <!-- UNIQUE crop animation -->
+                    <div id="cropAnimation" class="crop-animation hidden">
+                        <!-- Glow beam around crop -->
+                        <div class="crop-glow-beam" id="cropGlowBeam"></div>
+
+                        <!-- Zoom stage -->
+                        <div class="crop-stage">
+                            <div class="crop-stage-wrap" id="cropStageWrap">
+                                <img id="cropStageImg" src="#" alt="cropping preview">
+                                <div class="crop-stage-outside" id="cropStageOutside"></div>
+                                <div class="crop-stage-scan" id="cropStageScan"></div>
+                            </div>
+                        </div>
+
+                        <!-- Status + counter -->
+                        <div class="crop-progress-info">
+                            <div class="crop-status" id="cropStatus">Preparing Image...</div>
+                            <div class="crop-counter">
+                                <span id="cropCountValue">0</span><span class="crop-unit">%</span>
+                            </div>
+                        </div>
+
+                        <div class="crop-progress-bar">
+                            <div class="crop-progress-fill" id="cropProgressFill"></div>
+                        </div>
+                    </div>
+
+                    <!-- Success -->
+                    <div id="successAnimation" class="success-animation hidden">
+                        <div class="checkmark-circle"><i class="fas fa-check"></i></div>
+                        <p class="success-text">✅ Image Cropped Successfully</p>
+                        <div class="confetti">
+                            <span></span><span></span><span></span><span></span><span></span>
+                            <span></span><span></span><span></span><span></span><span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== RESULT CARD ========== -->
+        <section id="resultCard" class="card result-card hidden">
+            <h2 class="card-title"><i class="fas fa-check-circle" style="color:#10b981;"></i> Image Cropped Successfully</h2>
+
+            <div class="convert-result">
+                <div class="convert-side">
+                    <span class="convert-label">Original</span>
+                    <div class="compare-preview">
+                        <img id="resultOriginalImg" src="#" alt="original">
+                    </div>
+                </div>
+
+                <div class="convert-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+
+                <div class="convert-side">
+                    <span class="convert-label">Cropped</span>
+                    <div class="compare-preview">
+                        <img id="resultCroppedImg" src="#" alt="cropped">
+                    </div>
+                </div>
+            </div>
+
+            <div class="convert-details">
+                <div class="detail-row">
+                    <span><i class="fas fa-expand"></i> Resolution</span>
+                    <strong id="detailResolution">—</strong>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-weight-hanging"></i> File Size</span>
+                    <strong id="detailSize">—</strong>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-file-image"></i> Image Format</span>
+                    <strong id="detailFormat">—</strong>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-crop-alt"></i> Crop Dimensions</span>
+                    <strong id="detailCropDims">—</strong>
+                </div>
+            </div>
+
+            <p class="comp-time"><i class="far fa-clock"></i> Crop time: <span id="processTime">0.0s</span></p>
+
+            <button id="downloadBtn" class="btn-primary download-btn">
+                <i class="fas fa-download"></i> Download Cropped Image
+            </button>
+            <button id="cropAnotherBtn" class="btn-secondary">🔄 Crop Another Image</button>
+        </section>
+
+        <!-- ========== HOW IT WORKS ========== -->
+        <section class="card info-section fade-up" id="how-it-works">
+            <h2 class="card-title"><i class="fas fa-cogs" style="color:#8b5cf6;"></i> How It Works</h2>
+            <p class="section-subtitle">Three simple steps — no signup, no upload to a server.</p>
+
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <span class="step-number">1</span>
+                    <h3>Upload Image</h3>
+                    <p>Choose or drag your JPG, PNG or WEBP image. Your file never leaves your browser.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-crop-alt"></i></div>
+                    <span class="step-number">2</span>
+                    <h3>Adjust Crop Area</h3>
+                    <p>Drag the crop box, resize with the handles, pick an aspect ratio, zoom, and rotate.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-download"></i></div>
+                    <span class="step-number">3</span>
+                    <h3>Download Cropped Image</h3>
+                    <p>Apply the crop, preview the result, then download your cropped image in one click.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== HOW TO USE ========== -->
+        <section class="card info-section fade-up" id="how-to-use">
+            <h2 class="card-title"><i class="fas fa-question-circle" style="color:#8b5cf6;"></i> How to Use</h2>
+            <p class="section-subtitle">Get started in seconds — it's really that simple.</p>
+
+            <div class="usage-list">
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-hand-pointer"></i></span>
+                    <div>
+                        <h4>Upload your image</h4>
+                        <p>Click the upload area or drag your image file into the box (max 20MB).</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-arrows-alt"></i></span>
+                    <div>
+                        <h4>Drag and resize the crop box</h4>
+                        <p>Move the crop box freely, or grab any of the 8 handles to resize it.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-crop-alt"></i></span>
+                    <div>
+                        <h4>Choose an aspect ratio (optional)</h4>
+                        <p>Pick from 1:1, 4:3, 16:9, 3:2, or social media presets like Instagram, YouTube, and Facebook.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-search-plus"></i></span>
+                    <div>
+                        <h4>Use zoom and rotate</h4>
+                        <p>Zoom in/out for precision or rotate the image left/right by 90°.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-magic"></i></span>
+                    <div>
+                        <h4>Click Crop Image</h4>
+                        <p>Watch the unique scanning-border animation as the crop is applied.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-download"></i></span>
+                    <div>
+                        <h4>Download the cropped image</h4>
+                        <p>Click the purple download button to save your cropped image instantly.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== WHY USE THIS TOOL ========== -->
+        <section class="card info-section fade-up" id="why-choose">
+            <h2 class="card-title"><i class="fas fa-star" style="color:#8b5cf6;"></i> Why Use This Tool</h2>
+            <p class="section-subtitle">Built for precision, speed, and privacy.</p>
+
+            <div class="features-grid">
+                <div class="feature-chip"><i class="fas fa-crop-alt"></i> Interactive Crop Box</div>
+                <div class="feature-chip"><i class="fas fa-gem"></i> High Quality Output</div>
+                <div class="feature-chip"><i class="fas fa-infinity"></i> Free Forever</div>
+                <div class="feature-chip"><i class="fas fa-shield-alt"></i> Privacy Protected</div>
+                <div class="feature-chip"><i class="fas fa-bolt"></i> Fast Processing</div>
+                <div class="feature-chip"><i class="fas fa-ban"></i> No Watermark</div>
+                <div class="feature-chip"><i class="fas fa-mobile-alt"></i> Mobile Friendly</div>
+                <div class="feature-chip"><i class="fas fa-globe"></i> Browser Based</div>
+            </div>
+        </section>
+
+        <!-- ========== FEATURES ========== -->
+        <section class="card info-section fade-up" id="features">
+            <h2 class="card-title"><i class="fas fa-list-check" style="color:#8b5cf6;"></i> Features</h2>
+            <p class="section-subtitle">Everything you need from a premium crop tool.</p>
+
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h3>Live Crop Preview</h3>
+                    <p>See the exact crop area with grid lines and handles updating in real time.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                        <i class="fas fa-arrows-alt"></i>
+                    </div>
+                    <h3>Drag &amp; Resize</h3>
+                    <p>Move the crop box freely or resize with 8 handles for pixel-perfect precision.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="fas fa-crop-alt"></i>
+                    </div>
+                    <h3>Preset Ratios</h3>
+                    <p>1:1, 4:3, 16:9, 3:2 plus Instagram, YouTube and Facebook presets.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                    <h3>Zoom Controls</h3>
+                    <p>Zoom in and out to fine-tune your crop selection with precision.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #ec4899, #db2777);">
+                        <i class="fas fa-undo-alt"></i>
+                    </div>
+                    <h3>Rotate Support</h3>
+                    <p>Rotate the image left or right by 90° to fix orientation quickly.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h3>High Quality Export</h3>
+                    <p>Export using the original format and quality for pixel-perfect results.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #3b82f6);">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Responsive Design</h3>
+                    <p>Works perfectly on mobile, tablet, laptop, and desktop.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #1e1b4b, #3b82f6);">
+                        <i class="fas fa-wifi"></i>
+                    </div>
+                    <h3>Works Offline</h3>
+                    <p>Once loaded, the tool functions without an internet connection.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== OTHER TOOLS ========== -->
+        <section class="card info-section fade-up" id="other-tools">
+            <h2 class="card-title"><i class="fas fa-toolbox" style="color:#8b5cf6;"></i> Other Tools</h2>
+            <p class="section-subtitle">Explore more free tools from our suite — all privacy-first.</p>
+
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                        <i class="fas fa-compress-alt"></i>
+                    </div>
+                    <h3>Image Compressor</h3>
+                    <p>Reduce image file sizes by up to 80% without visible quality loss.</p>
+                    <a href="imagecompress.html" class="tool-link">Try Compressor <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </div>
+                    <h3>Image Resizer</h3>
+                    <p>Resize images to exact dimensions for web, print, or social media.</p>
+                    <a href="imageresize.html" class="tool-link">Try Resizer <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #a78bfa, #8b5cf6);">
+                        <i class="fas fa-low-vision"></i>
+                    </div>
+                    <h3>Blur Image</h3>
+                    <p>Apply adjustable blur to any image with a smooth slider.</p>
+                    <a href="blurimage.html" class="tool-link">Try Blur <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #ec4899, #db2777);">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h3>Sharpen Image</h3>
+                    <p>Enhance image clarity with adjustable sharpening strength.</p>
+                    <a href="Sharpenimage.html" class="tool-link">Try Sharpen <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <h3>Brightness &amp; Contrast</h3>
+                    <p>Adjust image brightness and contrast with live preview.</p>
+                    <a href="brightness-contrast.html" class="tool-link">Try Adjuster <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="fas fa-file-image"></i>
+                    </div>
+                    <h3>JPG to PNG</h3>
+                    <p>Convert JPG images to lossless PNG with transparency support.</p>
+                    <a href="jpgtopng.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #ec4899);">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3>PNG to JPG</h3>
+                    <p>Convert PNG to JPG with automatic white background flatten.</p>
+                    <a href="pngtojpg.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #ec4899);">
+                        <i class="fas fa-undo-alt"></i>
+                    </div>
+                    <h3>Rotate Image</h3>
+                    <p>Rotate images left, right or by any custom angle.</p>
+                    <a href="image-flip.html" class="tool-link">Try Rotator <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #ec4899);">
+                        <i class="fas fa-arrows-alt-h"></i>
+                    </div>
+                    <h3>Flip Image</h3>
+                    <p>Flip images horizontally or vertically in one click.</p>
+                    <a href="image-flip.html" class="tool-link">Try Flipper <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #06b6d4, #10b981);">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <h3>Image Metadata Viewer</h3>
+                    <p>View EXIF, dimensions, and file info from any image.</p>
+                    <a href="image-metadata.html" class="tool-link">Try Viewer <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #1e1b4b, #3b82f6);">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <h3>QR Code Generator</h3>
+                    <p>Generate QR codes for links, text, or any data instantly.</p>
+                    <a href="urltoqr.html" class="tool-link">Try Generator <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== FAQ ========== -->
+        <section class="card info-section fade-up" id="faq">
+            <h2 class="card-title"><i class="fas fa-question" style="color:#8b5cf6;"></i> Frequently Asked Questions</h2>
+            <p class="section-subtitle">Quick answers to common questions about this tool.</p>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>What is Image Crop?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Image cropping is the process of removing unwanted areas from an image to focus on a specific subject or fit a target aspect ratio. This tool gives you an interactive crop box you can drag and resize freely, along with preset aspect ratios for social media, web, and print — all applied in your browser using the Canvas API.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Can I crop without losing quality?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes. Cropping removes pixels outside the selection but keeps the remaining pixels at their original resolution and quality. The export uses the same format as your original image, so there's no additional compression loss — the cropped result is pixel-perfect at the crop dimensions you choose.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Can I use preset aspect ratios?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Absolutely. Choose from Free (no constraint), 1:1, 4:3, 16:9, 3:2, plus social presets like Instagram Square (1:1), Instagram Story (9:16), Facebook Cover (820:312), and YouTube Thumbnail (16:9). The crop box will snap to your chosen ratio, and the handles will maintain it while resizing.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Does my image leave my browser?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>No. Everything runs locally in your browser using the Canvas API. No files are uploaded to any server, and nothing is stored or tracked. Your privacy is fully preserved — the tool even works offline once loaded.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Is this tool free?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes, it's 100% free with no limits, no signup, no watermarks, and no hidden fees. You can crop as many images as you want.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <p>© 2025 CrafterTools — crop smarter, not harder.</p>
+    </footer>
+
+    <div id="toast" class="toast">📥 Download started!</div>
+
+    <script src="image-cropper.js"></script>
+</body>
+</html>
