@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrafterTools · Image Color Picker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="colourpicker.css">
+</head>
+<body>
+
+    <!-- ========== NAVBAR ========== -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-compress-alt"></i>
+                <span>CrafterTools</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="about.html">About us </a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#other-tools">Tools</a></li>
+                <li><a href="index.html" class="btn-nav">Home</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container" id="home">
+
+        <!-- ========== HERO ========== -->
+        <div class="page-header fade-up">
+            <h1>Extract Colors from <span class="highlight">Images</span> Instantly</h1>
+            <p>Upload an image and pick any color with a single click. Copy HEX, RGB, HSL, or CSS values instantly. Fast, free, private, and processed entirely in your browser.</p>
+        </div>
+
+        <!-- ========== UPLOAD CARD ========== -->
+        <section class="card upload-card fade-up" id="uploadCard">
+
+            <!-- Upload area -->
+            <div class="upload-area" id="uploadArea">
+                <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                <h3>Drag & drop your image here</h3>
+                <p>or <span class="browse-link">browse files</span> — JPG, PNG, WEBP (max 20MB)</p>
+                <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden>
+            </div>
+
+            <!-- Processing animation -->
+            <div id="processingAnimation" class="processing-animation hidden">
+                <div class="processing-stage">
+                    <div class="processing-ring">
+                        <svg width="80" height="80" viewBox="0 0 80 80">
+                            <circle cx="40" cy="40" r="34" fill="none" stroke="#e9eef3" stroke-width="6"/>
+                            <circle id="processingRing" cx="40" cy="40" r="34" fill="none" stroke="url(#gradCP)" stroke-width="6" stroke-linecap="round" stroke-dasharray="213.6" stroke-dashoffset="213.6"/>
+                            <defs>
+                                <linearGradient id="gradCP" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#4f46e5"/>
+                                    <stop offset="100%" stop-color="#3b82f6"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <div class="processing-percent" id="processingPercent">0%</div>
+                    </div>
+                </div>
+                <p class="processing-status" id="processingStatus">Reading image...</p>
+                <div class="processing-bar">
+                    <div class="processing-bar-fill" id="processingBarFill"></div>
+                </div>
+            </div>
+
+            <!-- Success -->
+            <div id="successAnimation" class="success-animation hidden">
+                <div class="checkmark-circle"><i class="fas fa-check"></i></div>
+                <p class="success-text">✅ Image Loaded Successfully</p>
+                <div class="confetti">
+                    <span></span><span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span><span></span>
+                </div>
+            </div>
+
+            <!-- Editor -->
+            <div id="editorSection" class="editor-section hidden">
+
+                <!-- Preview info -->
+                <div class="preview-content">
+                    <div class="preview-thumb">
+                        <img id="previewThumb" src="#" alt="preview">
+                    </div>
+                    <div class="preview-meta">
+                        <div class="meta-row"><i class="fas fa-image"></i> <span id="previewName">—</span></div>
+                        <div class="meta-row"><i class="fas fa-weight-hanging"></i> <span id="previewSize">—</span></div>
+                        <div class="meta-row"><i class="fas fa-expand"></i> <span id="previewDimensions">—</span></div>
+                        <div class="meta-row"><i class="fas fa-file"></i> <span id="previewType">—</span></div>
+                    </div>
+                    <div class="preview-actions">
+                        <button class="action-btn" id="replaceBtn" title="Replace image"><i class="fas fa-sync-alt"></i></button>
+                        <button class="action-btn" id="removeBtn" title="Remove image"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+
+                <!-- Image picker -->
+                <div class="picker-section">
+                    <h3 class="options-title"><i class="fas fa-eye-dropper" style="color:#4f46e5;"></i> Click Anywhere to Pick a Color</h3>
+                    <p class="picker-hint"><i class="fas fa-hand-pointer"></i> Move your cursor over the image to see the magnifier. Click to select a color.</p>
+
+                    <div class="picker-wrap" id="pickerWrap">
+                        <canvas id="pickCanvas"></canvas>
+                        <div class="magnifier" id="magnifier">
+                            <canvas id="magnifierCanvas" width="120" height="120"></canvas>
+                            <div class="magnifier-crosshair"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Selected color -->
+                <div class="selected-color-section" id="selectedColorSection">
+                    <div class="selected-swatch" id="selectedSwatch" style="background:#ffffff"></div>
+                    <div class="selected-info">
+                        <h4 class="selected-title">Selected Color</h4>
+                        <div class="color-values" id="colorValues">
+                            <!-- Filled by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dominant palette -->
+                <div class="palette-section">
+                    <div class="palette-header">
+                        <h3 class="options-title"><i class="fas fa-palette" style="color:#4f46e5;"></i> Dominant Palette</h3>
+                        <div class="palette-download-btns">
+                            <button class="palette-dl-btn" id="downloadJsonBtn" title="Download JSON"><i class="fas fa-file-code"></i> JSON</button>
+                            <button class="palette-dl-btn" id="downloadCssBtn" title="Download CSS"><i class="fab fa-css3-alt"></i> CSS</button>
+                            <button class="palette-dl-btn" id="downloadTxtBtn" title="Download TXT"><i class="fas fa-file-alt"></i> TXT</button>
+                        </div>
+                    </div>
+                    <div class="palette-grid" id="paletteGrid">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+
+                <!-- Reset -->
+                <button id="pickAnotherBtn" class="btn-secondary" style="margin-top:20px;">
+                    <i class="fas fa-redo-alt"></i> Pick Another Image
+                </button>
+            </div>
+        </section>
+
+        <!-- ========== HOW IT WORKS ========== -->
+        <section class="card info-section fade-up" id="how-it-works">
+            <h2 class="card-title"><i class="fas fa-cogs" style="color:#4f46e5;"></i> How It Works</h2>
+            <p class="section-subtitle">Four simple steps — no signup, no upload to a server.</p>
+
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <span class="step-number">1</span>
+                    <h3>Upload Image</h3>
+                    <p>Choose or drag your JPG, PNG, or WEBP image. Your file never leaves your browser.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-eye-dropper"></i></div>
+                    <span class="step-number">2</span>
+                    <h3>Click Any Pixel</h3>
+                    <p>Use the zoom magnifier to hover precisely, then click to pick the exact color.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-copy"></i></div>
+                    <span class="step-number">3</span>
+                    <h3>View Color Codes</h3>
+                    <p>Get HEX, RGB, RGBA, HSL, HSV, and CMYK values — each with a copy button.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-download"></i></div>
+                    <span class="step-number">4</span>
+                    <h3>Copy or Download</h3>
+                    <p>Copy individual codes, or download the full dominant palette as JSON, CSS, or TXT.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== HOW TO USE ========== -->
+        <section class="card info-section fade-up" id="how-to-use">
+            <h2 class="card-title"><i class="fas fa-question-circle" style="color:#4f46e5;"></i> How to Use</h2>
+            <p class="section-subtitle">Get started in seconds — it's really that simple.</p>
+
+            <div class="usage-list">
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-hand-pointer"></i></span>
+                    <div>
+                        <h4>Upload an image</h4>
+                        <p>Click the upload area or drag your image file into the box (max 20MB).</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-search-plus"></i></span>
+                    <div>
+                        <h4>Click anywhere on the image</h4>
+                        <p>The magnifier helps you hover precisely. Click or tap to pick the exact pixel color.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-code"></i></span>
+                    <div>
+                        <h4>View HEX, RGB, HSL, HSV, and CMYK</h4>
+                        <p>Every format is displayed with a dedicated copy button for one-click use.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-copy"></i></span>
+                    <div>
+                        <h4>Copy the desired color code</h4>
+                        <p>Click any copy button to instantly copy that color format to your clipboard.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-download"></i></span>
+                    <div>
+                        <h4>Download the complete color palette</h4>
+                        <p>Save the 10 dominant colors as JSON, CSS variables, or a plain text file.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== FEATURES ========== -->
+        <section class="card info-section fade-up" id="features">
+            <h2 class="card-title"><i class="fas fa-list-check" style="color:#4f46e5;"></i> Features</h2>
+            <p class="section-subtitle">Everything you need from a premium color picker.</p>
+
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #4f46e5, #4338ca);">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3>Browser-Based</h3>
+                    <p>All processing happens in your browser using the Canvas API. No server needed.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                        <i class="fas fa-ban"></i>
+                    </div>
+                    <h3>No Watermark</h3>
+                    <p>Every color, code, and palette is clean — no branding, no restrictions.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <h3>No Upload to Server</h3>
+                    <p>Your images never leave your device. Zero network requests during processing.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-eye-dropper"></i>
+                    </div>
+                    <h3>Live Pixel Picker</h3>
+                    <p>Click any pixel for instant color detection with full precision.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #ec4899, #db2777);">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                    <h3>Zoom Magnifier</h3>
+                    <p>A magnifying lens follows your cursor for pixel-perfect precision.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3>Dominant Color Extraction</h3>
+                    <p>Automatically extracts the 10 most prominent colors using median-cut quantization.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #4f46e5, #3b82f6);">
+                        <i class="fas fa-copy"></i>
+                    </div>
+                    <h3>One-Click Copy</h3>
+                    <p>Copy HEX, RGB, RGBA, HSL, HSV, or CMYK values with a single click.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #1e1b4b, #3b82f6);">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Mobile Friendly</h3>
+                    <p>Full touch support — tap to pick colors, swipe the magnifier on mobile.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== OTHER TOOLS ========== -->
+        <section class="card info-section fade-up" id="other-tools">
+            <h2 class="card-title"><i class="fas fa-toolbox" style="color:#4f46e5;"></i> Related Tools</h2>
+            <p class="section-subtitle">Explore more free tools from our suite — all privacy-first.</p>
+
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #4f46e5, #4338ca);">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h3>Background Remover</h3>
+                    <p>Remove image backgrounds automatically using AI.</p>
+                    <a href="backgroundremove.html" class="tool-link">Try Remover <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                        <i class="fas fa-compress-alt"></i>
+                    </div>
+                    <h3>Image Compressor</h3>
+                    <p>Reduce image file sizes by up to 80% without visible quality loss.</p>
+                    <a href="imagecompress.html" class="tool-link">Try Compressor <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </div>
+                    <h3>Image Resize</h3>
+                    <p>Resize images to exact dimensions for web, print, or social media.</p>
+                    <a href="imageresize.html" class="tool-link">Try Resizer <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-crop-alt"></i>
+                    </div>
+                    <h3>Image Crop</h3>
+                    <p>Crop any image to the exact area you need.</p>
+                    <a href="image-cropper.html" class="tool-link">Try Cropper <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #a78bfa, #4f46e5);">
+                        <i class="fas fa-low-vision"></i>
+                    </div>
+                    <h3>Blur Image</h3>
+                    <p>Apply adjustable blur to any image with a smooth slider.</p>
+                    <a href="blurimage.html" class="tool-link">Try Blur <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #ec4899, #db2777);">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h3>Sharpen Image</h3>
+                    <p>Enhance image clarity with adjustable sharpening strength.</p>
+                    <a href="sharpenimage.html" class="tool-link">Try Sharpen <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <h3>Brightness &amp; Contrast</h3>
+                    <p>Adjust image brightness and contrast with live preview.</p>
+                    <a href="brightness-contrast.html" class="tool-link">Try Adjuster <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #ec4899);">
+                        <i class="fas fa-film"></i>
+                    </div>
+                    <h3>GIF Maker</h3>
+                    <p>Turn multiple images into beautiful animated GIFs.</p>
+                    <a href="imagegif.html" class="tool-link">Try GIF Maker <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="fas fa-file-image"></i>
+                    </div>
+                    <h3>JPG to PNG</h3>
+                    <p>Convert JPG images to lossless PNG with transparency support.</p>
+                    <a href="jpgtopng.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3>PNG to JPG</h3>
+                    <p>Convert PNG to JPG with automatic white background flatten.</p>
+                    <a href="pngtojpg.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #06b6d4, #10b981);">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <h3>Image Metadata Viewer</h3>
+                    <p>View EXIF, dimensions, and file info from any image.</p>
+                    <a href="image-metadata.html" class="tool-link">Try Viewer <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #ec4899);">
+                        <i class="fas fa-font"></i>
+                    </div>
+                    <h3>Image to ASCII Art</h3>
+                    <p>Convert images into beautiful text-based ASCII art.</p>
+                    <a href="imagetoasciiart.html" class="tool-link">Try ASCII <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== FAQ ========== -->
+        <section class="card info-section fade-up" id="faq">
+            <h2 class="card-title"><i class="fas fa-question" style="color:#4f46e5;"></i> Frequently Asked Questions</h2>
+            <p class="section-subtitle">Quick answers to common questions about this tool.</p>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>What is an Image Color Picker?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>An Image Color Picker is a tool that lets you click on any pixel of an image to identify its exact color. It gives you the color code in multiple formats (HEX, RGB, HSL, HSV, CMYK) so you can use it in web design, graphic design, branding, or any creative project. It also extracts the 10 most dominant colors from the image automatically.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>How does the color picker work?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>The image is loaded into an HTML5 Canvas, which exposes each pixel's RGBA values. When you click on the image, the tool reads the pixel at that exact coordinate from the canvas buffer. The magnifier lens displays a zoomed view of nearby pixels so you can hover precisely. Dominant colors are extracted using a median-cut quantization algorithm that clusters similar pixel colors.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Is my image uploaded to a server?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>No. Everything runs locally in your browser using the Canvas API. No files are uploaded to any server, and nothing is stored or tracked. Your privacy is fully preserved — the tool even works offline after loading.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Can I use it on mobile?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes! The tool is fully responsive and touch-friendly. On mobile, tap anywhere on the image to pick a color — the magnifier follows your finger to help you target the exact pixel.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>What color formats are supported?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Six formats are provided: HEX (#4f46e5), RGB (rgb(79, 70, 229)), RGBA (with alpha), HSL (hsl(244, 75%, 59%)), HSV, and CMYK. Each value has its own copy button for one-click use in any design tool.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Can I copy HEX and RGB values?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes — every format has a dedicated copy button. Click it to instantly copy the value to your clipboard. A toast notification confirms the copy.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>How are dominant colors extracted?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>The image pixels are sampled at regular intervals (for speed) and then grouped using a quantization algorithm. Colors are sorted by frequency, and the top 10 distinct color clusters become your palette. Duplicate colors are removed so each palette entry is unique.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Can I download the palette?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes! You can download the 10 dominant colors as JSON, CSS variables, or a plain text file. The CSS export generates ready-to-use <code>--color-1</code>, <code>--color-2</code> variables for your stylesheets.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Is it free?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes, it's 100% free with no limits, no signup, no watermarks, and no hidden fees. You can pick colors from as many images as you want.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Does it work offline after loading?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes! Once the page is fully loaded, you can pick colors and download palettes without an internet connection — all processing is done locally using the Canvas API.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <p>© 2025 CrafterTools — pick colors smarter, not harder.</p>
+    </footer>
+
+    <div id="toast" class="toast">📋 Copied!</div>
+
+    <script src="colourpicker.js"></script>
+</body>
+</html>
