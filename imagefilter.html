@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrafterTools · Image Filter</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="imagefilter.css">
+</head>
+<body>
+
+    <!-- ========== NAVBAR ========== -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-compress-alt"></i>
+                <span>CrafterTools</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="about.html">About us </a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#other-tools">Tools</a></li>
+                <li><a href="index.html" class="btn-nav">Home</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container" id="home">
+
+        <!-- ========== HERO ========== -->
+        <div class="page-header fade-up">
+            <h1>Image <span class="highlight">Filters</span></h1>
+            <p>Apply beautiful filters to your images instantly — vintage, noir, warm, cool and more. Fast, secure and completely browser-based.</p>
+        </div>
+
+        <!-- ========== UPLOAD + FILTER CARD ========== -->
+        <section class="card upload-card fade-up" id="uploadCard">
+
+            <!-- Upload area -->
+            <div class="upload-area" id="uploadArea">
+                <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                <h3>Drag & drop your image here</h3>
+                <p>or <span class="browse-link">browse files</span> — JPG, PNG, WEBP (max 20MB)</p>
+                <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden>
+            </div>
+
+            <!-- Editor -->
+            <div id="editorSection" class="editor-section hidden">
+
+                <!-- Preview info -->
+                <div id="previewContent" class="preview-content">
+                    <div class="preview-meta">
+                        <div class="meta-row"><i class="fas fa-image"></i> <span id="previewName">—</span></div>
+                        <div class="meta-row"><i class="fas fa-weight-hanging"></i> <span id="previewSize">—</span></div>
+                        <div class="meta-row"><i class="fas fa-expand"></i> <span id="previewDimensions">—</span></div>
+                        <div class="meta-row"><i class="fas fa-magic"></i> <span id="previewFilter">Filter: Original</span></div>
+                    </div>
+                    <button class="reset-btn" id="resetBtn" title="Remove image"><i class="fas fa-times"></i></button>
+                </div>
+
+                <!-- Live preview -->
+                <div class="filter-preview-wrap" id="filterPreviewWrap">
+                    <div class="glow-border" id="glowBorder"></div>
+                    <div class="filter-preview-inner">
+                        <img id="previewImage" src="#" alt="preview">
+                        <div class="develop-overlay" id="developOverlay"></div>
+                    </div>
+                    <div class="filter-name-badge" id="filterNameBadge">Original</div>
+                </div>
+
+                <!-- Filter controls -->
+                <div class="filter-controls">
+                    <h3 class="options-title"><i class="fas fa-magic" style="color:#8b5cf6;"></i> Filter Presets</h3>
+
+                    <!-- Filter grid -->
+                    <div class="filter-grid" id="filterGrid">
+                        <!-- Populated by JS -->
+                    </div>
+
+                    <!-- Intensity slider -->
+                    <div class="intensity-wrap">
+                        <div class="intensity-header">
+                            <label for="intensitySlider"><i class="fas fa-sliders-h"></i> Filter Intensity</label>
+                            <span class="intensity-readout" id="intensityReadout">100%</span>
+                        </div>
+                        <input type="range" id="intensitySlider" class="intensity-slider" min="0" max="100" value="100" step="1">
+                        <div class="intensity-ticks">
+                            <span>0%</span>
+                            <span>25%</span>
+                            <span>50%</span>
+                            <span>75%</span>
+                            <span>100%</span>
+                        </div>
+                    </div>
+
+                    <!-- Reset filter button -->
+                    <button class="reset-filter-btn" id="resetFilterBtn">
+                        <i class="fas fa-undo-alt"></i> Reset to Original
+                    </button>
+                </div>
+
+                <!-- Apply button + UNIQUE develop animation -->
+                <div class="convert-action">
+                    <button id="applyBtn" class="btn-primary" disabled>
+                        <i class="fas fa-check"></i> Apply Filter &amp; Download
+                    </button>
+
+                    <!-- UNIQUE film-develop animation -->
+                    <div id="developAnimation" class="develop-animation hidden">
+                        <div class="glow-line" id="glowLine"></div>
+
+                        <div class="develop-stage">
+                            <div class="develop-img-wrap" id="developImgWrap">
+                                <img id="developStageImg" src="#" alt="developing">
+                                <div class="develop-reveal" id="developReveal"></div>
+                                <div class="develop-scanline" id="developScanline"></div>
+                            </div>
+                        </div>
+
+                        <div class="develop-progress-info">
+                            <div class="develop-status" id="developStatus">Preparing Image...</div>
+                            <div class="develop-counter">
+                                <span id="developCountValue">0</span><span class="develop-unit">%</span>
+                            </div>
+                        </div>
+
+                        <div class="develop-progress-bar">
+                            <div class="develop-progress-fill" id="developProgressFill"></div>
+                        </div>
+                    </div>
+
+                    <!-- Success -->
+                    <div id="successAnimation" class="success-animation hidden">
+                        <div class="checkmark-circle"><i class="fas fa-check"></i></div>
+                        <p class="success-text">✅ Filter Applied Successfully</p>
+                        <div class="confetti">
+                            <span></span><span></span><span></span><span></span><span></span>
+                            <span></span><span></span><span></span><span></span><span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== RESULT CARD ========== -->
+        <section id="resultCard" class="card result-card hidden">
+            <h2 class="card-title"><i class="fas fa-check-circle" style="color:#10b981;"></i> Filter Applied Successfully</h2>
+
+            <!-- Before/After slider -->
+            <div class="compare-slider-wrapper">
+                <div class="compare-slider" id="compareSlider">
+                    <img id="compareBefore" class="compare-img" src="#" alt="before">
+                    <div class="compare-after-clip" id="compareAfterClip">
+                        <img id="compareAfter" class="compare-img" src="#" alt="after">
+                    </div>
+                    <div class="compare-handle" id="compareHandle">
+                        <i class="fas fa-arrows-alt-h"></i>
+                    </div>
+                </div>
+                <div class="compare-labels">
+                    <span>Original</span>
+                    <span>Filtered</span>
+                </div>
+            </div>
+
+            <!-- Side-by-side -->
+            <div class="convert-result">
+                <div class="convert-side">
+                    <span class="convert-label">Original</span>
+                    <div class="compare-preview">
+                        <img id="resultOriginalImg" src="#" alt="original">
+                    </div>
+                </div>
+
+                <div class="convert-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+
+                <div class="convert-side">
+                    <span class="convert-label">Filtered</span>
+                    <div class="compare-preview">
+                        <img id="resultFilteredImg" src="#" alt="filtered">
+                    </div>
+                </div>
+            </div>
+
+            <div class="convert-details">
+                <div class="detail-row">
+                    <span><i class="fas fa-file-signature"></i> File Name</span>
+                    <strong id="detailFilename">—</strong>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-magic"></i> Applied Filter</span>
+                    <strong id="detailFilter">—</strong>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-expand"></i> Resolution</span>
+                    <strong id="detailResolution">—</strong>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-weight-hanging"></i> File Size</span>
+                    <strong id="detailSize">—</strong>
+                </div>
+            </div>
+
+            <p class="comp-time"><i class="far fa-clock"></i> Process time: <span id="processTime">0.0s</span></p>
+
+            <button id="downloadBtn" class="btn-primary download-btn">
+                <i class="fas fa-download"></i> Download Image
+            </button>
+            <button id="editAnotherBtn" class="btn-secondary">🔄 Edit Another Image</button>
+        </section>
+
+        <!-- ========== HOW IT WORKS ========== -->
+        <section class="card info-section fade-up" id="how-it-works">
+            <h2 class="card-title"><i class="fas fa-cogs" style="color:#8b5cf6;"></i> How It Works</h2>
+            <p class="section-subtitle">Three simple steps — no signup, no upload to a server.</p>
+
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <span class="step-number">1</span>
+                    <h3>Upload Image</h3>
+                    <p>Choose or drag your JPG, PNG, or WEBP image. Your file never leaves your browser.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-magic"></i></div>
+                    <span class="step-number">2</span>
+                    <h3>Choose a Filter</h3>
+                    <p>Pick from 12+ presets, adjust intensity, and watch the live preview update instantly.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-download"></i></div>
+                    <span class="step-number">3</span>
+                    <h3>Download Image</h3>
+                    <p>Apply the filter, compare before/after, then download your filtered image.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== HOW TO USE ========== -->
+        <section class="card info-section fade-up" id="how-to-use">
+            <h2 class="card-title"><i class="fas fa-question-circle" style="color:#8b5cf6;"></i> How to Use</h2>
+            <p class="section-subtitle">Get started in seconds — it's really that simple.</p>
+
+            <div class="usage-list">
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-hand-pointer"></i></span>
+                    <div>
+                        <h4>Upload your image</h4>
+                        <p>Click the upload area or drag your image file into the box (max 20MB).</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-th-large"></i></span>
+                    <div>
+                        <h4>Pick a filter preset</h4>
+                        <p>Choose from Vintage, Noir, Warm, Cool, Dramatic, Fade and more.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-sliders-h"></i></span>
+                    <div>
+                        <h4>Fine-tune intensity</h4>
+                        <p>Use the slider to blend the filter from 0% (original) to 100% (full effect).</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-magic"></i></span>
+                    <div>
+                        <h4>Click Apply Filter</h4>
+                        <p>Watch the film-develop animation as the filter is baked into the image.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-columns"></i></span>
+                    <div>
+                        <h4>Compare before &amp; after</h4>
+                        <p>Use the interactive slider to see the exact difference.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-download"></i></span>
+                    <div>
+                        <h4>Download your image</h4>
+                        <p>Click the purple download button to save your filtered image.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== WHY USE THIS TOOL ========== -->
+        <section class="card info-section fade-up" id="why-choose">
+            <h2 class="card-title"><i class="fas fa-star" style="color:#8b5cf6;"></i> Why Use This Tool</h2>
+            <p class="section-subtitle">Built for creativity, speed, and privacy.</p>
+
+            <div class="features-grid">
+                <div class="feature-chip"><i class="fas fa-th-large"></i> 12+ Presets</div>
+                <div class="feature-chip"><i class="fas fa-sliders-h"></i> Adjustable Intensity</div>
+                <div class="feature-chip"><i class="fas fa-eye"></i> Live Preview</div>
+                <div class="feature-chip"><i class="fas fa-bolt"></i> Fast Processing</div>
+                <div class="feature-chip"><i class="fas fa-infinity"></i> 100% Free</div>
+                <div class="feature-chip"><i class="fas fa-shield-alt"></i> Privacy Protected</div>
+                <div class="feature-chip"><i class="fas fa-ban"></i> No Watermark</div>
+                <div class="feature-chip"><i class="fas fa-mobile-alt"></i> Mobile Friendly</div>
+            </div>
+        </section>
+
+        <!-- ========== FEATURES ========== -->
+        <section class="card info-section fade-up" id="features">
+            <h2 class="card-title"><i class="fas fa-list-check" style="color:#8b5cf6;"></i> Features</h2>
+            <p class="section-subtitle">Everything you need from a premium image filter tool.</p>
+
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                        <i class="fas fa-th-large"></i>
+                    </div>
+                    <h3>12+ Filter Presets</h3>
+                    <p>Vintage, Noir, Warm, Cool, Dramatic, Fade, Sepia, Vivid, Cool Blue, Pink Dream, Mono, Invert.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                        <i class="fas fa-sliders-h"></i>
+                    </div>
+                    <h3>Adjustable Intensity</h3>
+                    <p>Blend any filter from 0% to 100% for subtle or dramatic effects.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h3>Live Preview</h3>
+                    <p>See the exact effect in real time on the preview before applying.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-columns"></i>
+                    </div>
+                    <h3>Before/After Slider</h3>
+                    <p>Drag the comparison slider to see the exact difference.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #ec4899, #db2777);">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h3>Instant Download</h3>
+                    <p>Get your filtered image immediately — no waiting, no queues.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Responsive Design</h3>
+                    <p>Works perfectly on mobile, tablet, laptop, and desktop.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #3b82f6);">
+                        <i class="fas fa-wifi"></i>
+                    </div>
+                    <h3>Works Offline</h3>
+                    <p>Once loaded, the tool functions without an internet connection.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #1e1b4b, #3b82f6);">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <h3>High Quality Export</h3>
+                    <p>Filters applied at full resolution using Canvas pixel math.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== OTHER TOOLS ========== -->
+        <section class="card info-section fade-up" id="other-tools">
+            <h2 class="card-title"><i class="fas fa-toolbox" style="color:#8b5cf6;"></i> Other Tools</h2>
+            <p class="section-subtitle">Explore more free tools from our suite — all privacy-first.</p>
+
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                        <i class="fas fa-compress-alt"></i>
+                    </div>
+                    <h3>Image Compressor</h3>
+                    <p>Reduce image file sizes by up to 80% without visible quality loss.</p>
+                    <a href="imagecompress.html" class="tool-link">Try Compressor <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </div>
+                    <h3>Image Resizer</h3>
+                    <p>Resize images to exact dimensions for web, print, or social media.</p>
+                    <a href="imageresize.html" class="tool-link">Try Resizer <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="fas fa-file-image"></i>
+                    </div>
+                    <h3>JPG to PNG</h3>
+                    <p>Convert JPG images to lossless PNG with transparency support.</p>
+                    <a href="jpgtopng.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3>PNG to JPG</h3>
+                    <p>Convert PNG to JPG with automatic white background flatten.</p>
+                    <a href="pngtojpg.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #a78bfa, #8b5cf6);">
+                        <i class="fas fa-low-vision"></i>
+                    </div>
+                    <h3>Blur Image</h3>
+                    <p>Apply adjustable blur to any image with a smooth slider.</p>
+                    <a href="blurimage.html" class="tool-link">Try Blur <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #ec4899, #db2777);">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h3>Sharpen Image</h3>
+                    <p>Enhance image clarity with adjustable sharpening strength.</p>
+                    <a href="Sharpenimage.html" class="tool-link">Try Sharpen <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #3b82f6);">
+                        <i class="fas fa-crop-alt"></i>
+                    </div>
+                    <h3>Crop Image</h3>
+                    <p>Crop any image to the exact area you need.</p>
+                    <a href="image-cropper.html" class="tool-link">Try Cropper <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #ec4899);">
+                        <i class="fas fa-undo-alt"></i>
+                    </div>
+                    <h3>Rotate Image</h3>
+                    <p>Rotate images left, right or by any custom angle.</p>
+                    <a href="image-flip.html" class="tool-link">Try Rotator <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #ec4899);">
+                        <i class="fas fa-arrows-alt-h"></i>
+                    </div>
+                    <h3>Flip Image</h3>
+                    <p>Flip images horizontally or vertically in one click.</p>
+                    <a href="image-flip.html" class="tool-link">Try Flipper <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <h3>Brightness &amp; Contrast</h3>
+                    <p>Adjust image brightness and contrast with live preview.</p>
+                    <a href="brightness-contrast.html" class="tool-link">Try Adjuster <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #06b6d4, #10b981);">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <h3>Image Metadata Viewer</h3>
+                    <p>View EXIF, dimensions, and file info from any image.</p>
+                    <a href="image-metadata.html" class="tool-link">Try Viewer <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #1e1b4b, #3b82f6);">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <h3>QR Code Generator</h3>
+                    <p>Generate QR codes for links, text, or any data instantly.</p>
+                    <a href="urltoqr.html" class="tool-link">Try Generator <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== FAQ ========== -->
+        <section class="card info-section fade-up" id="faq">
+            <h2 class="card-title"><i class="fas fa-question" style="color:#8b5cf6;"></i> Frequently Asked Questions</h2>
+            <p class="section-subtitle">Quick answers to common questions about this tool.</p>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>What kind of filters are available?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>This tool includes 12+ curated presets: Original, Vintage, Noir, Warm, Cool, Dramatic, Fade, Sepia, Vivid, Cool Blue, Pink Dream, Mono, and Invert. Each filter uses a combination of CSS filters (brightness, contrast, saturation, hue-rotate, sepia, grayscale, invert) blended to create a distinct cinematic look.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Can I adjust the filter strength?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes! Use the intensity slider to blend between the original image (0%) and the full filter effect (100%). This gives you full control — subtle enhancements or bold transformations.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Will image quality decrease?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>No. Filters are applied at full resolution using the Canvas API, so the output keeps the original dimensions and quality. For JPG input, the export uses 92% quality for optimal balance of size and visual fidelity.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Does my image leave my browser?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>No. Everything runs locally in your browser using the Canvas API. No files are uploaded to any server, and nothing is stored or tracked. Your privacy is fully preserved — the tool even works offline once loaded.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Is this tool free?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes, it's 100% free with no limits, no signup, no watermarks, and no hidden fees. You can filter as many images as you want.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <p>© 2025 CrafterTools — filter smarter, not harder.</p>
+    </footer>
+
+    <div id="toast" class="toast">📥 Download started!</div>
+
+    <script src="imagefilter.js"></script>
+</body>
+</html>
