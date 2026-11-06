@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrafterTools · Add Text to Image</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="Addtexttoimage.css">
+</head>
+<body>
+
+    <!-- ========== NAVBAR ========== -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-compress-alt"></i>
+                <span>CrafterTools</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="about.html">About us </a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#other-tools">Tools</a></li>
+                <li><a href="#" class="btn-nav">Home</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container" id="home">
+
+        <!-- ========== HERO ========== -->
+        <div class="page-header fade-up">
+            <h1>Add <span class="highlight">Text</span> to Image</h1>
+            <p>Add unlimited text layers to any image with full control over fonts, colors, sizes, and positions. Fast, secure and completely browser-based.</p>
+        </div>
+
+        <!-- ========== UPLOAD + EDITOR CARD ========== -->
+        <section class="card upload-card fade-up" id="uploadCard">
+
+            <!-- Upload area -->
+            <div class="upload-area" id="uploadArea">
+                <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                <h3>Drag & drop your image here</h3>
+                <p>or <span class="browse-link">browse files</span> — JPG, PNG, WEBP (max 20MB)</p>
+                <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden>
+            </div>
+
+            <!-- Editor -->
+            <div id="editorSection" class="editor-section hidden">
+
+                <!-- Preview + info -->
+                <div id="previewContent" class="preview-content">
+                    <div class="preview-meta">
+                        <div class="meta-row"><i class="fas fa-image"></i> <span id="previewName">—</span></div>
+                        <div class="meta-row"><i class="fas fa-weight-hanging"></i> <span id="previewSize">—</span></div>
+                        <div class="meta-row"><i class="fas fa-expand"></i> <span id="previewDimensions">—</span></div>
+                        <div class="meta-row"><i class="fas fa-layer-group"></i> <span id="previewLayers">Text layers: 0</span></div>
+                    </div>
+                    <button class="reset-btn" id="resetBtn" title="Remove image"><i class="fas fa-times"></i></button>
+                </div>
+
+                <!-- Canvas Editor -->
+                <div class="editor-layout">
+                    <div class="canvas-panel">
+                        <div class="canvas-wrap" id="canvasWrap">
+                            <canvas id="editCanvas"></canvas>
+                            <div class="text-handle" id="textHandle" style="display:none;">
+                                <div class="handle-corner tl"></div>
+                                <div class="handle-corner tr"></div>
+                                <div class="handle-corner bl"></div>
+                                <div class="handle-corner br"></div>
+                            </div>
+                        </div>
+                        <p class="canvas-hint"><i class="fas fa-hand-pointer"></i> Drag any text to reposition • Click to select</p>
+                    </div>
+
+                    <div class="controls-panel">
+                        <h3 class="options-title"><i class="fas fa-font" style="color:#8b5cf6;"></i> Text Controls</h3>
+
+                        <!-- Text input -->
+                        <div class="control-group">
+                            <label class="control-label"><i class="fas fa-pen"></i> Text Content</label>
+                            <textarea id="textInput" class="text-input" rows="2" placeholder="Type your text here…" maxlength="200"></textarea>
+                            <div class="char-count"><span id="charCount">0</span>/200</div>
+                        </div>
+
+                        <!-- Font family -->
+                        <div class="control-group">
+                            <label class="control-label"><i class="fas fa-font"></i> Font Family</label>
+                            <select id="fontFamily" class="select-input">
+                                <option value="Inter, sans-serif">Inter (Default)</option>
+                                <option value="Arial, sans-serif">Arial</option>
+                                <option value="Georgia, serif">Georgia</option>
+                                <option value="'Times New Roman', serif">Times New Roman</option>
+                                <option value="'Courier New', monospace">Courier New</option>
+                                <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                                <option value="Verdana, sans-serif">Verdana</option>
+                                <option value="Impact, sans-serif">Impact</option>
+                                <option value="'Comic Sans MS', cursive">Comic Sans MS</option>
+                                <option value="'Brush Script MT', cursive">Brush Script</option>
+                            </select>
+                        </div>
+
+                        <!-- Font size + style row -->
+                        <div class="control-row">
+                            <div class="control-group half">
+                                <label class="control-label"><i class="fas fa-text-height"></i> Size</label>
+                                <div class="size-input-wrap">
+                                    <input type="range" id="fontSize" class="size-slider" min="12" max="200" value="48">
+                                    <span class="size-readout" id="sizeReadout">48px</span>
+                                </div>
+                            </div>
+                            <div class="control-group half">
+                                <label class="control-label"><i class="fas fa-bold"></i> Style</label>
+                                <div class="style-btns">
+                                    <button class="style-btn" id="boldBtn" title="Bold"><i class="fas fa-bold"></i></button>
+                                    <button class="style-btn" id="italicBtn" title="Italic"><i class="fas fa-italic"></i></button>
+                                    <button class="style-btn" id="underlineBtn" title="Underline"><i class="fas fa-underline"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Color -->
+                        <div class="control-group">
+                            <label class="control-label"><i class="fas fa-palette"></i> Text Color</label>
+                            <div class="color-row">
+                                <div class="color-picker-wrap">
+                                    <input type="color" id="textColor" value="#ffffff" class="color-input">
+                                    <span class="color-value" id="colorValue">#FFFFFF</span>
+                                </div>
+                                <div class="quick-colors">
+                                    <button class="quick-color" data-color="#ffffff" style="background:#ffffff" title="White"></button>
+                                    <button class="quick-color" data-color="#000000" style="background:#000000" title="Black"></button>
+                                    <button class="quick-color" data-color="#8b5cf6" style="background:#8b5cf6" title="Purple"></button>
+                                    <button class="quick-color" data-color="#3b82f6" style="background:#3b82f6" title="Blue"></button>
+                                    <button class="quick-color" data-color="#ef4444" style="background:#ef4444" title="Red"></button>
+                                    <button class="quick-color" data-color="#10b981" style="background:#10b981" title="Green"></button>
+                                    <button class="quick-color" data-color="#f59e0b" style="background:#f59e0b" title="Orange"></button>
+                                    <button class="quick-color" data-color="#ec4899" style="background:#ec4899" title="Pink"></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Background box -->
+                        <div class="control-group">
+                            <label class="control-label"><i class="fas fa-square"></i> Background Box</label>
+                            <div class="bg-row">
+                                <label class="toggle-label">
+                                    <input type="checkbox" id="bgToggle">
+                                    <span>Enable background</span>
+                                </label>
+                                <div class="color-picker-wrap small" id="bgColorWrap" style="display:none;">
+                                    <input type="color" id="bgColor" value="#000000" class="color-input">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action buttons -->
+                        <div class="layer-actions">
+                            <button id="addLayerBtn" class="btn-primary btn-add">
+                                <i class="fas fa-plus"></i> Add Text
+                            </button>
+                            <div class="layer-buttons">
+                                <button id="updateLayerBtn" class="btn-secondary btn-small" disabled title="Update selected text">
+                                    <i class="fas fa-check"></i> Update
+                                </button>
+                                <button id="deleteLayerBtn" class="btn-danger btn-small" disabled title="Delete selected text">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Layer list -->
+                        <div class="layers-panel" id="layersPanel">
+                            <label class="control-label"><i class="fas fa-layer-group"></i> Text Layers</label>
+                            <div class="layers-list" id="layersList">
+                                <p class="layers-empty">No text layers yet. Type something above and click "Add Text".</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Apply button + UNIQUE typewriter animation -->
+                <div class="convert-action">
+                    <button id="applyBtn" class="btn-primary" disabled>
+                        <i class="fas fa-download"></i> Download Image
+                    </button>
+
+                    <!-- UNIQUE typewriter animation -->
+                    <div id="renderAnimation" class="render-animation hidden">
+                        <div class="glow-line" id="glowLine"></div>
+
+                        <div class="typewriter-stage">
+                            <div class="typewriter-img-wrap" id="typewriterImgWrap">
+                                <img id="typewriterImg" src="#" alt="rendering preview">
+                                <div class="typewriter-cursor" id="typewriterCursor"></div>
+                            </div>
+                        </div>
+
+                        <div class="render-progress-info">
+                            <div class="render-status" id="renderStatus">Preparing Canvas...</div>
+                            <div class="render-counter">
+                                <span id="renderCountValue">0</span><span class="render-unit">%</span>
+                            </div>
+                        </div>
+
+                        <div class="render-progress-bar">
+                            <div class="render-progress-fill" id="renderProgressFill"></div>
+                        </div>
+                    </div>
+
+                    <!-- Success -->
+                    <div id="successAnimation" class="success-animation hidden">
+                        <div class="checkmark-circle"><i class="fas fa-check"></i></div>
+                        <p class="success-text">✅ Image Created Successfully</p>
+                        <div class="confetti">
+                            <span></span><span></span><span></span><span></span><span></span>
+                            <span></span><span></span><span></span><span></span><span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== RESULT CARD ========== -->
+        <section id="resultCard" class="card result-card hidden">
+            <h2 class="card-title"><i class="fas fa-check-circle" style="color:#10b981;"></i> Image Created Successfully</h2>
+
+            <div class="result-preview-wrap">
+                <img id="resultImage" src="#" alt="result">
+            </div>
+
+            <div class="convert-details">
+                <div class="detail-row">
+                    <span><i class="fas fa-file-signature"></i> File Name</span>
+                    <strong id="detailFilename">—</strong>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-expand"></i> Resolution</span>
+                    <strong id="detailResolution">—</strong>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-layer-group"></i> Text Layers</span>
+                    <strong id="detailLayers">—</strong>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-weight-hanging"></i> File Size</span>
+                    <strong id="detailSize">—</strong>
+                </div>
+            </div>
+
+            <p class="comp-time"><i class="far fa-clock"></i> Render time: <span id="processTime">0.0s</span></p>
+
+            <button id="downloadBtn" class="btn-primary download-btn">
+                <i class="fas fa-download"></i> Download Image
+            </button>
+            <button id="editAnotherBtn" class="btn-secondary">🔄 Edit Another Image</button>
+        </section>
+
+        <!-- ========== HOW IT WORKS ========== -->
+        <section class="card info-section fade-up" id="how-it-works">
+            <h2 class="card-title"><i class="fas fa-cogs" style="color:#8b5cf6;"></i> How It Works</h2>
+            <p class="section-subtitle">Three simple steps — no signup, no upload to a server.</p>
+
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <span class="step-number">1</span>
+                    <h3>Upload Image</h3>
+                    <p>Choose or drag your image. Add as many text layers as you want.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-font"></i></div>
+                    <span class="step-number">2</span>
+                    <h3>Add & Style Text</h3>
+                    <p>Customize font, size, color, style, and position for each text layer.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-download"></i></div>
+                    <span class="step-number">3</span>
+                    <h3>Download Image</h3>
+                    <p>Render your image with all text applied and download in one click.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== HOW TO USE ========== -->
+        <section class="card info-section fade-up" id="how-to-use">
+            <h2 class="card-title"><i class="fas fa-question-circle" style="color:#8b5cf6;"></i> How to Use</h2>
+            <p class="section-subtitle">Get started in seconds — it's really that simple.</p>
+
+            <div class="usage-list">
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-hand-pointer"></i></span>
+                    <div>
+                        <h4>Upload your image</h4>
+                        <p>Click the upload area or drag your image file into the box (max 20MB).</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-pen"></i></span>
+                    <div>
+                        <h4>Type your text</h4>
+                        <p>Enter any text in the input box, then customize font, size, and color.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-plus"></i></span>
+                    <div>
+                        <h4>Click "Add Text"</h4>
+                        <p>Add multiple text layers — each with its own font, size, and color.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-arrows-alt"></i></span>
+                    <div>
+                        <h4>Drag to position</h4>
+                        <p>Click any text on the canvas and drag it to the perfect spot.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-layer-group"></i></span>
+                    <div>
+                        <h4>Manage your layers</h4>
+                        <p>Select a layer from the list to edit or delete it, or update its style.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-download"></i></span>
+                    <div>
+                        <h4>Download your image</h4>
+                        <p>Click the purple download button to save the final image.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== WHY USE THIS TOOL ========== -->
+        <section class="card info-section fade-up" id="why-choose">
+            <h2 class="card-title"><i class="fas fa-star" style="color:#8b5cf6;"></i> Why Use This Tool</h2>
+            <p class="section-subtitle">Built for creativity, precision, and privacy.</p>
+
+            <div class="features-grid">
+                <div class="feature-chip"><i class="fas fa-layer-group"></i> Multiple Text Layers</div>
+                <div class="feature-chip"><i class="fas fa-font"></i> 10+ Fonts</div>
+                <div class="feature-chip"><i class="fas fa-palette"></i> Unlimited Colors</div>
+                <div class="feature-chip"><i class="fas fa-arrows-alt"></i> Drag Positioning</div>
+                <div class="feature-chip"><i class="fas fa-bold"></i> Bold/Italic/Underline</div>
+                <div class="feature-chip"><i class="fas fa-infinity"></i> 100% Free</div>
+                <div class="feature-chip"><i class="fas fa-shield-alt"></i> Privacy Protected</div>
+                <div class="feature-chip"><i class="fas fa-mobile-alt"></i> Mobile Friendly</div>
+            </div>
+        </section>
+
+        <!-- ========== FEATURES ========== -->
+        <section class="card info-section fade-up" id="features">
+            <h2 class="card-title"><i class="fas fa-list-check" style="color:#8b5cf6;"></i> Features</h2>
+            <p class="section-subtitle">Everything you need to add text to any image.</p>
+
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <h3>Unlimited Layers</h3>
+                    <p>Add as many text elements as you need — each fully independent.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                        <i class="fas fa-font"></i>
+                    </div>
+                    <h3>10+ Fonts</h3>
+                    <p>Choose from sans-serif, serif, monospace, script, and decorative fonts.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3>Color Picker</h3>
+                    <p>Full color wheel with 8 quick-color presets for fast styling.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-arrows-alt"></i>
+                    </div>
+                    <h3>Drag Positioning</h3>
+                    <p>Click and drag any text on the canvas to place it perfectly.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #ec4899, #db2777);">
+                        <i class="fas fa-bold"></i>
+                    </div>
+                    <h3>Text Styles</h3>
+                    <p>Toggle bold, italic, and underline independently per layer.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">
+                        <i class="fas fa-square"></i>
+                    </div>
+                    <h3>Background Boxes</h3>
+                    <p>Add a colored background behind any text for better readability.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #3b82f6);">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h3>Live Preview</h3>
+                    <p>See every change instantly as you edit — no apply step needed.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #1e1b4b, #3b82f6);">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h3>High Quality</h3>
+                    <p>Export at full resolution in PNG or JPG with no quality loss.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== OTHER TOOLS ========== -->
+        <section class="card info-section fade-up" id="other-tools">
+            <h2 class="card-title"><i class="fas fa-toolbox" style="color:#8b5cf6;"></i> Other Tools</h2>
+            <p class="section-subtitle">Explore more free tools from our suite — all privacy-first.</p>
+
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                        <i class="fas fa-compress-alt"></i>
+                    </div>
+                    <h3>Image Compressor</h3>
+                    <p>Reduce image file sizes by up to 80% without visible quality loss.</p>
+                    <a href="imagecompress.html" class="tool-link">Try Compressor <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </div>
+                    <h3>Image Resizer</h3>
+                    <p>Resize images to exact dimensions for web, print, or social media.</p>
+                    <a href="imageresize.html" class="tool-link">Try Resizer <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="fas fa-file-image"></i>
+                    </div>
+                    <h3>JPG to PNG</h3>
+                    <p>Convert JPG images to lossless PNG with transparency support.</p>
+                    <a href="jpgtopng.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3>PNG to JPG</h3>
+                    <p>Convert PNG to JPG with automatic white background flatten.</p>
+                    <a href="pngtojpg.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #a78bfa, #8b5cf6);">
+                        <i class="fas fa-low-vision"></i>
+                    </div>
+                    <h3>Blur Image</h3>
+                    <p>Apply adjustable blur to any image with a smooth slider.</p>
+                    <a href="blurimage.html" class="tool-link">Try Blur <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #ec4899, #db2777);">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h3>Sharpen Image</h3>
+                    <p>Enhance image clarity with adjustable sharpening strength.</p>
+                    <a href="Sharpenimage.html" class="tool-link">Try Sharpen <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #3b82f6);">
+                        <i class="fas fa-crop-alt"></i>
+                    </div>
+                    <h3>Crop Image</h3>
+                    <p>Crop any image to the exact area you need.</p>
+                    <a href="image-cropper.html" class="tool-link">Try Cropper <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #ec4899);">
+                        <i class="fas fa-undo-alt"></i>
+                    </div>
+                    <h3>Rotate Image</h3>
+                    <p>Rotate images left, right or by any custom angle.</p>
+                    <a href="image-flip.html" class="tool-link">Try Rotator <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #ec4899);">
+                        <i class="fas fa-arrows-alt-h"></i>
+                    </div>
+                    <h3>Flip Image</h3>
+                    <p>Flip images horizontally or vertically in one click.</p>
+                    <a href="image-flip.html" class="tool-link">Try Flipper <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #06b6d4, #10b981);">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <h3>Image Metadata Viewer</h3>
+                    <p>View EXIF, dimensions, and file info from any image.</p>
+                    <a href="image-metadata.html" class="tool-link">Try Viewer <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <h3>Brightness &amp; Contrast</h3>
+                    <p>Adjust image brightness and contrast with live preview.</p>
+                    <a href="brightness-contrast.html" class="tool-link">Try Adjuster <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #1e1b4b, #3b82f6);">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <h3>QR Code Generator</h3>
+                    <p>Generate QR codes for links, text, or any data instantly.</p>
+                    <a href="urltoqr.html" class="tool-link">Try Generator <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== FAQ ========== -->
+        <section class="card info-section fade-up" id="faq">
+            <h2 class="card-title"><i class="fas fa-question" style="color:#8b5cf6;"></i> Frequently Asked Questions</h2>
+            <p class="section-subtitle">Quick answers to common questions about this tool.</p>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Can I add multiple texts to one image?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes! This tool supports unlimited text layers. Each layer has its own font, size, color, style, and position. You can add as many text elements as you need and edit or delete any of them independently from the layer list.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Can I change font, size, and color per text?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Absolutely. Every text layer stores its own font family, font size (12–200px), text color, bold/italic/underline styles, and optional background box. Simply select a layer and adjust any of these settings — the change updates instantly on the canvas.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>How do I move text on the image?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Click on any text in the canvas to select it, then drag it with your mouse or finger. The layer list on the side also lets you quickly select which text you want to edit. On mobile, just tap and drag the text with your finger.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Does my image leave my browser?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>No. Everything runs locally in your browser using the Canvas API. No files are uploaded to any server, and nothing is stored or tracked. Your privacy is fully preserved — the tool even works offline once loaded.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Is this tool free?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes, it's 100% free with no limits, no signup, no watermarks, and no hidden fees. You can add text to as many images as you want.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <p>© 2025 CrafterTools — create smarter, not harder.</p>
+    </footer>
+
+    <div id="toast" class="toast">📥 Download started!</div>
+
+    <script src="Addtexttoimage.js"></script>
+</body>
+</html>
