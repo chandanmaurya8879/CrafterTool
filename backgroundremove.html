@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <!-- SEO -->
+  <title>AI Background Remover – Remove Image Background Online Free | CrafterTools</title>
+  <meta name="description" content="Remove image backgrounds online using AI in seconds. Upload JPG, PNG, or WebP images and download transparent backgrounds instantly for free with CrafterTools.">
+  <meta name="theme-color" content="#ffffff">
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Font Awesome for icons (lightweight, tree-shakeable in production but using CDN for simplicity) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="backgroundremove.css">
+</head>
+<body>
+  <!-- ===== HEADER (matches existing CrafterTools layout) ===== -->
+  <header class="crafter-header">
+    <div class="container header-inner">
+      <div class="logo">
+        <i class="fas fa-magic"></i>
+        <span>CrafterTools</span>
+      </div>
+      <nav class="main-nav" aria-label="Main navigation">
+        <ul>
+          <li><a href="index.html">Tools</a></li>
+          <li><a href="about.html">About us</a></li>
+          
+          <li><a href="index.html" class="btn-nav">Home</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="crafter-main">
+    <!-- ===== HERO SECTION ===== -->
+    <section class="hero-section container">
+      <h1 class="hero-title">AI Background Remover</h1>
+      <p class="hero-description">Remove image backgrounds instantly with AI. Create transparent images in seconds and download them in high quality for free.</p>
+    </section>
+
+    <!-- ===== TOOL CARD ===== -->
+    <section class="tool-section container">
+      <div class="premium-card tool-card">
+        <!-- Upload / Preview area -->
+        <div class="upload-area" id="uploadArea">
+          <div class="upload-placeholder" id="uploadPlaceholder">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <p>Drag & drop an image here or <span class="browse-link">browse</span></p>
+            <p class="hint">Supports JPG, PNG, WebP (max 25MB)</p>
+            <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden>
+          </div>
+
+          <!-- Image preview & info (hidden initially) -->
+          <div class="preview-container hidden" id="previewContainer">
+            <div class="preview-image-wrapper">
+              <img id="previewImage" src="" alt="Preview">
+            </div>
+            <div class="image-info">
+              <p><i class="fas fa-file"></i> <span id="infoName">—</span></p>
+              <p><i class="fas fa-weight-hanging"></i> <span id="infoSize">—</span></p>
+              <p><i class="fas fa-arrows-alt"></i> <span id="infoDimensions">—</span></p>
+              <p><i class="fas fa-file-image"></i> <span id="infoType">—</span></p>
+            </div>
+            <div class="preview-actions">
+              <button class="btn btn-primary" id="removeBgBtn"><i class="fas fa-magic"></i> Remove Background</button>
+              <button class="btn btn-secondary" id="resetUploadBtn"><i class="fas fa-trash-alt"></i> Clear</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== LOADING OVERLAY ===== -->
+        <div class="loading-overlay hidden" id="loadingOverlay">
+          <div class="spinner"></div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <p id="loadingText">Processing image… <span id="progressPercent">0%</span></p>
+        </div>
+
+        <!-- ===== RESULT AREA (Before & After, editing, downloads) ===== -->
+        <div class="result-area hidden" id="resultArea">
+          <!-- Before / After comparison -->
+          <div class="comparison-container">
+            <div class="compare-card">
+              <h3><i class="fas fa-image"></i> Original</h3>
+              <div class="compare-image-wrapper">
+                <img id="originalResult" src="" alt="Original image">
+              </div>
+            </div>
+            <div class="compare-card">
+              <h3><i class="fas fa-check-circle"></i> Background Removed</h3>
+              <div class="compare-image-wrapper">
+                <img id="resultImage" src="" alt="Background removed image">
+              </div>
+            </div>
+          </div>
+
+          <!-- Editing Toolbar -->
+          <div class="editing-toolbar premium-card">
+            <h4><i class="fas fa-sliders-h"></i> Edit & Adjust</h4>
+            <div class="tool-group">
+              <button class="tool-btn" id="cropBtn" title="Crop"><i class="fas fa-crop-alt"></i></button>
+              <button class="tool-btn" id="rotateBtn" title="Rotate"><i class="fas fa-undo-alt"></i></button>
+              <button class="tool-btn" id="flipHBtn" title="Flip Horizontal"><i class="fas fa-arrows-alt-h"></i></button>
+              <button class="tool-btn" id="flipVBtn" title="Flip Vertical"><i class="fas fa-arrows-alt-v"></i></button>
+              <button class="tool-btn" id="zoomInBtn" title="Zoom In"><i class="fas fa-search-plus"></i></button>
+              <button class="tool-btn" id="zoomOutBtn" title="Zoom Out"><i class="fas fa-search-minus"></i></button>
+            </div>
+            <div class="slider-group">
+              <label for="borderRadius">Border Radius <span id="borderRadiusVal">0px</span></label>
+              <input type="range" id="borderRadius" min="0" max="50" value="0">
+            </div>
+            <div class="slider-group">
+              <label for="shadowRange">Shadow <span id="shadowVal">0px</span></label>
+              <input type="range" id="shadowRange" min="0" max="30" value="0">
+            </div>
+            <div class="slider-group">
+              <label for="paddingRange">Padding <span id="paddingVal">0px</span></label>
+              <input type="range" id="paddingRange" min="0" max="40" value="0">
+            </div>
+          </div>
+
+          <!-- Background Options -->
+          <div class="background-options premium-card">
+            <h4><i class="fas fa-fill-drip"></i> Background Options</h4>
+            <div class="bg-buttons">
+              <button class="bg-btn active" data-bg="transparent"><i class="fas fa-check"></i> Transparent</button>
+              <button class="bg-btn" data-bg="white">White</button>
+              <button class="bg-btn" data-bg="black">Black</button>
+              <button class="bg-btn" data-bg="color"><i class="fas fa-palette"></i> Color</button>
+              <button class="bg-btn" data-bg="gradient">Gradient</button>
+              <button class="bg-btn" data-bg="custom"><i class="fas fa-upload"></i> Custom</button>
+            </div>
+            <div class="bg-controls hidden" id="colorPickerControl">
+              <label for="bgColorPicker">Pick a color:</label>
+              <input type="color" id="bgColorPicker" value="#ffffff">
+            </div>
+            <div class="bg-controls hidden" id="gradientControl">
+              <label for="gradientColor1">Color 1:</label>
+              <input type="color" id="gradientColor1" value="#ff6b6b">
+              <label for="gradientColor2">Color 2:</label>
+              <input type="color" id="gradientColor2" value="#4ecdc4">
+            </div>
+            <div class="bg-controls hidden" id="customBgControl">
+              <input type="file" id="customBgInput" accept="image/*" hidden>
+              <button class="btn btn-secondary" id="uploadBgBtn"><i class="fas fa-upload"></i> Upload Background</button>
+              <span id="customBgName"></span>
+            </div>
+          </div>
+
+          <!-- Download & Reset -->
+          <div class="download-actions">
+            <button class="btn btn-primary" id="downloadPngBtn"><i class="fas fa-download"></i> Download PNG</button>
+            <button class="btn btn-primary" id="downloadJpgBtn"><i class="fas fa-download"></i> Download JPG</button>
+            <button class="btn btn-primary" id="downloadWebpBtn"><i class="fas fa-download"></i> Download WebP</button>
+            <button class="btn btn-secondary" id="uploadAnotherBtn"><i class="fas fa-plus-circle"></i> Upload Another</button>
+            <button class="btn btn-outline" id="resetAllBtn"><i class="fas fa-redo-alt"></i> Reset Everything</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== WHY USE THIS TOOL ===== -->
+    <section class="content-section container">
+      <h2>Why Use This Tool</h2>
+      <ul class="features-list">
+        <li><i class="fas fa-check-circle"></i> One-click AI background removal</li>
+        <li><i class="fas fa-check-circle"></i> High-quality transparent PNG output</li>
+        <li><i class="fas fa-check-circle"></i> Fast processing</li>
+        <li><i class="fas fa-check-circle"></i> Easy to use</li>
+        <li><i class="fas fa-check-circle"></i> Works on desktop and mobile</li>
+        <li><i class="fas fa-check-circle"></i> No software installation required</li>
+        <li><i class="fas fa-check-circle"></i> Secure image processing</li>
+        <li><i class="fas fa-check-circle"></i> Free and user-friendly interface</li>
+      </ul>
+    </section>
+
+    <!-- ===== HOW IT WORKS ===== -->
+    <section class="content-section container">
+      <h2>How It Works</h2>
+      <div class="steps-grid">
+        <div class="step-card premium-card">
+          <span class="step-number">1</span>
+          <h3>Upload your image</h3>
+          <p>Drag & drop or choose a file from your device.</p>
+        </div>
+        <div class="step-card premium-card">
+          <span class="step-number">2</span>
+          <h3>Click “Remove Background”</h3>
+          <p>Our AI will instantly start processing.</p>
+        </div>
+        <div class="step-card premium-card">
+          <span class="step-number">3</span>
+          <h3>AI detects & removes</h3>
+          <p>The background is removed with high precision.</p>
+        </div>
+        <div class="step-card premium-card">
+          <span class="step-number">4</span>
+          <h3>Preview transparent image</h3>
+          <p>See the result and make adjustments.</p>
+        </div>
+        <div class="step-card premium-card">
+          <span class="step-number">5</span>
+          <h3>Download</h3>
+          <p>Get your image in PNG, JPG, or WebP.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FEATURES ===== -->
+    <section class="content-section container">
+      <h2>Features</h2>
+      <div class="features-grid">
+        <span class="feature-badge"><i class="fas fa-robot"></i> AI Powered</span>
+        <span class="feature-badge"><i class="fas fa-star"></i> High Quality Output</span>
+        <span class="feature-badge"><i class="fas fa-bolt"></i> Fast Processing</span>
+        <span class="feature-badge"><i class="fas fa-chess-board"></i> Transparent Background</span>
+        <span class="feature-badge"><i class="fas fa-fill-drip"></i> Custom Background Support</span>
+        <span class="feature-badge"><i class="fas fa-file-export"></i> Multiple Download Formats</span>
+        <span class="feature-badge"><i class="fas fa-mobile-alt"></i> Responsive Design</span>
+        <span class="feature-badge"><i class="fas fa-lock"></i> Secure Processing</span>
+        <span class="feature-badge"><i class="fas fa-tint-slash"></i> No Watermark</span>
+        <span class="feature-badge"><i class="fas fa-gift"></i> Free to Use</span>
+      </div>
+    </section>
+
+    <!-- ===== FAQ ===== -->
+    <section class="content-section container">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-list">
+        <details class="faq-item premium-card">
+          <summary>Q1. Is this AI Background Remover free?</summary>
+          <p>Yes, CrafterTools AI Background Remover is completely free to use. You can remove backgrounds from unlimited images without any hidden costs or watermarks. We believe in providing accessible, high-quality tools for everyone.</p>
+        </details>
+        <details class="faq-item premium-card">
+          <summary>Q2. Which image formats are supported?</summary>
+          <p>We support JPG, JPEG, PNG, and WebP formats. The maximum file size is 25 MB. For best results, use images with clear subject-background separation.</p>
+        </details>
+        <details class="faq-item premium-card">
+          <summary>Q3. Does the image quality decrease?</summary>
+          <p>No, our AI preserves the original image quality while removing the background. The output is high-resolution and retains all the details of your subject.</p>
+        </details>
+        <details class="faq-item premium-card">
+          <summary>Q4. Is my uploaded image secure?</summary>
+          <p>Absolutely. We use secure API connections and do not store your images on our servers. All processing is done in real-time and your files are automatically deleted after processing.</p>
+        </details>
+        <details class="faq-item premium-card">
+          <summary>Q5. Can I use the transparent image commercially?</summary>
+          <p>Yes, you own the rights to your original image. The background-removed result can be used for both personal and commercial purposes, as long as you have the rights to the original image.</p>
+        </details>
+        <details class="faq-item premium-card">
+          <summary>Q6. Does it work on mobile devices?</summary>
+          <p>Yes, our tool is fully responsive and works seamlessly on smartphones, tablets, and desktop computers. You can upload images directly from your mobile gallery or camera.</p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="crafter-footer">
+    <div class="container footer-inner">
+      <p>© 2025 CrafterTools. All rights reserved.</p>
+      <ul class="footer-links">
+        <li><a href="#">Privacy</a></li>
+        <li><a href="term.html">Terms</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- Config file (API key) -->
+  <script src="config.js"></script>
+  <!-- Main script -->
+  <script src="backgroundremove.js"></script>
+</body>
+</html>
