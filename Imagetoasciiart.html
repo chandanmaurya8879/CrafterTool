@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrafterTools · Image to ASCII Art</title>
+    <!-- Poppins font (matches CrafterTools) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="Imagetoasciiart.css">
+</head>
+<body>
+
+    <!-- ========== NAVBAR ========== -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-compress-alt"></i>
+                <span>CrafterTools</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="about.html">About us</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#other-tools">Tools</a></li>
+                <li><a href="index.html" class="btn-nav">Home</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container" id="home">
+
+        <!-- ========== HERO ========== -->
+        <div class="page-header fade-up">
+            <h1>Convert Images to <span class="highlight">ASCII Art</span> Instantly</h1>
+            <p>Transform your photos into beautiful text-based ASCII art. Fast, free, private, and processed entirely in your browser.</p>
+        </div>
+
+        <!-- ========== UPLOAD + SETTINGS CARD ========== -->
+        <section class="card upload-card fade-up" id="uploadCard">
+
+            <!-- Upload area -->
+            <div class="upload-area" id="uploadArea">
+                <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                <h3>Drag & drop your image here</h3>
+                <p>or <span class="browse-link">browse files</span> — JPG, PNG, WEBP (max 20MB)</p>
+                <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden>
+            </div>
+
+            <!-- Editor -->
+            <div id="editorSection" class="editor-section hidden">
+
+                <!-- Preview info -->
+                <div class="preview-content" id="previewContent">
+                    <div class="preview-thumb">
+                        <img id="previewImage" src="#" alt="preview">
+                    </div>
+                    <div class="preview-meta">
+                        <div class="meta-row"><i class="fas fa-image"></i> <span id="previewName">—</span></div>
+                        <div class="meta-row"><i class="fas fa-weight-hanging"></i> <span id="previewSize">—</span></div>
+                        <div class="meta-row"><i class="fas fa-expand"></i> <span id="previewDimensions">—</span></div>
+                        <div class="meta-row"><i class="fas fa-file"></i> <span id="previewType">—</span></div>
+                    </div>
+                    <div class="preview-actions">
+                        <button class="action-btn" id="replaceBtn" title="Replace image"><i class="fas fa-sync-alt"></i></button>
+                        <button class="action-btn" id="removeBtn" title="Remove image"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+
+                <!-- ASCII Settings -->
+                <div class="settings-section">
+                    <h3 class="options-title"><i class="fas fa-sliders-h" style="color:#4f46e5;"></i> ASCII Settings</h3>
+
+                    <div class="settings-grid">
+
+                        <!-- Character Set -->
+                        <div class="control-group">
+                            <label class="control-label"><i class="fas fa-font"></i> ASCII Character Set</label>
+                            <select id="charsetSelect" class="select-input">
+                                <option value="standard">Standard (10 levels)</option>
+                                <option value="detailed">Detailed (70 levels)</option>
+                                <option value="blocks">Blocks (shaded)</option>
+                                <option value="symbols">Symbols</option>
+                                <option value="numbers">Numbers</option>
+                                <option value="custom">Custom Characters</option>
+                            </select>
+                        </div>
+
+                        <!-- Custom chars -->
+                        <div class="control-group" id="customCharsGroup" style="display:none;">
+                            <label class="control-label"><i class="fas fa-keyboard"></i> Custom Characters</label>
+                            <input type="text" id="customChars" class="text-input-single" placeholder="e.g. @#*+=-:. " maxlength="100" value="@%#*+=-:. ">
+                        </div>
+
+                        <!-- Output Width -->
+                        <div class="control-group">
+                            <label class="control-label"><i class="fas fa-arrows-alt-h"></i> Output Width (chars)</label>
+                            <div class="size-input-wrap">
+                                <input type="range" id="widthSlider" class="size-slider" min="50" max="300" value="120" step="1">
+                                <span class="size-readout" id="widthReadout">120</span>
+                            </div>
+                        </div>
+
+                        <!-- Brightness -->
+                        <div class="control-group">
+                            <label class="control-label"><i class="fas fa-sun"></i> Brightness</label>
+                            <div class="size-input-wrap">
+                                <input type="range" id="brightnessSlider" class="size-slider" min="-100" max="100" value="0" step="1">
+                                <span class="size-readout" id="brightnessReadout">0</span>
+                            </div>
+                        </div>
+
+                        <!-- Contrast -->
+                        <div class="control-group">
+                            <label class="control-label"><i class="fas fa-adjust"></i> Contrast</label>
+                            <div class="size-input-wrap">
+                                <input type="range" id="contrastSlider" class="size-slider" min="-100" max="100" value="0" step="1">
+                                <span class="size-readout" id="contrastReadout">0</span>
+                            </div>
+                        </div>
+
+                        <!-- Font Size -->
+                        <div class="control-group">
+                            <label class="control-label"><i class="fas fa-text-height"></i> Font Size</label>
+                            <div class="size-input-wrap">
+                                <input type="range" id="fontSizeSlider" class="size-slider" min="4" max="20" value="8" step="1">
+                                <span class="size-readout" id="fontSizeReadout">8px</span>
+                            </div>
+                        </div>
+
+                        <!-- Font Family -->
+                        <div class="control-group">
+                            <label class="control-label"><i class="fas fa-font"></i> Font Family</label>
+                            <select id="fontFamilySelect" class="select-input">
+                                <option value="monospace">Monospace</option>
+                                <option value="'Courier New', monospace">Courier New</option>
+                                <option value="Consolas, monospace">Consolas</option>
+                            </select>
+                        </div>
+
+                        <!-- Background Color -->
+                        <div class="control-group">
+                            <label class="control-label"><i class="fas fa-palette"></i> Background</label>
+                            <div class="color-picker-wrap">
+                                <input type="color" id="bgColor" value="#ffffff" class="color-input">
+                                <span class="color-value" id="bgColorValue">#FFFFFF</span>
+                            </div>
+                        </div>
+
+                        <!-- Toggles -->
+                        <div class="control-group">
+                            <label class="control-label"><i class="fas fa-exchange-alt"></i> Invert Colors</label>
+                            <label class="toggle-label">
+                                <input type="checkbox" id="invertToggle">
+                                <span>Invert (light on dark)</span>
+                            </label>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label"><i class="fas fa-tint"></i> Colored ASCII</label>
+                            <label class="toggle-label">
+                                <input type="checkbox" id="colorToggle">
+                                <span>Keep original colors</span>
+                            </label>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label"><i class="fas fa-expand"></i> Aspect Ratio</label>
+                            <label class="toggle-label">
+                                <input type="checkbox" id="aspectToggle" checked>
+                                <span>Preserve aspect ratio</span>
+                            </label>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Generate button + animation -->
+                <div class="convert-action">
+                    <button id="generateBtn" class="btn-primary" disabled>
+                        <i class="fas fa-bolt"></i> Generate ASCII Art
+                    </button>
+
+                    <!-- Processing animation -->
+                    <div id="processingAnimation" class="processing-animation hidden">
+                        <div class="processing-stage">
+                            <div class="processing-ring">
+                                <svg width="80" height="80" viewBox="0 0 80 80">
+                                    <circle cx="40" cy="40" r="34" fill="none" stroke="#e9eef3" stroke-width="6"/>
+                                    <circle id="processingRing" cx="40" cy="40" r="34" fill="none" stroke="url(#gradASCII)" stroke-width="6" stroke-linecap="round" stroke-dasharray="213.6" stroke-dashoffset="213.6"/>
+                                    <defs>
+                                        <linearGradient id="gradASCII" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#4f46e5"/>
+                                            <stop offset="100%" stop-color="#3b82f6"/>
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <div class="processing-percent" id="processingPercent">0%</div>
+                            </div>
+                        </div>
+                        <p class="processing-status" id="processingStatus">Reading image...</p>
+                        <div class="processing-bar">
+                            <div class="processing-bar-fill" id="processingBarFill"></div>
+                        </div>
+                    </div>
+
+                    <!-- Success -->
+                    <div id="successAnimation" class="success-animation hidden">
+                        <div class="checkmark-circle"><i class="fas fa-check"></i></div>
+                        <p class="success-text">✅ ASCII Art Generated Successfully</p>
+                        <div class="confetti">
+                            <span></span><span></span><span></span><span></span><span></span>
+                            <span></span><span></span><span></span><span></span><span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== RESULT CARD ========== -->
+        <section id="resultCard" class="card result-card hidden">
+            <h2 class="card-title"><i class="fas fa-check-circle" style="color:#10b981;"></i> ASCII Art Generated</h2>
+
+            <!-- Zoom controls -->
+            <div class="result-toolbar">
+                <div class="zoom-controls">
+                    <button class="tool-btn" id="zoomOutBtn" title="Zoom out"><i class="fas fa-search-minus"></i></button>
+                    <span class="zoom-level" id="zoomLevel">100%</span>
+                    <button class="tool-btn" id="zoomInBtn" title="Zoom in"><i class="fas fa-search-plus"></i></button>
+                </div>
+                <button class="tool-btn reset-zoom" id="resetZoomBtn" title="Reset zoom"><i class="fas fa-sync-alt"></i> Reset</button>
+            </div>
+
+            <!-- ASCII preview -->
+            <div class="ascii-preview-wrap" id="asciiPreviewWrap">
+                <pre id="asciiOutput" class="ascii-output"></pre>
+            </div>
+
+            <!-- Stats -->
+            <div class="convert-details">
+                <div class="detail-row">
+                    <span><i class="fas fa-keyboard"></i> Character Count</span>
+                    <strong id="detailChars">—</strong>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-expand"></i> Output Resolution</span>
+                    <strong id="detailResolution">—</strong>
+                </div>
+                <div class="detail-row">
+                    <span><i class="far fa-clock"></i> Processing Time</span>
+                    <strong id="detailTime">—</strong>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-font"></i> Font Size</span>
+                    <strong id="detailFontSize">—</strong>
+                </div>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="result-actions">
+                <button id="copyBtn" class="btn-secondary action-large">
+                    <i class="fas fa-copy"></i> Copy ASCII
+                </button>
+                <button id="downloadTxtBtn" class="btn-secondary action-large">
+                    <i class="fas fa-file-alt"></i> TXT
+                </button>
+                <button id="downloadPngBtn" class="btn-secondary action-large">
+                    <i class="fas fa-file-image"></i> PNG
+                </button>
+                <button id="downloadHtmlBtn" class="btn-secondary action-large">
+                    <i class="fas fa-file-code"></i> HTML
+                </button>
+            </div>
+            <button id="generateAnotherBtn" class="btn-primary download-btn">
+                <i class="fas fa-redo-alt"></i> Generate Another
+            </button>
+        </section>
+
+        <!-- ========== HOW IT WORKS ========== -->
+        <section class="card info-section fade-up" id="how-it-works">
+            <h2 class="card-title"><i class="fas fa-cogs" style="color:#4f46e5;"></i> How It Works</h2>
+            <p class="section-subtitle">Five simple steps — no signup, no upload to a server.</p>
+
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <span class="step-number">1</span>
+                    <h3>Upload Image</h3>
+                    <p>Choose or drag your JPG, PNG, or WEBP image. Your file never leaves your browser.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-sliders-h"></i></div>
+                    <span class="step-number">2</span>
+                    <h3>Choose Settings</h3>
+                    <p>Pick a character set, adjust width, brightness, contrast, and colors.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-bolt"></i></div>
+                    <span class="step-number">3</span>
+                    <h3>Generate ASCII</h3>
+                    <p>Click Generate and watch your image transform into text art in real time.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-eye"></i></div>
+                    <span class="step-number">4</span>
+                    <h3>Preview Result</h3>
+                    <p>Zoom in and out to inspect every detail of your ASCII art.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-download"></i></div>
+                    <span class="step-number">5</span>
+                    <h3>Copy or Download</h3>
+                    <p>Copy to clipboard or download as TXT, PNG, or HTML.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== HOW TO USE ========== -->
+        <section class="card info-section fade-up" id="how-to-use">
+            <h2 class="card-title"><i class="fas fa-question-circle" style="color:#4f46e5;"></i> How to Use</h2>
+            <p class="section-subtitle">Get started in seconds — it's really that simple.</p>
+
+            <div class="usage-list">
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-hand-pointer"></i></span>
+                    <div>
+                        <h4>Upload an image</h4>
+                        <p>Click the upload area or drag your image file into the box (max 20MB).</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-sliders-h"></i></span>
+                    <div>
+                        <h4>Adjust settings</h4>
+                        <p>Choose character set, output width, brightness, contrast, colors, and fonts.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-bolt"></i></span>
+                    <div>
+                        <h4>Click Generate</h4>
+                        <p>Watch the browser-based ASCII conversion with live progress updates.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-eye"></i></span>
+                    <div>
+                        <h4>Preview ASCII Art</h4>
+                        <p>Use zoom controls to inspect your art at different scales.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-copy"></i></span>
+                    <div>
+                        <h4>Copy or Download</h4>
+                        <p>Copy to clipboard or save as TXT, PNG image, or standalone HTML file.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== FEATURES ========== -->
+        <section class="card info-section fade-up" id="features">
+            <h2 class="card-title"><i class="fas fa-list-check" style="color:#4f46e5;"></i> Features</h2>
+            <p class="section-subtitle">Everything you need from a premium ASCII art generator.</p>
+
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #4f46e5, #4338ca);">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3>100% Browser-Based</h3>
+                    <p>All processing happens in your browser using the Canvas API. No server needed.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                        <i class="fas fa-ban"></i>
+                    </div>
+                    <h3>No Watermark</h3>
+                    <p>Your ASCII art is clean and unbranded — perfect for sharing anywhere.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Privacy Friendly</h3>
+                    <p>Your images never leave your device. No uploads, no tracking, no storage.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <h3>No Upload to Server</h3>
+                    <p>100% offline-capable after initial load. Zero network requests during processing.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #ec4899, #db2777);">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Fast Processing</h3>
+                    <p>Optimized algorithms generate high-quality ASCII art in milliseconds.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3>Colored ASCII Support</h3>
+                    <p>Toggle colored mode to preserve the original image's hues in your ASCII art.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #4f46e5, #3b82f6);">
+                        <i class="fas fa-copy"></i>
+                    </div>
+                    <h3>Copy with One Click</h3>
+                    <p>Instantly copy the ASCII art to your clipboard for pasting anywhere.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #1e1b4b, #3b82f6);">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Mobile Friendly</h3>
+                    <p>Works beautifully on smartphones, tablets, laptops, and desktops.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== OTHER TOOLS ========== -->
+        <section class="card info-section fade-up" id="other-tools">
+            <h2 class="card-title"><i class="fas fa-toolbox" style="color:#4f46e5;"></i> Related Tools</h2>
+            <p class="section-subtitle">Explore more free tools from our suite — all privacy-first.</p>
+
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #4f46e5, #4338ca);">
+                        <i class="fas fa-compress-alt"></i>
+                    </div>
+                    <h3>Image Compressor</h3>
+                    <p>Reduce image file sizes by up to 80% without visible quality loss.</p>
+                    <a href="imagecompress.html" class="tool-link">Try Compressor <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </div>
+                    <h3>Image Resize</h3>
+                    <p>Resize images to exact dimensions for web, print, or social media.</p>
+                    <a href="imageresize.html" class="tool-link">Try Resizer <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="fas fa-file-image"></i>
+                    </div>
+                    <h3>JPG to PNG</h3>
+                    <p>Convert JPG images to lossless PNG with transparency support.</p>
+                    <a href="jpgtopng.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3>PNG to JPG</h3>
+                    <p>Convert PNG to JPG with automatic white background flatten.</p>
+                    <a href="pngtojpg.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #ec4899, #db2777);">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3>JPG to WEBP</h3>
+                    <p>Convert JPG to WEBP for smaller file sizes and faster web loading.</p>
+                    <a href="jpgtowebp.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3>WEBP to JPG</h3>
+                    <p>Convert WEBP to JPG in one click — no quality loss.</p>
+                    <a href="webptojpg.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #3b82f6);">
+                        <i class="fas fa-crop-alt"></i>
+                    </div>
+                    <h3>Image Crop</h3>
+                    <p>Crop any image to the exact area you need.</p>
+                    <a href="image-cropper.html" class="tool-link">Try Cropper <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #a78bfa, #4f46e5);">
+                        <i class="fas fa-low-vision"></i>
+                    </div>
+                    <h3>Blur Image</h3>
+                    <p>Apply adjustable blur to any image with a smooth slider.</p>
+                    <a href="blurimage.html" class="tool-link">Try Blur <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #ec4899, #db2777);">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h3>Sharpen Image</h3>
+                    <p>Enhance image clarity with adjustable sharpening strength.</p>
+                    <a href="Sharpenimage.html" class="tool-link">Try Sharpen <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #ec4899);">
+                        <i class="fas fa-film"></i>
+                    </div>
+                    <h3>GIF Maker</h3>
+                    <p>Turn multiple images into beautiful animated GIFs.</p>
+                    <a href="imagegif.html" class="tool-link">Try GIF Maker <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #06b6d4, #10b981);">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <h3>Image Metadata Viewer</h3>
+                    <p>View EXIF, dimensions, and file info from any image.</p>
+                    <a href="image-metadata.html" class="tool-link">Try Viewer <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <h3>Brightness &amp; Contrast</h3>
+                    <p>Adjust image brightness and contrast with live preview.</p>
+                    <a href="brightness-contrast.html" class="tool-link">Try Adjuster <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== FAQ ========== -->
+        <section class="card info-section fade-up" id="faq">
+            <h2 class="card-title"><i class="fas fa-question" style="color:#4f46e5;"></i> Frequently Asked Questions</h2>
+            <p class="section-subtitle">Quick answers to common questions about this tool.</p>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>What is ASCII Art?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>ASCII art is a graphic design technique that uses printable characters (letters, numbers, and symbols) to create visual images. Each character represents a different brightness level, and when viewed together, they form a recognizable picture — like a photo made entirely of text.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>How does Image to ASCII work?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>The tool loads your image into an HTML5 Canvas, samples each pixel, calculates its brightness (luminance), and maps that value to a character in your chosen set. Bright pixels get lighter characters (like `.` or ` `), dark pixels get heavier ones (like `@` or `#`). The result is a grid of characters that visually recreates your image.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Is my image uploaded to a server?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>No. Everything runs locally in your browser using the Canvas API. No files are uploaded to any server, and nothing is stored or tracked. Your privacy is fully preserved.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Can I use it on mobile?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Absolutely. The tool is fully responsive and works perfectly on smartphones, tablets, laptops, and desktops. You can drag &amp; drop on desktop or tap to upload on mobile.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Can I copy the ASCII text?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes! Click the "Copy ASCII" button to instantly copy the generated art to your clipboard. You can then paste it into any text editor, chat, or document.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Can I download as TXT?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes — click the "TXT" button to download the ASCII art as a plain text file. You can also export as a PNG image or a standalone HTML file.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Can I create colored ASCII?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes! Toggle "Colored ASCII" to preserve the original colors of your image in the output. Each character takes on the color of the pixel it represents, creating a beautiful full-color ASCII render.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Is it free?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes, it's 100% free with no limits, no signup, no watermarks, and no hidden fees. You can generate as many ASCII arts as you want.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Does it work offline after loading?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes! Once the page is fully loaded, you can generate ASCII art without an internet connection — all processing is done locally using the Canvas API.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>What image formats are supported?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>You can upload JPG, PNG, and WEBP images up to 20MB in size. Most other common formats are also supported by modern browsers, but these three are guaranteed to work.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <p>© 2025 CrafterTools — create smarter, not harder.</p>
+    </footer>
+
+    <div id="toast" class="toast">📥 Download started!</div>
+
+    <script src="Imagetoasciiart.js"></script>
+</body>
+</html>
