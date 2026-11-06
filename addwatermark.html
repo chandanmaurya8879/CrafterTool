@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrafterTools · Add Watermark</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="addwatermark.css">
+</head>
+<body>
+
+    <!-- ========== NAVBAR ========== -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-compress-alt"></i>
+                <span>CrafterTools</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="about.html">About us </a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#other-tools">Tools</a></li>
+                <li><a href="index.html" class="btn-nav">Home</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container" id="home">
+
+        <!-- ========== HERO ========== -->
+        <div class="page-header fade-up">
+            <h1>Add <span class="highlight">Watermark</span></h1>
+            <p>Protect your images with professional text or image watermarks. Full control over position, opacity, size, and rotation. Fast, secure and completely browser-based.</p>
+        </div>
+
+        <!-- ========== UPLOAD + WATERMARK CARD ========== -->
+        <section class="card upload-card fade-up" id="uploadCard">
+
+            <!-- Upload area -->
+            <div class="upload-area" id="uploadArea">
+                <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                <h3>Drag & drop your image here</h3>
+                <p>or <span class="browse-link">browse files</span> — JPG, PNG, WEBP (max 20MB)</p>
+                <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden>
+            </div>
+
+            <!-- Editor -->
+            <div id="editorSection" class="editor-section hidden">
+
+                <!-- Preview info -->
+                <div id="previewContent" class="preview-content">
+                    <div class="preview-meta">
+                        <div class="meta-row"><i class="fas fa-image"></i> <span id="previewName">—</span></div>
+                        <div class="meta-row"><i class="fas fa-weight-hanging"></i> <span id="previewSize">—</span></div>
+                        <div class="meta-row"><i class="fas fa-expand"></i> <span id="previewDimensions">—</span></div>
+                        <div class="meta-row"><i class="fas fa-stamp"></i> <span id="previewWatermark">Watermark: Text</span></div>
+                    </div>
+                    <button class="reset-btn" id="resetBtn" title="Remove image"><i class="fas fa-times"></i></button>
+                </div>
+
+                <!-- Watermark Editor Layout -->
+                <div class="editor-layout">
+                    <!-- Canvas -->
+                    <div class="canvas-panel">
+                        <div class="canvas-wrap" id="canvasWrap">
+                            <canvas id="wmCanvas"></canvas>
+                        </div>
+                        <p class="canvas-hint"><i class="fas fa-eye"></i> Live preview — updates in real time as you adjust settings</p>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="controls-panel">
+
+                        <!-- Type toggle -->
+                        <div class="control-group">
+                            <label class="control-label"><i class="fas fa-layer-group"></i> Watermark Type</label>
+                            <div class="type-toggle">
+                                <button class="type-btn active" id="typeTextBtn">
+                                    <i class="fas fa-font"></i> Text
+                                </button>
+                                <button class="type-btn" id="typeImageBtn">
+                                    <i class="fas fa-image"></i> Image
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- TEXT WATERMARK -->
+                        <div id="textWatermarkPanel" class="wm-panel">
+                            <div class="control-group">
+                                <label class="control-label"><i class="fas fa-pen"></i> Watermark Text</label>
+                                <input type="text" id="watermarkText" class="text-input-single" value="© CrafterTools" maxlength="100" placeholder="Enter watermark text">
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label"><i class="fas fa-font"></i> Font Family</label>
+                                <select id="wmFont" class="select-input">
+                                    <option value="Inter, sans-serif">Inter (Default)</option>
+                                    <option value="Arial, sans-serif">Arial</option>
+                                    <option value="Georgia, serif">Georgia</option>
+                                    <option value="'Times New Roman', serif">Times New Roman</option>
+                                    <option value="'Courier New', monospace">Courier New</option>
+                                    <option value="Verdana, sans-serif">Verdana</option>
+                                    <option value="Impact, sans-serif">Impact</option>
+                                </select>
+                            </div>
+
+                            <div class="control-row">
+                                <div class="control-group half">
+                                    <label class="control-label"><i class="fas fa-text-height"></i> Size</label>
+                                    <div class="size-input-wrap">
+                                        <input type="range" id="wmSize" class="size-slider" min="12" max="200" value="48">
+                                        <span class="size-readout" id="wmSizeReadout">48px</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label"><i class="fas fa-palette"></i> Text Color</label>
+                                <div class="color-row">
+                                    <div class="color-picker-wrap">
+                                        <input type="color" id="wmColor" value="#ffffff" class="color-input">
+                                        <span class="color-value" id="wmColorValue">#FFFFFF</span>
+                                    </div>
+                                    <div class="quick-colors">
+                                        <button class="quick-color" data-color="#ffffff" style="background:#ffffff" title="White"></button>
+                                        <button class="quick-color" data-color="#000000" style="background:#000000" title="Black"></button>
+                                        <button class="quick-color" data-color="#8b5cf6" style="background:#8b5cf6" title="Purple"></button>
+                                        <button class="quick-color" data-color="#3b82f6" style="background:#3b82f6" title="Blue"></button>
+                                        <button class="quick-color" data-color="#ef4444" style="background:#ef4444" title="Red"></button>
+                                        <button class="quick-color" data-color="#10b981" style="background:#10b981" title="Green"></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label"><i class="fas fa-bold"></i> Style</label>
+                                <div class="style-btns">
+                                    <button class="style-btn" id="wmBoldBtn" title="Bold"><i class="fas fa-bold"></i></button>
+                                    <button class="style-btn" id="wmItalicBtn" title="Italic"><i class="fas fa-italic"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- IMAGE WATERMARK -->
+                        <div id="imageWatermarkPanel" class="wm-panel hidden">
+                            <div class="control-group">
+                                <label class="control-label"><i class="fas fa-image"></i> Watermark Image</label>
+                                <div class="image-upload-area" id="wmImageUpload">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <span>Upload watermark image</span>
+                                    <span class="image-upload-hint">PNG with transparency recommended</span>
+                                    <input type="file" id="wmImageInput" accept="image/png,image/jpeg,image/webp" hidden>
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label"><i class="fas fa-text-height"></i> Scale</label>
+                                <div class="size-input-wrap">
+                                    <input type="range" id="wmImageScale" class="size-slider" min="5" max="100" value="30">
+                                    <span class="size-readout" id="wmImageScaleReadout">30%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- COMMON CONTROLS -->
+                        <div class="wm-panel">
+                            <div class="control-group">
+                                <label class="control-label"><i class="fas fa-map-marker-alt"></i> Position</label>
+                                <div class="position-grid" id="positionGrid">
+                                    <button class="position-btn" data-pos="top-left" title="Top Left"><i class="fas fa-arrow-up-left"></i></button>
+                                    <button class="position-btn" data-pos="top-center" title="Top Center"><i class="fas fa-arrow-up"></i></button>
+                                    <button class="position-btn" data-pos="top-right" title="Top Right"><i class="fas fa-arrow-up-right"></i></button>
+                                    <button class="position-btn" data-pos="middle-left" title="Middle Left"><i class="fas fa-arrow-left"></i></button>
+                                    <button class="position-btn active" data-pos="center" title="Center"><i class="fas fa-circle"></i></button>
+                                    <button class="position-btn" data-pos="middle-right" title="Middle Right"><i class="fas fa-arrow-right"></i></button>
+                                    <button class="position-btn" data-pos="bottom-left" title="Bottom Left"><i class="fas fa-arrow-down-left"></i></button>
+                                    <button class="position-btn" data-pos="bottom-center" title="Bottom Center"><i class="fas fa-arrow-down"></i></button>
+                                    <button class="position-btn" data-pos="bottom-right" title="Bottom Right"><i class="fas fa-arrow-down-right"></i></button>
+                                </div>
+                            </div>
+
+                            <div class="control-row">
+                                <div class="control-group half">
+                                    <label class="control-label"><i class="fas fa-adjust"></i> Opacity</label>
+                                    <div class="size-input-wrap">
+                                        <input type="range" id="wmOpacity" class="size-slider" min="5" max="100" value="70">
+                                        <span class="size-readout" id="wmOpacityReadout">70%</span>
+                                    </div>
+                                </div>
+                                <div class="control-group half">
+                                    <label class="control-label"><i class="fas fa-sync-alt"></i> Rotation</label>
+                                    <div class="size-input-wrap">
+                                        <input type="range" id="wmRotation" class="size-slider" min="-180" max="180" value="0">
+                                        <span class="size-readout" id="wmRotationReadout">0°</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label"><i class="fas fa-th"></i> Tiling</label>
+                                <label class="toggle-label">
+                                    <input type="checkbox" id="wmTile">
+                                    <span>Repeat watermark across the image</span>
+                                </label>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label"><i class="fas fa-arrows-alt"></i> Margin</label>
+                                <div class="size-input-wrap">
+                                    <input type="range" id="wmMargin" class="size-slider" min="0" max="100" value="20">
+                                    <span class="size-readout" id="wmMarginReadout">20px</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Reset -->
+                        <button class="reset-filter-btn" id="resetWatermarkBtn">
+                            <i class="fas fa-undo-alt"></i> Reset Watermark
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Apply button + UNIQUE stamp animation -->
+                <div class="convert-action">
+                    <button id="applyBtn" class="btn-primary" disabled>
+                        <i class="fas fa-stamp"></i> Apply Watermark &amp; Download
+                    </button>
+
+                    <!-- UNIQUE stamp animation -->
+                    <div id="stampAnimation" class="stamp-animation hidden">
+                        <div class="glow-line" id="glowLine"></div>
+
+                        <div class="stamp-stage">
+                            <div class="stamp-img-wrap" id="stampImgWrap">
+                                <img id="stampStageImg" src="#" alt="stamping">
+                                <div class="stamp-overlay" id="stampOverlay">
+                                    <div class="stamp-ring"></div>
+                                    <div class="stamp-check">✓</div>
+                                </div>
+                                <div class="stamp-ripple" id="stampRipple"></div>
+                            </div>
+                        </div>
+
+                        <div class="stamp-progress-info">
+                            <div class="stamp-status" id="stampStatus">Preparing Image...</div>
+                            <div class="stamp-counter">
+                                <span id="stampCountValue">0</span><span class="stamp-unit">%</span>
+                            </div>
+                        </div>
+
+                        <div class="stamp-progress-bar">
+                            <div class="stamp-progress-fill" id="stampProgressFill"></div>
+                        </div>
+                    </div>
+
+                    <!-- Success -->
+                    <div id="successAnimation" class="success-animation hidden">
+                        <div class="checkmark-circle"><i class="fas fa-check"></i></div>
+                        <p class="success-text">✅ Watermark Applied Successfully</p>
+                        <div class="confetti">
+                            <span></span><span></span><span></span><span></span><span></span>
+                            <span></span><span></span><span></span><span></span><span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== RESULT CARD ========== -->
+        <section id="resultCard" class="card result-card hidden">
+            <h2 class="card-title"><i class="fas fa-check-circle" style="color:#10b981;"></i> Watermark Applied Successfully</h2>
+
+            <div class="result-preview-wrap">
+                <img id="resultImage" src="#" alt="result">
+            </div>
+
+            <div class="convert-details">
+                <div class="detail-row">
+                    <span><i class="fas fa-file-signature"></i> File Name</span>
+                    <strong id="detailFilename">—</strong>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-stamp"></i> Watermark Type</span>
+                    <strong id="detailType">—</strong>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-expand"></i> Resolution</span>
+                    <strong id="detailResolution">—</strong>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-weight-hanging"></i> File Size</span>
+                    <strong id="detailSize">—</strong>
+                </div>
+            </div>
+
+            <p class="comp-time"><i class="far fa-clock"></i> Process time: <span id="processTime">0.0s</span></p>
+
+            <button id="downloadBtn" class="btn-primary download-btn">
+                <i class="fas fa-download"></i> Download Image
+            </button>
+            <button id="editAnotherBtn" class="btn-secondary">🔄 Add Watermark to Another Image</button>
+        </section>
+
+        <!-- ========== HOW IT WORKS ========== -->
+        <section class="card info-section fade-up" id="how-it-works">
+            <h2 class="card-title"><i class="fas fa-cogs" style="color:#8b5cf6;"></i> How It Works</h2>
+            <p class="section-subtitle">Three simple steps — no signup, no upload to a server.</p>
+
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <span class="step-number">1</span>
+                    <h3>Upload Image</h3>
+                    <p>Choose or drag your JPG, PNG, or WEBP image. Your file never leaves your browser.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-stamp"></i></div>
+                    <span class="step-number">2</span>
+                    <h3>Configure Watermark</h3>
+                    <p>Add text or image watermark, choose position, opacity, rotation, and tiling.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-download"></i></div>
+                    <span class="step-number">3</span>
+                    <h3>Download Image</h3>
+                    <p>Apply the watermark, preview the result, and download your protected image.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== HOW TO USE ========== -->
+        <section class="card info-section fade-up" id="how-to-use">
+            <h2 class="card-title"><i class="fas fa-question-circle" style="color:#8b5cf6;"></i> How to Use</h2>
+            <p class="section-subtitle">Get started in seconds — it's really that simple.</p>
+
+            <div class="usage-list">
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-hand-pointer"></i></span>
+                    <div>
+                        <h4>Upload your image</h4>
+                        <p>Click the upload area or drag your image file into the box (max 20MB).</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-font"></i></span>
+                    <div>
+                        <h4>Choose watermark type</h4>
+                        <p>Pick Text for a quick copyright mark, or Image to upload your logo.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-pen"></i></span>
+                    <div>
+                        <h4>Customize appearance</h4>
+                        <p>Set font, size, color, opacity, rotation, and position (9 anchors).</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-th"></i></span>
+                    <div>
+                        <h4>Enable tiling (optional)</h4>
+                        <p>Repeat the watermark across the entire image for stronger protection.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-stamp"></i></span>
+                    <div>
+                        <h4>Click Apply Watermark</h4>
+                        <p>Watch the unique stamp imprint animation as your watermark is placed.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-download"></i></span>
+                    <div>
+                        <h4>Download your image</h4>
+                        <p>Click the purple download button to save your watermarked image.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== WHY USE THIS TOOL ========== -->
+        <section class="card info-section fade-up" id="why-choose">
+            <h2 class="card-title"><i class="fas fa-star" style="color:#8b5cf6;"></i> Why Use This Tool</h2>
+            <p class="section-subtitle">Built for protection, creativity, and privacy.</p>
+
+            <div class="features-grid">
+                <div class="feature-chip"><i class="fas fa-font"></i> Text Watermarks</div>
+                <div class="feature-chip"><i class="fas fa-image"></i> Image Watermarks</div>
+                <div class="feature-chip"><i class="fas fa-th"></i> Tiling Mode</div>
+                <div class="feature-chip"><i class="fas fa-map-marker-alt"></i> 9 Positions</div>
+                <div class="feature-chip"><i class="fas fa-sync-alt"></i> Rotation</div>
+                <div class="feature-chip"><i class="fas fa-adjust"></i> Opacity Control</div>
+                <div class="feature-chip"><i class="fas fa-shield-alt"></i> Privacy Protected</div>
+                <div class="feature-chip"><i class="fas fa-mobile-alt"></i> Mobile Friendly</div>
+            </div>
+        </section>
+
+        <!-- ========== FEATURES ========== -->
+        <section class="card info-section fade-up" id="features">
+            <h2 class="card-title"><i class="fas fa-list-check" style="color:#8b5cf6;"></i> Features</h2>
+            <p class="section-subtitle">Everything you need to protect your images.</p>
+
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                        <i class="fas fa-font"></i>
+                    </div>
+                    <h3>Text Watermarks</h3>
+                    <p>Add copyright notices, brand names, or custom text with full font control.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                        <i class="fas fa-image"></i>
+                    </div>
+                    <h3>Image Watermarks</h3>
+                    <p>Upload your logo or signature PNG — transparency is fully preserved.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="fas fa-th"></i>
+                    </div>
+                    <h3>Tiling Mode</h3>
+                    <p>Repeat the watermark across the entire image for stronger protection.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>9 Positions</h3>
+                    <p>Place watermarks at any corner, edge, or center of the image.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #ec4899, #db2777);">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <h3>Rotation</h3>
+                    <p>Rotate watermarks from -180° to 180° for diagonal or custom angles.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">
+                        <i class="fas fa-adjust"></i>
+                    </div>
+                    <h3>Opacity Control</h3>
+                    <p>Blend watermarks from subtle (5%) to bold (100%) — your choice.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #3b82f6);">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h3>Live Preview</h3>
+                    <p>See every change instantly on the canvas — no apply step needed.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #1e1b4b, #3b82f6);">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h3>High Quality</h3>
+                    <p>Export at full resolution with no quality loss in PNG or JPG.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== OTHER TOOLS ========== -->
+        <section class="card info-section fade-up" id="other-tools">
+            <h2 class="card-title"><i class="fas fa-toolbox" style="color:#8b5cf6;"></i> Other Tools</h2>
+            <p class="section-subtitle">Explore more free tools from our suite — all privacy-first.</p>
+
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                        <i class="fas fa-compress-alt"></i>
+                    </div>
+                    <h3>Image Compressor</h3>
+                    <p>Reduce image file sizes by up to 80% without visible quality loss.</p>
+                    <a href="imagecompress.html" class="tool-link">Try Compressor <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </div>
+                    <h3>Image Resizer</h3>
+                    <p>Resize images to exact dimensions for web, print, or social media.</p>
+                    <a href="imageresize.html" class="tool-link">Try Resizer <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="fas fa-file-image"></i>
+                    </div>
+                    <h3>JPG to PNG</h3>
+                    <p>Convert JPG images to lossless PNG with transparency support.</p>
+                    <a href="jpgtopng.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3>PNG to JPG</h3>
+                    <p>Convert PNG to JPG with automatic white background flatten.</p>
+                    <a href="pngtojpg.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #a78bfa, #8b5cf6);">
+                        <i class="fas fa-low-vision"></i>
+                    </div>
+                    <h3>Blur Image</h3>
+                    <p>Apply adjustable blur to any image with a smooth slider.</p>
+                    <a href="blurimage.html" class="tool-link">Try Blur <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #ec4899, #db2777);">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h3>Sharpen Image</h3>
+                    <p>Enhance image clarity with adjustable sharpening strength.</p>
+                    <a href="Sharpenimage.html" class="tool-link">Try Sharpen <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #3b82f6);">
+                        <i class="fas fa-crop-alt"></i>
+                    </div>
+                    <h3>Crop Image</h3>
+                    <p>Crop any image to the exact area you need.</p>
+                    <a href="image-cropper.html" class="tool-link">Try Cropper <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #ec4899);">
+                        <i class="fas fa-undo-alt"></i>
+                    </div>
+                    <h3>Rotate Image</h3>
+                    <p>Rotate images left, right or by any custom angle.</p>
+                    <a href="image-flip.html" class="tool-link">Try Rotator <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #ec4899);">
+                        <i class="fas fa-arrows-alt-h"></i>
+                    </div>
+                    <h3>Flip Image</h3>
+                    <p>Flip images horizontally or vertically in one click.</p>
+                    <a href="image-flip.html" class="tool-link">Try Flipper <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <h3>Brightness &amp; Contrast</h3>
+                    <p>Adjust image brightness and contrast with live preview.</p>
+                    <a href="brightness-contrast.html" class="tool-link">Try Adjuster <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #06b6d4, #10b981);">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <h3>Image Metadata Viewer</h3>
+                    <p>View EXIF, dimensions, and file info from any image.</p>
+                    <a href="image-metadata.html" class="tool-link">Try Viewer <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #1e1b4b, #3b82f6);">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <h3>QR Code Generator</h3>
+                    <p>Generate QR codes for links, text, or any data instantly.</p>
+                    <a href="urltoqr.html" class="tool-link">Try Generator <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== FAQ ========== -->
+        <section class="card info-section fade-up" id="faq">
+            <h2 class="card-title"><i class="fas fa-question" style="color:#8b5cf6;"></i> Frequently Asked Questions</h2>
+            <p class="section-subtitle">Quick answers to common questions about this tool.</p>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>What's the difference between text and image watermarks?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Text watermarks are simple strings like "© 2025 Your Name" or "DO NOT COPY" that you type directly into the tool. Image watermarks are files you upload — usually your logo, brand mark, or signature stored as a PNG with transparency. Image watermarks look more professional and brand-consistent, while text watermarks are faster to add.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>How does tiling protect my image better?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>When tiling is enabled, the watermark is repeated across the entire image in a grid pattern. This makes it much harder for someone to crop out the watermark — even if they crop one region, other watermarks remain visible. Tiling is especially useful for stock photos, portfolio previews, and proof sheets.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Does my image leave my browser?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>No. Everything runs locally in your browser using the Canvas API. No files are uploaded to any server, and nothing is stored or tracked. Your privacy is fully preserved — the tool even works offline once loaded.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Will transparency in my logo be preserved?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes! If you upload a PNG logo with transparency, the alpha channel is preserved through the rendering process. When you export as PNG, transparency is kept. When you export as JPG, the transparent areas blend with the base image (no white fill is added behind your logo).</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Is this tool free?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes, it's 100% free with no limits, no signup, no watermarks on your watermark, and no hidden fees. You can protect as many images as you want.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <p>© 2025 CrafterTools — protect smarter, not harder.</p>
+    </footer>
+
+    <div id="toast" class="toast">📥 Download started!</div>
+
+    <script src="addwatermark.js"></script>
+</body>
+</html>
