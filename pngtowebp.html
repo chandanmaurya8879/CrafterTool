@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrafterTools · PNG to WEBP Converter</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="pngtowebp.css">
+</head>
+<body>
+
+    <!-- ========== NAVBAR ========== -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-compress-alt"></i>
+                <span>CrafterTools</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="ahout.html">About us</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#other-tools">Tools</a></li>
+                <li><a href="index.html" class="btn-nav">Home</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container" id="home">
+
+        <!-- ========== HERO ========== -->
+        <div class="page-header fade-up">
+            <h1>PNG to <span class="highlight">WEBP</span> Converter</h1>
+            <p>Convert PNG images into modern WEBP format with transparency support and smaller file sizes. Fast, secure, free and completely browser-based.</p>
+        </div>
+
+        <!-- ========== UPLOAD + CONVERT CARD ========== -->
+        <section class="card upload-card fade-up" id="uploadCard">
+
+            <!-- Upload area -->
+            <div class="upload-area" id="uploadArea">
+                <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                <h3>Drag & drop your PNG here</h3>
+                <p>or <span class="browse-link">browse files</span> — PNG (max 20MB)</p>
+                <input type="file" id="fileInput" accept="image/png" hidden>
+            </div>
+
+            <!-- Preview + Quality -->
+            <div id="editorSection" class="editor-section hidden">
+
+                <!-- Skeleton -->
+                <div id="previewSkeleton" class="skeleton hidden">
+                    <div class="skeleton-avatar"></div>
+                    <div class="skeleton-lines">
+                        <div class="skeleton-line"></div>
+                        <div class="skeleton-line short"></div>
+                    </div>
+                </div>
+
+                <!-- Preview -->
+                <div id="previewContent" class="preview-content">
+                    <div class="preview-thumb checkerboard">
+                        <img id="previewImage" src="#" alt="preview">
+                    </div>
+                    <div class="preview-meta">
+                        <div class="meta-row"><i class="fas fa-image"></i> <span id="previewName">—</span></div>
+                        <div class="meta-row"><i class="fas fa-weight-hanging"></i> <span id="previewSize">—</span></div>
+                        <div class="meta-row"><i class="fas fa-expand"></i> <span id="previewDimensions">—</span></div>
+                        <div class="meta-row"><i class="fas fa-file"></i> <span id="previewType">PNG</span></div>
+                    </div>
+                    <button class="reset-btn" id="resetBtn" title="Remove image"><i class="fas fa-times"></i></button>
+                </div>
+
+                <!-- Transparency notice -->
+                <div class="transparency-notice" id="transparencyNotice">
+                    <i class="fas fa-info-circle"></i>
+                    <span id="transparencyText">Checking for transparency…</span>
+                </div>
+
+                <!-- Quality controls -->
+                <div class="quality-controls">
+                    <h3 class="options-title"><i class="fas fa-sliders-h" style="color:#8b5cf6;"></i> WEBP Quality</h3>
+
+                    <div class="quality-slider-wrap">
+                        <div class="quality-slider-header">
+                            <label for="qualitySlider">Quality</label>
+                            <span class="quality-readout" id="qualityReadout">90%</span>
+                        </div>
+                        <input type="range" id="qualitySlider" class="quality-slider" min="10" max="100" value="90" step="1">
+                        <div class="quality-ticks">
+                            <span>10%</span>
+                            <span>25%</span>
+                            <span>50%</span>
+                            <span>75%</span>
+                            <span>100%</span>
+                        </div>
+                    </div>
+
+                    <div class="option-group">
+                        <label class="group-label">Quick Presets</label>
+                        <div class="chip-row" id="presetRow">
+                            <button class="chip" data-quality="30">Smaller</button>
+                            <button class="chip" data-quality="60">Balanced</button>
+                            <button class="chip active" data-quality="90">High Quality</button>
+                            <button class="chip" data-quality="100">Maximum</button>
+                        </div>
+                    </div>
+
+                    <div class="live-preview">
+                        <i class="fas fa-info-circle"></i>
+                        <span>PNG transparency is preserved in the WEBP output (unless you pick very low quality).</span>
+                    </div>
+                </div>
+
+                <!-- Convert button + UNIQUE pixel animation -->
+                <div class="convert-action">
+                    <button id="convertBtn" class="btn-primary" disabled>
+                        <i class="fas fa-exchange-alt"></i> Convert to WEBP
+                    </button>
+
+                    <!-- UNIQUE pixel transformation animation -->
+                    <div id="webpAnimation" class="webp-animation hidden">
+                        <div class="glow-line" id="glowLine"></div>
+
+                        <div class="pixel-stage">
+                            <div class="pixel-img-wrap" id="pixelImgWrap">
+                                <img id="pixelStageImg" src="#" alt="pixel preview" class="pixel-base-img">
+                                <canvas id="pixelCanvas" class="pixel-canvas"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="webp-progress-info">
+                            <div class="webp-status" id="webpStatus">Loading PNG...</div>
+                            <div class="webp-counter">
+                                <span id="webpCountValue">0</span><span class="webp-unit">%</span>
+                            </div>
+                        </div>
+
+                        <div class="webp-progress-bar">
+                            <div class="webp-progress-fill" id="webpProgressFill"></div>
+                        </div>
+                    </div>
+
+                    <!-- Success -->
+                    <div id="successAnimation" class="success-animation hidden">
+                        <div class="checkmark-circle"><i class="fas fa-check"></i></div>
+                        <p class="success-text">✅ Conversion Complete!</p>
+                        <div class="confetti">
+                            <span></span><span></span><span></span><span></span><span></span>
+                            <span></span><span></span><span></span><span></span><span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== RESULT CARD ========== -->
+        <section id="resultCard" class="card result-card hidden">
+            <h2 class="card-title"><i class="fas fa-check-circle" style="color:#10b981;"></i> Conversion Successful</h2>
+
+            <div class="convert-result">
+                <div class="convert-side">
+                    <span class="convert-label">Original PNG</span>
+                    <div class="compare-preview checkerboard">
+                        <img id="resultOriginalImg" src="#" alt="original">
+                    </div>
+                </div>
+
+                <div class="convert-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+
+                <div class="convert-side">
+                    <span class="convert-label">Converted WEBP</span>
+                    <div class="compare-preview checkerboard">
+                        <img id="resultWebpImg" src="#" alt="webp">
+                    </div>
+                </div>
+            </div>
+
+            <div class="convert-details">
+                <div class="detail-row">
+                    <span><i class="fas fa-file-signature"></i> File Name</span>
+                    <strong id="detailFilename">—</strong>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-weight-hanging"></i> Original Size</span>
+                    <strong id="detailOrigSize">—</strong>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-database"></i> WEBP Size</span>
+                    <strong id="detailWebpSize">—</strong>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-chart-line"></i> Compression Saved</span>
+                    <strong id="detailSaved">—</strong>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-expand"></i> Resolution</span>
+                    <strong id="detailResolution">—</strong>
+                </div>
+            </div>
+
+            <p class="comp-time"><i class="far fa-clock"></i> Conversion time: <span id="processTime">0.0s</span></p>
+
+            <button id="downloadBtn" class="btn-primary download-btn">
+                <i class="fas fa-download"></i> Download WEBP
+            </button>
+            <button id="convertAnotherBtn" class="btn-secondary">🔄 Convert Another Image</button>
+        </section>
+
+        <!-- ========== HOW IT WORKS ========== -->
+        <section class="card info-section fade-up" id="how-it-works">
+            <h2 class="card-title"><i class="fas fa-cogs" style="color:#8b5cf6;"></i> How It Works</h2>
+            <p class="section-subtitle">Three simple steps — no signup, no upload to a server.</p>
+
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <span class="step-number">1</span>
+                    <h3>Upload PNG</h3>
+                    <p>Choose or drag your PNG image. Transparency is supported and preserved.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-exchange-alt"></i></div>
+                    <span class="step-number">2</span>
+                    <h3>Convert to WEBP</h3>
+                    <p>Our browser converts it into modern WEBP format with alpha-channel support.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-download"></i></div>
+                    <span class="step-number">3</span>
+                    <h3>Download WEBP</h3>
+                    <p>Download instantly — smaller file size while keeping transparency and quality.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== HOW TO USE ========== -->
+        <section class="card info-section fade-up" id="how-to-use">
+            <h2 class="card-title"><i class="fas fa-question-circle" style="color:#8b5cf6;"></i> How to Use</h2>
+            <p class="section-subtitle">Get started in seconds — it's really that simple.</p>
+
+            <div class="usage-list">
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-hand-pointer"></i></span>
+                    <div>
+                        <h4>Upload a PNG image</h4>
+                        <p>Click the upload area or drag your PNG file into the box (max 20MB).</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-sliders-h"></i></span>
+                    <div>
+                        <h4>Adjust WEBP quality if needed</h4>
+                        <p>Slide between 10% and 100%. Default is 90% for a great balance.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-exchange-alt"></i></span>
+                    <div>
+                        <h4>Click Convert to WEBP</h4>
+                        <p>Start the browser-based conversion — no uploads, no waiting on servers.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-hourglass-half"></i></span>
+                    <div>
+                        <h4>Wait for the pixel animation</h4>
+                        <p>Watch the unique pixel transformation as your PNG becomes WEBP.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-image"></i></span>
+                    <div>
+                        <h4>Preview the WEBP image</h4>
+                        <p>Compare original PNG with converted WEBP and check the size savings.</p>
+                    </div>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-badge"><i class="fas fa-download"></i></span>
+                    <div>
+                        <h4>Download the converted WEBP</h4>
+                        <p>Click the purple download button to save your WEBP instantly.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== WHY USE THIS TOOL ========== -->
+        <section class="card info-section fade-up" id="why-choose">
+            <h2 class="card-title"><i class="fas fa-star" style="color:#8b5cf6;"></i> Why Use This Tool</h2>
+            <p class="section-subtitle">Built for size, quality, and privacy.</p>
+
+            <div class="features-grid">
+                <div class="feature-chip"><i class="fas fa-compress-alt"></i> Smaller File Size</div>
+                <div class="feature-chip"><i class="fas fa-gem"></i> High Quality</div>
+                <div class="feature-chip"><i class="fas fa-bolt"></i> Fast Conversion</div>
+                <div class="feature-chip"><i class="fas fa-infinity"></i> 100% Free</div>
+                <div class="feature-chip"><i class="fas fa-shield-alt"></i> Privacy Protected</div>
+                <div class="feature-chip"><i class="fas fa-ban"></i> No Watermark</div>
+                <div class="feature-chip"><i class="fas fa-globe"></i> Browser Based</div>
+                <div class="feature-chip"><i class="fas fa-mobile-alt"></i> Mobile Friendly</div>
+            </div>
+        </section>
+
+        <!-- ========== FEATURES ========== -->
+        <section class="card info-section fade-up" id="features">
+            <h2 class="card-title"><i class="fas fa-list-check" style="color:#8b5cf6;"></i> Features</h2>
+            <p class="section-subtitle">Everything you need from a premium PNG to WEBP converter.</p>
+
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                        <i class="fas fa-eye-dropper"></i>
+                    </div>
+                    <h3>Transparency Support</h3>
+                    <p>PNG alpha channels are preserved in the WEBP output — perfect for logos and graphics.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                        <i class="fas fa-sliders-h"></i>
+                    </div>
+                    <h3>Quality Control</h3>
+                    <p>Fine-tune WEBP quality from 10% to 100% with quick presets for every use case.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h3>Live Preview</h3>
+                    <p>See the original PNG and converted WEBP side-by-side before downloading.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h3>Instant Download</h3>
+                    <p>Get your WEBP immediately — no waiting, no processing queues.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #ec4899, #db2777);">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Responsive Design</h3>
+                    <p>Works perfectly on mobile, tablet, laptop, and desktop.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">
+                        <i class="fas fa-wifi"></i>
+                    </div>
+                    <h3>Works Offline</h3>
+                    <p>Once loaded, the tool functions without an internet connection.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #3b82f6);">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Fast Processing</h3>
+                    <p>Canvas-based conversion completes in under a second.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #1e1b4b, #3b82f6);">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <h3>High Quality Output</h3>
+                    <p>Uses canvas.toBlob with the WEBP codec for crisp, optimized results.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== OTHER TOOLS ========== -->
+        <section class="card info-section fade-up" id="other-tools">
+            <h2 class="card-title"><i class="fas fa-toolbox" style="color:#8b5cf6;"></i> Other Tools</h2>
+            <p class="section-subtitle">Explore more free tools from our suite — all privacy-first.</p>
+
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                        <i class="fas fa-compress-alt"></i>
+                    </div>
+                    <h3>Image Compressor</h3>
+                    <p>Reduce image file sizes by up to 80% without visible quality loss.</p>
+                    <a href="imagecompress.html" class="tool-link">Try Compressor <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </div>
+                    <h3>Image Resizer</h3>
+                    <p>Resize images to exact dimensions for web, print, or social media.</p>
+                    <a href="imageresize.html" class="tool-link">Try Resizer <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="fas fa-file-image"></i>
+                    </div>
+                    <h3>JPG to PNG</h3>
+                    <p>Convert JPG images to lossless PNG with transparency support.</p>
+                    <a href="jpgtopng.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3>PNG to JPG</h3>
+                    <p>Convert PNG to JPG with automatic white background flatten.</p>
+                    <a href="pngtojpg.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #ec4899, #db2777);">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3>WEBP to JPG</h3>
+                    <p>Convert WEBP to JPG in one click — no quality loss.</p>
+                    <a href="webptojpg.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3>WEBP to PNG</h3>
+                    <p>Convert WEBP images to PNG instantly with lossless quality.</p>
+                    <a href="webptopng.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6, #3b82f6);">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3>JPG to WEBP</h3>
+                    <p>Convert JPG to WEBP for smaller file sizes and faster web loading.</p>
+                    <a href="jpgtowebp.html" class="tool-link">Try Converter <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #a78bfa, #8b5cf6);">
+                        <i class="fas fa-low-vision"></i>
+                    </div>
+                    <h3>Blur Image</h3>
+                    <p>Apply adjustable blur to any image with a smooth slider.</p>
+                    <a href="blurimage.html" class="tool-link">Try Blur <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #ec4899, #db2777);">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h3>Sharpen Image</h3>
+                    <p>Enhance image clarity with adjustable sharpening strength.</p>
+                    <a href="sharpenimage.html" class="tool-link">Try Sharpen <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #3b82f6);">
+                        <i class="fas fa-crop-alt"></i>
+                    </div>
+                    <h3>Crop Image</h3>
+                    <p>Crop any image to the exact area you need.</p>
+                    <a href="image-cropper.html" class="tool-link">Try Cropper <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b, #ec4899);">
+                        <i class="fas fa-undo-alt"></i>
+                    </div>
+                    <h3>Rotate Image</h3>
+                    <p>Rotate images left, right or by any custom angle.</p>
+                    <a href="image-flip.html" class="tool-link">Try Rotator <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #1e1b4b, #3b82f6);">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <h3>QR Code Generator</h3>
+                    <p>Generate QR codes for links, text, or any data instantly.</p>
+                    <a href="urltoqr.html" class="tool-link">Try Generator <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== FAQ ========== -->
+        <section class="card info-section fade-up" id="faq">
+            <h2 class="card-title"><i class="fas fa-question" style="color:#8b5cf6;"></i> Frequently Asked Questions</h2>
+            <p class="section-subtitle">Quick answers to common questions about this tool.</p>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>What is WEBP?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>WEBP is a modern image format developed by Google that provides superior compression compared to PNG and JPG. WEBP files are typically 25–40% smaller than PNG at the same visual quality, and unlike JPG, WEBP fully supports transparency (alpha channel). It's supported by all modern browsers and is ideal for web use.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Will transparency be preserved?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes! WEBP natively supports transparency, so any transparent areas in your PNG will remain transparent in the converted WEBP — no white fill, no loss of quality. This makes it perfect for logos, icons, and graphics that need a see-through background.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Why convert PNG to WEBP?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>PNG is lossless but produces large files. WEBP compresses much better while keeping quality and transparency, making your site load faster, use less bandwidth, and improve SEO. For websites with many images (logos, illustrations, UI graphics), WEBP is a major upgrade.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Does my image leave my browser?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>No. Everything runs locally in your browser using the Canvas API. No files are uploaded to any server, and nothing is stored or tracked. Your privacy is fully preserved — the tool even works offline once loaded.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Is this tool free?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes, it's 100% free with no limits, no signup, no watermarks, and no hidden fees. You can convert as many PNG files as you want.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <p>© 2025 CrafterTools — convert smarter, not harder.</p>
+    </footer>
+
+    <div id="toast" class="toast">📥 Download started!</div>
+
+    <script src="pngtowebp.js"></script>
+</body>
+</html>
