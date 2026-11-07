@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Contact CrafterTools — get support, request features, report bugs, or send feedback. We reply fast and we're always happy to help.">
+    <title>Contact Us | CrafterTools</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="contact.css">
+</head>
+<body>
+
+    <!-- ========== NAVBAR ========== -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo" aria-label="CrafterTools Home">
+                <i class=""></i>
+                <div style="display: flex; align-items: center; gap: 8px;">
+  <img src="favicon.png" alt="logo" style="width: 32px; height: 32px; border-radius: 8px;">
+  <h3 style="margin:0;">CrafterTools</h3>
+</div>
+            
+            </a>
+            <ul class="nav-links">
+                <li><a href="about.html">About us</a></li>
+                <li><a href="term.html">Term&Condition</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
+                <li><a href="index.html" class="btn-nav">Home</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+
+        <!-- ========== HERO ========== -->
+        <section class="hero-section">
+            <h1 class="hero-title">Contact <span class="highlight">Us</span></h1>
+            <p class="hero-subtitle">Have a question, suggestion, or feedback? We'd love to hear from you.</p>
+        </section>
+
+        <!-- ========== CONTACT CARDS ========== -->
+        <section class="contact-cards-section">
+            <div class="contact-cards-grid">
+                <a href="mailto:support@craftertools.com" class="contact-card reveal-up" data-delay="0">
+                    <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                    <h3>Email</h3>
+                    <p>support@craftertools.com</p>
+                </a>
+                <div class="contact-card reveal-up" data-delay="80">
+                    <div class="contact-icon"><i class="fas fa-comments"></i></div>
+                    <h3>General Support</h3>
+                    <p>Get help with any tool or issue.</p>
+                </div>
+                <div class="contact-card reveal-up" data-delay="160">
+                    <div class="contact-icon"><i class="fas fa-lightbulb"></i></div>
+                    <h3>Feature Requests</h3>
+                    <p>Suggest new tools or improvements.</p>
+                </div>
+                <div class="contact-card reveal-up" data-delay="240">
+                    <div class="contact-icon"><i class="fas fa-bug"></i></div>
+                    <h3>Report a Bug</h3>
+                    <p>Help us improve CrafterTools.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== CONTACT FORM ========== -->
+        <section class="card form-section reveal-up" id="contactForm">
+            <h2 class="card-title">
+                <i class="fas fa-paper-plane" style="color:#4f46e5;"></i>
+                Send Us a Message
+            </h2>
+            <p class="form-subtitle">Fill in the form below and we'll get back to you as soon as possible.</p>
+
+            <form class="contact-form" id="contactFormEl" novalidate>
+                <!-- Full Name -->
+                <div class="form-field">
+                    <input type="text" id="fullName" name="fullName" class="form-input" placeholder=" " required autocomplete="name">
+                    <label for="fullName" class="form-label">Full Name</label>
+                    <span class="form-error" id="errFullName"></span>
+                </div>
+
+                <!-- Email -->
+                <div class="form-field">
+                    <input type="email" id="email" name="email" class="form-input" placeholder=" " required autocomplete="email">
+                    <label for="email" class="form-label">Email Address</label>
+                    <span class="form-error" id="errEmail"></span>
+                </div>
+
+                <!-- Subject -->
+                <div class="form-field">
+                    <input type="text" id="subject" name="subject" class="form-input" placeholder=" " required>
+                    <label for="subject" class="form-label">Subject</label>
+                    <span class="form-error" id="errSubject"></span>
+                </div>
+
+                <!-- Message -->
+                <div class="form-field">
+                    <textarea id="message" name="message" class="form-input form-textarea" rows="6" placeholder=" " required></textarea>
+                    <label for="message" class="form-label">Message</label>
+                    <span class="form-error" id="errMessage"></span>
+                </div>
+
+                <!-- Submit -->
+                <button type="submit" class="btn-primary submit-btn" id="submitBtn">
+                    <span class="btn-text"><i class="fas fa-paper-plane"></i> Send Message</span>
+                </button>
+
+                <!-- Success message -->
+                <div class="form-success hidden" id="formSuccess" role="status" aria-live="polite">
+                    <div class="success-check"><i class="fas fa-check"></i></div>
+                    <div>
+                        <strong>Thank you! Your message has been received.</strong>
+                        <p>We'll get back to you within 24–48 hours.</p>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <!-- ========== WHY CONTACT US ========== -->
+        <section class="info-section" id="why-contact">
+            <h2 class="section-heading reveal-up">Why Contact Us</h2>
+            <p class="section-subtitle reveal-up delay-1">We're here to help with anything you need.</p>
+
+            <div class="why-grid">
+                <div class="why-card reveal-up" data-delay="0">
+                    <div class="why-icon"><i class="fas fa-bolt"></i></div>
+                    <h3>Fast Response</h3>
+                    <p>We reply within 24–48 hours on business days.</p>
+                </div>
+                <div class="why-card reveal-up" data-delay="80">
+                    <div class="why-icon"><i class="fas fa-smile"></i></div>
+                    <h3>Friendly Support</h3>
+                    <p>Real humans, real answers — no bots, no scripts.</p>
+                </div>
+                <div class="why-card reveal-up" data-delay="160">
+                    <div class="why-icon"><i class="fas fa-lightbulb"></i></div>
+                    <h3>Feature Suggestions Welcome</h3>
+                    <p>Have an idea? We love hearing what to build next.</p>
+                </div>
+                <div class="why-card reveal-up" data-delay="240">
+                    <div class="why-icon"><i class="fas fa-bug"></i></div>
+                    <h3>Bug Reports</h3>
+                    <p>Found something broken? Report it and we'll fix it fast.</p>
+                </div>
+                <div class="why-card reveal-up" data-delay="320">
+                    <div class="why-icon"><i class="fas fa-briefcase"></i></div>
+                    <h3>Business Enquiries</h3>
+                    <p>Partnerships, integrations, or bulk usage — let's talk.</p>
+                </div>
+                <div class="why-card reveal-up" data-delay="400">
+                    <div class="why-icon"><i class="fas fa-question-circle"></i></div>
+                    <h3>General Questions</h3>
+                    <p>Not sure where to start? Ask anything — we'll point you right.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== FAQ ========== -->
+        <section class="info-section" id="faq">
+            <h2 class="section-heading reveal-up">Frequently Asked Questions</h2>
+            <p class="section-subtitle reveal-up delay-1">Quick answers to the questions we hear most often.</p>
+
+            <div class="faq-list">
+                <div class="faq-item reveal-up" data-delay="0">
+                    <button class="faq-question" type="button">
+                        <span>How can I contact CrafterTools?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>You can reach us by filling out the contact form on this page or by emailing support@craftertools.com directly. We monitor both channels daily.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item reveal-up" data-delay="50">
+                    <button class="faq-question" type="button">
+                        <span>How long does it take to receive a reply?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Most messages receive a reply within 24–48 hours on business days. Complex technical issues or feature discussions may take a little longer.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item reveal-up" data-delay="100">
+                    <button class="faq-question" type="button">
+                        <span>Can I request a new tool?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Absolutely! We love new ideas. Use the "Feature Requests" card or submit the contact form with the details of what you'd like to see  we review every suggestion.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item reveal-up" data-delay="150">
+                    <button class="faq-question" type="button">
+                        <span>Can I report bugs?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes, please do! Use the "Report a Bug" card or the contact form. Include the tool name, what happened, and your browser/device — this helps us fix things much faster.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item reveal-up" data-delay="200">
+                    <button class="faq-question" type="button">
+                        <span>Is CrafterTools free?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes — every tool is 100% free, forever. No subscriptions, no paywalls, no watermarks. All processing happens in your browser.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item reveal-up" data-delay="250">
+                    <button class="faq-question" type="button">
+                        <span>Can I suggest improvements?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>We'd love that. Send us your ideas via the contact form  every suggestion is read and considered as we plan our roadmap.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item reveal-up" data-delay="300">
+                    <button class="faq-question" type="button">
+                        <span>Is my information secure?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes. This contact form stores your message locally in your browser using Local Storage nothing is sent to a server. Your data stays on your device.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item reveal-up" data-delay="350">
+                    <button class="faq-question" type="button">
+                        <span>Can I contact from mobile?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Of course. The entire page is fully responsive and mobile-optimized the form, cards, and FAQ all work beautifully on any screen size.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== CTA ========== -->
+        <section class="cta-section reveal-scale">
+            <div class="cta-glow"></div>
+            <div class="cta-content">
+                <h2 class="cta-title">Need quick help?</h2>
+                <p class="cta-subtitle">Browse our free online tools or contact us anytime.</p>
+                <a href="index.html" class="btn-primary cta-btn pulse-glow">
+                    <i class="fas fa-toolbox"></i> Explore Tools
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <p>© 2025 CrafterTools — built with care, for creators everywhere.</p>
+    </footer>
+
+    <script src="contact.js"></script>
+</body>
+</html>
